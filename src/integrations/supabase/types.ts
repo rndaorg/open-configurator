@@ -14,7 +14,197 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      categories: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          image_url: string | null
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      config_options: {
+        Row: {
+          created_at: string
+          display_order: number
+          id: string
+          is_required: boolean
+          name: string
+          option_type: string
+          product_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          display_order?: number
+          id?: string
+          is_required?: boolean
+          name: string
+          option_type: string
+          product_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          display_order?: number
+          id?: string
+          is_required?: boolean
+          name?: string
+          option_type?: string
+          product_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "config_options_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      option_values: {
+        Row: {
+          config_option_id: string | null
+          created_at: string
+          display_order: number
+          hex_color: string | null
+          id: string
+          image_url: string | null
+          is_available: boolean
+          name: string
+          price_modifier: number
+        }
+        Insert: {
+          config_option_id?: string | null
+          created_at?: string
+          display_order?: number
+          hex_color?: string | null
+          id?: string
+          image_url?: string | null
+          is_available?: boolean
+          name: string
+          price_modifier?: number
+        }
+        Update: {
+          config_option_id?: string | null
+          created_at?: string
+          display_order?: number
+          hex_color?: string | null
+          id?: string
+          image_url?: string | null
+          is_available?: boolean
+          name?: string
+          price_modifier?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "option_values_config_option_id_fkey"
+            columns: ["config_option_id"]
+            isOneToOne: false
+            referencedRelation: "config_options"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      product_configurations: {
+        Row: {
+          configuration_data: Json
+          configuration_name: string | null
+          created_at: string
+          id: string
+          product_id: string | null
+          total_price: number
+          updated_at: string
+        }
+        Insert: {
+          configuration_data: Json
+          configuration_name?: string | null
+          created_at?: string
+          id?: string
+          product_id?: string | null
+          total_price: number
+          updated_at?: string
+        }
+        Update: {
+          configuration_data?: Json
+          configuration_name?: string | null
+          created_at?: string
+          id?: string
+          product_id?: string | null
+          total_price?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_configurations_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      products: {
+        Row: {
+          base_price: number
+          category_id: string | null
+          created_at: string
+          description: string | null
+          id: string
+          image_url: string | null
+          is_active: boolean
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          base_price?: number
+          category_id?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          is_active?: boolean
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          base_price?: number
+          category_id?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          is_active?: boolean
+          name?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "products_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
