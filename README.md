@@ -49,8 +49,8 @@ Open Configurator is a modern, full-stack product configurator that enables busi
 
 ### 1. Clone & Install
 ```bash
-git clone https://github.com/your-username/configuremax.git
-cd configuremax
+git clone https://github.com/rndaorg/open-configurator.git
+cd open-configurator
 npm install
 ```
 
