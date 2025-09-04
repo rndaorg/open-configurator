@@ -10,7 +10,7 @@
 
 Open Configurator is a modern, full-stack product configurator that enables businesses to offer customizable products with real-time pricing, visual feedback, and seamless user experience. Perfect for businesses selling bicycles, generators, furniture, electronics, or any configurable products.
 
-![ConfigureMax Hero](https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=1200&h=600&fit=crop&crop=center)
+![Open Configurator](<img width="1200" height="600" fit="crop" crop="center" alt="image" src="https://github.com/user-attachments/assets/f28e9e2a-5e76-457f-b5e0-6d53f8aa4406" />)
 
 ## ✨ Features
 
