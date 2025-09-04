@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useCategories, useProducts } from '@/hooks/useProducts';
 import { ProductCard } from './ProductCard';
-import { Button } from '@/components/ui/button';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { Loader2, Package } from 'lucide-react';
 
@@ -48,29 +48,31 @@ export const ProductCatalog = ({ onConfigureProduct }: ProductCatalogProps) => {
           </p>
         </div>
         
-        {/* Category filters */}
-        <div className="flex flex-wrap gap-3 justify-center animate-slide-up">
-          <Button
-            variant={selectedCategory === null ? "default" : "outline"}
-            onClick={() => setSelectedCategory(null)}
-            className="rounded-full"
-          >
-            All Products
-            <Badge variant="secondary" className="ml-2">
-              {products?.length || 0}
-            </Badge>
-          </Button>
-          
-          {categories?.map((category) => (
-            <Button
-              key={category.id}
-              variant={selectedCategory === category.id ? "default" : "outline"}
-              onClick={() => setSelectedCategory(category.id)}
-              className="rounded-full"
+        {/* Category filter dropdown */}
+        <div className="flex justify-center animate-slide-up">
+          <div className="w-full max-w-xs">
+            <Select
+              value={selectedCategory || "all"}
+              onValueChange={(value) => setSelectedCategory(value === "all" ? null : value)}
             >
-              {category.name}
-            </Button>
-          ))}
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Select a category" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">
+                  All Products
+                  <Badge variant="secondary" className="ml-2">
+                    {products?.length || 0}
+                  </Badge>
+                </SelectItem>
+                {categories?.map((category) => (
+                  <SelectItem key={category.id} value={category.id}>
+                    {category.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
         </div>
         
         {/* Products grid */}
