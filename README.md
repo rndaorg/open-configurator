@@ -1,4 +1,4 @@
-# ConfigureMax - Universal Product Configurator
+# Open Configurator - Universal Product Configurator
 
 [![Deploy to Production](https://img.shields.io/badge/deploy-production-green)](https://lovable.dev)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -8,7 +8,7 @@
 
 > **Transform the way customers configure and purchase custom products with our beautiful, intuitive product configurator.**
 
-ConfigureMax is a modern, full-stack product configurator that enables businesses to offer customizable products with real-time pricing, visual feedback, and seamless user experience. Perfect for businesses selling bicycles, generators, furniture, electronics, or any configurable products.
+Open Configurator is a modern, full-stack product configurator that enables businesses to offer customizable products with real-time pricing, visual feedback, and seamless user experience. Perfect for businesses selling bicycles, generators, furniture, electronics, or any configurable products.
 
 ![ConfigureMax Hero](https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=1200&h=600&fit=crop&crop=center)
 
@@ -173,12 +173,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🚀 Deploy Your Own
 
-[![Deploy with Lovable](https://img.shields.io/badge/Deploy%20with-Lovable-purple)](https://lovable.dev)
-
-Deploy your own ConfigureMax instance in minutes with our one-click deployment.
+Deploy your own Open  instance in minutes with our one-shot deployment.
 
 ---
 
 **Ready to transform your product sales?** [Get started now](https://lovable.dev) or [try the demo](https://configuremax-demo.lovable.app).
-
-Made with ❤️ by the ConfigureMax team
