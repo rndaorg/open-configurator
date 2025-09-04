@@ -1,73 +1,184 @@
-# Welcome to your Lovable project
+# ConfigureMax - Universal Product Configurator
 
-## Project info
+[![Deploy to Production](https://img.shields.io/badge/deploy-production-green)](https://lovable.dev)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=flat&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![React](https://img.shields.io/badge/React-20232A?style=flat&logo=react&logoColor=61DAFB)](https://reactjs.org/)
+[![Supabase](https://img.shields.io/badge/Supabase-181818?style=flat&logo=supabase&logoColor=white)](https://supabase.com/)
 
-**URL**: https://lovable.dev/projects/3b4e6882-24d0-40f6-9479-ade73026c2ec
+> **Transform the way customers configure and purchase custom products with our beautiful, intuitive product configurator.**
 
-## How can I edit this code?
+ConfigureMax is a modern, full-stack product configurator that enables businesses to offer customizable products with real-time pricing, visual feedback, and seamless user experience. Perfect for businesses selling bicycles, generators, furniture, electronics, or any configurable products.
 
-There are several ways of editing your application.
+![ConfigureMax Hero](https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=1200&h=600&fit=crop&crop=center)
 
-**Use Lovable**
+## ✨ Features
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/3b4e6882-24d0-40f6-9479-ade73026c2ec) and start prompting.
+### 🎨 **Beautiful, Modern Interface**
+- Glass morphism design with smooth animations
+- Responsive design that works on all devices
+- Real-time visual feedback during configuration
+- Intuitive step-by-step configuration process
 
-Changes made via Lovable will be committed automatically to this repo.
+### ⚡ **Powerful Configurator Engine**
+- **Real-time Pricing**: Instant price updates as customers configure
+- **Visual Options**: Support for colors, images, and custom previews
+- **Required & Optional**: Flexible configuration rules
+- **Multi-category Support**: Handle diverse product types
+- **Save & Share**: Customers can save and share configurations
 
-**Use your preferred IDE**
+### 🏢 **Business Ready**
+- **Admin Dashboard**: Easy product and option management
+- **Category Management**: Organize products by categories
+- **Pricing Control**: Set base prices and option modifiers
+- **Inventory Integration**: Track availability and stock
+- **Analytics Ready**: Built-in tracking and insights
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### 🔧 **Developer Friendly**
+- **Full-stack Solution**: Frontend + Backend included
+- **Modern Tech Stack**: React, TypeScript, Tailwind CSS
+- **Database Included**: PostgreSQL with Supabase
+- **API Ready**: RESTful API for integrations
+- **Extensible**: Easy to customize and extend
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+## 🚀 Quick Start
 
-Follow these steps:
+### Prerequisites
+- Node.js 18+ and npm
+- A Supabase account (free tier available)
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+### 1. Clone & Install
+```bash
+git clone https://github.com/your-username/configuremax.git
+cd configuremax
+npm install
 ```
 
-**Edit a file directly in GitHub**
+### 2. Environment Setup
+```bash
+# Copy environment template
+cp .env.example .env
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+# Add your Supabase credentials
+VITE_SUPABASE_URL=your_supabase_url
+VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+```
 
-**Use GitHub Codespaces**
+### 3. Database Setup
+The database schema is automatically applied when you set up Supabase. Sample data is included for:
+- **Bicycles** with frame sizes, colors, and accessories
+- **Generators** with power output, fuel types, and features
+- **Custom categories** for your specific products
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+### 4. Run Development Server
+```bash
+npm run dev
+```
+Visit `http://localhost:5173` to see your configurator in action!
 
-## What technologies are used for this project?
+## 📖 How It Works
 
-This project is built with:
+### For Customers
+1. **Browse Products**: Explore categorized product catalog
+2. **Configure**: Step-through configuration options with real-time pricing
+3. **Visualize**: See changes reflected instantly
+4. **Save & Share**: Save configurations or share with others
+5. **Purchase**: Add configured products to cart
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+### For Businesses
+1. **Add Products**: Create products with base pricing
+2. **Define Options**: Set up configuration options (colors, sizes, features)
+3. **Set Pricing**: Configure price modifiers for each option
+4. **Organize**: Use categories to organize product lines
+5. **Launch**: Deploy and start selling customized products
 
-## How can I deploy this project?
+## 🛠 Technology Stack
 
-Simply open [Lovable](https://lovable.dev/projects/3b4e6882-24d0-40f6-9479-ade73026c2ec) and click on Share -> Publish.
+- **Frontend**: React 18, TypeScript, Tailwind CSS
+- **Backend**: Supabase (PostgreSQL, Auth, Storage)
+- **UI Components**: Radix UI + shadcn/ui
+- **Animations**: Tailwind CSS + Custom keyframes
+- **State Management**: TanStack Query
+- **Routing**: React Router
+- **Build Tool**: Vite
+- **Deployment**: Lovable Platform
 
-## Can I connect a custom domain to my Lovable project?
+## 📁 Project Structure
 
-Yes, you can!
+```
+configuremax/
+├── src/
+│   ├── components/           # Reusable UI components
+│   │   ├── ui/              # shadcn/ui components
+│   │   ├── HeroSection.tsx  # Landing page hero
+│   │   ├── ProductCatalog.tsx
+│   │   └── ProductConfigurator.tsx
+│   ├── hooks/               # Custom React hooks
+│   │   └── useProducts.ts   # Product data management
+│   ├── pages/               # Route components
+│   ├── integrations/        # External service integrations
+│   │   └── supabase/        # Supabase client & types
+│   └── lib/                 # Utilities and helpers
+├── supabase/
+│   ├── migrations/          # Database migrations
+│   └── config.toml         # Supabase configuration
+└── docs/                   # Documentation
+```
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+## 🎯 Use Cases
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+### **Perfect For**
+- **Bicycle Shops**: Frame sizes, colors, components, accessories
+- **Generator Retailers**: Power output, fuel type, features
+- **Furniture Stores**: Materials, colors, dimensions, options
+- **Electronics**: Specifications, colors, accessories
+- **Automotive**: Options, colors, packages, accessories
+- **Custom Manufacturing**: Any configurable product
+
+### **Key Benefits**
+- **Increase Sales**: Visual configuration increases conversion rates
+- **Reduce Returns**: Customers know exactly what they're getting
+- **Streamline Operations**: Automated pricing and configuration tracking
+- **Scale Efficiently**: Handle complex product variations easily
+- **Improve UX**: Modern, intuitive configuration experience
+
+## 📚 Documentation
+
+- [Getting Started Guide](docs/getting-started.md)
+- [Configuration Options](docs/configuration.md)
+- [API Reference](docs/api.md)
+- [Deployment Guide](docs/deployment.md)
+- [Customization](docs/customization.md)
+
+## 🤝 Contributing
+
+We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🌟 Support
+
+- ⭐ Star this repository if you find it helpful
+- 🐛 [Report bugs](https://github.com/your-username/configuremax/issues)
+- 💡 [Request features](https://github.com/your-username/configuremax/issues)
+- 📧 [Contact us](mailto:support@configuremax.com)
+
+## 🚀 Deploy Your Own
+
+[![Deploy with Lovable](https://img.shields.io/badge/Deploy%20with-Lovable-purple)](https://lovable.dev)
+
+Deploy your own ConfigureMax instance in minutes with our one-click deployment.
+
+---
+
+**Ready to transform your product sales?** [Get started now](https://lovable.dev) or [try the demo](https://configuremax-demo.lovable.app).
+
+Made with ❤️ by the ConfigureMax team

@@ -2,6 +2,8 @@ import { useState, useRef } from 'react';
 import { HeroSection } from '@/components/HeroSection';
 import { ProductCatalog } from '@/components/ProductCatalog';
 import { ProductConfigurator } from '@/components/ProductConfigurator';
+import { FeaturesSection } from '@/components/FeaturesSection';
+import { Footer } from '@/components/Footer';
 
 const Index = () => {
   const [selectedProductId, setSelectedProductId] = useState<string | null>(null);
@@ -31,9 +33,11 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background">
       <HeroSection onExploreProducts={handleExploreProducts} />
+      <FeaturesSection />
       <div ref={catalogRef}>
         <ProductCatalog onConfigureProduct={handleConfigureProduct} />
       </div>
+      <Footer />
     </div>
   );
 };
