@@ -1,5 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useProductById } from '@/hooks/useProducts';
+import { RuleEngine } from '@/services/ruleEngine';
+import { PricingEngine } from '@/services/pricingEngine';
+import { Product3DVisualization } from '@/components/Product3DVisualization';
+import { RecommendationEngine } from '@/components/RecommendationEngine';
+import { ConfigurationComparison } from '@/components/ConfigurationComparison';
+import { analyticsTracker } from '@/services/analyticsTracker';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -22,6 +28,19 @@ export const ProductConfigurator = ({ productId, onBack }: ProductConfiguratorPr
   const [selectedOptions, setSelectedOptions] = useState<SelectedOptions>({});
   const [totalPrice, setTotalPrice] = useState(0);
   const [isSaving, setIsSaving] = useState(false);
+  const [ruleEngine] = useState(() => new RuleEngine());
+  const [pricingEngine] = useState(() => new PricingEngine());
+  const [sessionId, setSessionId] = useState<string | null>(null);
+
+  // Initialize engines and analytics
+  useEffect(() => {
+    if (product) {
+      ruleEngine.loadRules(productId);
+      pricingEngine.loadPricingRules(productId);
+      const id = analyticsTracker.startSession(productId);
+      setSessionId(id);
+    }
+  }, [product, productId]);
 
   // Calculate total price when selections change
   useEffect(() => {
@@ -137,18 +156,13 @@ export const ProductConfigurator = ({ productId, onBack }: ProductConfiguratorPr
       </div>
 
       <div className="max-w-7xl mx-auto px-6 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Product Image */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Product Visualization */}
           <div className="space-y-6">
-            <Card className="glass-card overflow-hidden">
-              <div className="aspect-square">
-                <img
-                  src={product.image_url || '/placeholder.svg'}
-                  alt={product.name}
-                  className="w-full h-full object-cover"
-                />
-              </div>
-            </Card>
+            <Product3DVisualization 
+              product={product}
+              selectedOptions={selectedOptions}
+            />
             
             <Card className="glass-card p-6">
               <h3 className="text-lg font-semibold mb-4">Product Details</h3>
@@ -275,6 +289,26 @@ export const ProductConfigurator = ({ productId, onBack }: ProductConfiguratorPr
                 </div>
               </Card>
             </div>
+          </div>
+
+          {/* Advanced Features Sidebar */}
+          <div className="space-y-6">
+            <RecommendationEngine
+              product={product}
+              selectedOptions={selectedOptions}
+              onApplyRecommendation={(optionId, valueId) => {
+                handleOptionSelect(optionId, valueId);
+                analyticsTracker.trackRecommendationApplied(productId, 'ai_suggestion', optionId, valueId);
+              }}
+            />
+            
+            <ConfigurationComparison
+              product={product}
+              currentConfiguration={{
+                selectedOptions,
+                totalPrice
+              }}
+            />
           </div>
         </div>
       </div>

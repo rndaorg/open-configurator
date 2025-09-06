@@ -79,6 +79,129 @@ export type Database = {
           },
         ]
       }
+      configuration_analytics: {
+        Row: {
+          abandonment_point: string | null
+          completion_rate: number | null
+          configuration_data: Json
+          created_at: string
+          id: string
+          product_id: string | null
+          session_id: string | null
+          user_agent: string | null
+        }
+        Insert: {
+          abandonment_point?: string | null
+          completion_rate?: number | null
+          configuration_data: Json
+          created_at?: string
+          id?: string
+          product_id?: string | null
+          session_id?: string | null
+          user_agent?: string | null
+        }
+        Update: {
+          abandonment_point?: string | null
+          completion_rate?: number | null
+          configuration_data?: Json
+          created_at?: string
+          id?: string
+          product_id?: string | null
+          session_id?: string | null
+          user_agent?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "configuration_analytics_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      configuration_rules: {
+        Row: {
+          actions: Json
+          conditions: Json
+          created_at: string
+          id: string
+          is_active: boolean
+          priority: number
+          product_id: string | null
+          rule_name: string
+          rule_type: string
+          updated_at: string
+        }
+        Insert: {
+          actions: Json
+          conditions: Json
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          priority?: number
+          product_id?: string | null
+          rule_name: string
+          rule_type: string
+          updated_at?: string
+        }
+        Update: {
+          actions?: Json
+          conditions?: Json
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          priority?: number
+          product_id?: string | null
+          rule_name?: string
+          rule_type?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "configuration_rules_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      inventory_levels: {
+        Row: {
+          available_quantity: number
+          id: string
+          low_stock_threshold: number
+          option_value_id: string | null
+          reserved_quantity: number
+          updated_at: string
+        }
+        Insert: {
+          available_quantity?: number
+          id?: string
+          low_stock_threshold?: number
+          option_value_id?: string | null
+          reserved_quantity?: number
+          updated_at?: string
+        }
+        Update: {
+          available_quantity?: number
+          id?: string
+          low_stock_threshold?: number
+          option_value_id?: string | null
+          reserved_quantity?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "inventory_levels_option_value_id_fkey"
+            columns: ["option_value_id"]
+            isOneToOne: false
+            referencedRelation: "option_values"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       option_values: {
         Row: {
           config_option_id: string | null
@@ -119,6 +242,62 @@ export type Database = {
             columns: ["config_option_id"]
             isOneToOne: false
             referencedRelation: "config_options"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pricing_rules: {
+        Row: {
+          conditions: Json
+          created_at: string
+          discount_type: string
+          discount_value: number
+          id: string
+          is_active: boolean
+          min_quantity: number | null
+          product_id: string | null
+          rule_name: string
+          rule_type: string
+          updated_at: string
+          valid_from: string | null
+          valid_until: string | null
+        }
+        Insert: {
+          conditions: Json
+          created_at?: string
+          discount_type: string
+          discount_value?: number
+          id?: string
+          is_active?: boolean
+          min_quantity?: number | null
+          product_id?: string | null
+          rule_name: string
+          rule_type: string
+          updated_at?: string
+          valid_from?: string | null
+          valid_until?: string | null
+        }
+        Update: {
+          conditions?: Json
+          created_at?: string
+          discount_type?: string
+          discount_value?: number
+          id?: string
+          is_active?: boolean
+          min_quantity?: number | null
+          product_id?: string | null
+          rule_name?: string
+          rule_type?: string
+          updated_at?: string
+          valid_from?: string | null
+          valid_until?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pricing_rules_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
             referencedColumns: ["id"]
           },
         ]
@@ -201,6 +380,44 @@ export type Database = {
             columns: ["category_id"]
             isOneToOne: false
             referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_preferences: {
+        Row: {
+          created_at: string
+          id: string
+          interaction_score: number
+          preferences: Json
+          product_id: string | null
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          interaction_score?: number
+          preferences: Json
+          product_id?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          interaction_score?: number
+          preferences?: Json
+          product_id?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_preferences_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
             referencedColumns: ["id"]
           },
         ]
