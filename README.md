@@ -21,25 +21,31 @@ Open Configurator is a modern, full-stack product configurator that enables busi
 - Intuitive step-by-step configuration process
 
 ### ⚡ **Powerful Configurator Engine**
-- **Real-time Pricing**: Instant price updates as customers configure
-- **Visual Options**: Support for colors, images, and custom previews
-- **Required & Optional**: Flexible configuration rules
-- **Multi-category Support**: Handle diverse product types
+- **AI-Powered Rule Engine**: Intelligent validation and constraint system
+- **Dynamic Pricing Engine**: Complex pricing rules with volume discounts and tiered pricing
+- **3D Product Visualization**: Interactive 3D models with real-time configuration updates
+- **Smart Recommendations**: AI-powered suggestions based on customer preferences
+- **Configuration Comparison**: Side-by-side comparison of different setups
+- **Real-time Inventory**: Live stock checking and availability updates
+- **Advanced Analytics**: Comprehensive tracking and user behavior insights
 - **Save & Share**: Customers can save and share configurations
 
 ### 🏢 **Business Ready**
-- **Admin Dashboard**: Easy product and option management
-- **Category Management**: Organize products by categories
-- **Pricing Control**: Set base prices and option modifiers
-- **Inventory Integration**: Track availability and stock
-- **Analytics Ready**: Built-in tracking and insights
+- **Advanced Rule Management**: Configure complex business rules and constraints
+- **Multi-tier Pricing**: Volume discounts, bulk pricing, and conditional pricing
+- **Real-time Analytics**: Session tracking, conversion analysis, and user insights
+- **Inventory Management**: Live stock tracking with low-stock alerts
+- **A/B Testing**: Built-in recommendation engine testing capabilities
+- **Performance Monitoring**: Real-time performance metrics and optimization suggestions
 
 ### 🔧 **Developer Friendly**
-- **Full-stack Solution**: Frontend + Backend included
-- **Modern Tech Stack**: React, TypeScript, Tailwind CSS
-- **Database Included**: PostgreSQL with Supabase
-- **API Ready**: RESTful API for integrations
-- **Extensible**: Easy to customize and extend
+- **Full-stack Solution**: Frontend + Backend included with advanced engines
+- **Modern Tech Stack**: React, TypeScript, Tailwind CSS, Three.js for 3D
+- **Database Included**: PostgreSQL with Supabase and advanced schema
+- **Rule Engine SDK**: Powerful rule engine for custom business logic
+- **Pricing Engine API**: Flexible pricing system with complex calculations
+- **Analytics SDK**: Built-in analytics with custom event tracking
+- **3D Integration**: Three.js integration for immersive product visualization
 
 ## 🚀 Quick Start
 
@@ -95,34 +101,45 @@ Visit `http://localhost:5173` to see your configurator in action!
 ## 🛠 Technology Stack
 
 - **Frontend**: React 18, TypeScript, Tailwind CSS
-- **Backend**: Supabase (PostgreSQL, Auth, Storage)
+- **3D Visualization**: Three.js, @react-three/fiber, @react-three/drei
+- **Backend**: Supabase (PostgreSQL, Auth, Storage, Real-time)
 - **UI Components**: Radix UI + shadcn/ui
-- **Animations**: Tailwind CSS + Custom keyframes
-- **State Management**: TanStack Query
-- **Routing**: React Router
-- **Build Tool**: Vite
-- **Deployment**: Lovable Platform
+- **Business Logic**: Custom Rule Engine + Pricing Engine
+- **Analytics**: Custom Analytics Tracker with session management
+- **Animations**: Tailwind CSS + Custom keyframes + 3D animations
+- **State Management**: TanStack Query + React Context
+- **Routing**: React Router with advanced navigation
+- **Build Tool**: Vite with optimizations
+- **Deployment**: Lovable Platform with global CDN
 
 ## 📁 Project Structure
 
 ```
-configuremax/
+open-configurator/
 ├── src/
 │   ├── components/           # Reusable UI components
 │   │   ├── ui/              # shadcn/ui components
-│   │   ├── HeroSection.tsx  # Landing page hero
+│   │   ├── Navigation.tsx   # Multi-page navigation
 │   │   ├── ProductCatalog.tsx
-│   │   └── ProductConfigurator.tsx
+│   │   ├── ProductConfigurator.tsx  # Main configurator
+│   │   ├── Product3DVisualization.tsx  # 3D product viewer
+│   │   ├── RecommendationEngine.tsx    # AI recommendations
+│   │   └── ConfigurationComparison.tsx # Side-by-side comparison
 │   ├── hooks/               # Custom React hooks
-│   │   └── useProducts.ts   # Product data management
-│   ├── pages/               # Route components
+│   │   ├── useProducts.ts   # Product data management
+│   │   └── useInventoryCheck.ts  # Real-time inventory
+│   ├── services/            # Business logic engines
+│   │   ├── ruleEngine.ts    # Advanced rule processing
+│   │   ├── pricingEngine.ts # Dynamic pricing calculations
+│   │   └── analyticsTracker.ts  # User behavior tracking
+│   ├── pages/               # Route components (Home, Features, Products)
 │   ├── integrations/        # External service integrations
 │   │   └── supabase/        # Supabase client & types
 │   └── lib/                 # Utilities and helpers
 ├── supabase/
-│   ├── migrations/          # Database migrations
+│   ├── migrations/          # Database migrations with advanced schema
 │   └── config.toml         # Supabase configuration
-└── docs/                   # Documentation
+└── docs/                   # Comprehensive documentation
 ```
 
 ## 🎯 Use Cases
@@ -136,11 +153,12 @@ configuremax/
 - **Custom Manufacturing**: Any configurable product
 
 ### **Key Benefits**
-- **Increase Sales**: Visual configuration increases conversion rates
-- **Reduce Returns**: Customers know exactly what they're getting
-- **Streamline Operations**: Automated pricing and configuration tracking
-- **Scale Efficiently**: Handle complex product variations easily
-- **Improve UX**: Modern, intuitive configuration experience
+- **Increase Sales**: 3D visualization and AI recommendations boost conversion rates
+- **Reduce Returns**: Immersive 3D previews show exactly what customers get
+- **Streamline Operations**: Automated rule enforcement and dynamic pricing
+- **Scale Efficiently**: Handle complex product variations with intelligent engines
+- **Data-Driven Insights**: Advanced analytics reveal customer preferences and bottlenecks
+- **Future-Proof**: Extensible architecture supports growing business needs
 
 ## 📚 Documentation
 

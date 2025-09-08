@@ -1,10 +1,10 @@
-# Getting Started with ConfigureMax
+# Getting Started with Open Configurator
 
-Welcome to ConfigureMax! This guide will help you set up and customize your product configurator in under 30 minutes.
+Welcome to Open Configurator! This guide will help you set up and customize your advanced product configurator with 3D visualization, AI recommendations, and intelligent pricing in under 30 minutes.
 
 ## Overview
 
-ConfigureMax is designed to be deployment-ready out of the box while remaining highly customizable. You can have a working product configurator running in minutes, then customize it to match your brand and products.
+Open Configurator is designed to be deployment-ready out of the box while providing enterprise-grade features like rule engines, dynamic pricing, 3D visualization, and AI-powered recommendations. You can have a working product configurator running in minutes, then customize it to match your brand and products.
 
 ## Prerequisites
 
@@ -17,8 +17,8 @@ Before you begin, make sure you have:
 
 ### Clone the Repository
 ```bash
-git clone https://github.com/your-username/configuremax.git
-cd configuremax
+git clone https://github.com/your-username/open-configurator.git
+cd open-configurator
 npm install
 ```
 
@@ -33,21 +33,32 @@ You can find these values in your Supabase project dashboard under Settings → 
 
 ## Step 2: Database Setup
 
-ConfigureMax comes with a complete database schema and sample data. The schema includes:
+Open Configurator comes with a comprehensive database schema and sample data. The schema includes:
 
-- **Products**: Your main product catalog
-- **Categories**: Product organization
-- **Config Options**: Customization choices (color, size, features)
-- **Option Values**: Specific choices within each option
-- **Product Configurations**: Saved customer configurations
+- **Products**: Your main product catalog with 3D model references
+- **Categories**: Product organization with visual hierarchies
+- **Config Options**: Customization choices (color, size, materials, features)
+- **Option Values**: Specific choices within each option with 3D model variants
+- **Product Configurations**: Saved customer configurations with analytics
+- **Rule Definitions**: Business rules and validation constraints
+- **Pricing Rules**: Dynamic pricing with volume discounts and conditions
+- **Analytics Sessions**: User behavior tracking and conversion analytics
+- **3D Models**: Product visualization assets and configuration mappings
 
 ### Sample Data Included
 
 The system comes pre-loaded with:
-- **Mountain Bike**: Configurable with frame size, color, and accessories
-- **Road Bike**: Multiple color options and component choices
-- **Portable Generator**: Power output and fuel type options
-- **Standby Generator**: Advanced features and sizing options
+- **Mountain Bike**: Configurable with frame size, color, accessories, and 3D visualization
+- **Road Bike**: Multiple color options, component choices, and interactive 3D model
+- **Portable Generator**: Power output, fuel type options with rule-based constraints
+- **Standby Generator**: Advanced features, sizing options, and dynamic pricing tiers
+
+### Advanced Features Ready
+- **3D Product Models**: Interactive visualization with real-time configuration updates
+- **AI Recommendations**: Smart suggestions based on customer behavior patterns
+- **Rule Engine**: Pre-configured business rules and validation constraints
+- **Dynamic Pricing**: Volume discounts and conditional pricing already set up
+- **Analytics Tracking**: User behavior tracking and conversion optimization
 
 ## Step 3: Run Development Server
 
@@ -56,9 +67,12 @@ npm run dev
 ```
 
 Open `http://localhost:5173` in your browser. You should see:
-- Beautiful landing page with hero section
-- Product catalog with sample products
-- Working configurator with real-time pricing
+- Beautiful landing page with hero section and navigation
+- Multi-page structure (Home, Features, Products)
+- Product catalog with sample products and 3D previews
+- Working configurator with real-time pricing and 3D visualization
+- AI-powered recommendation engine in action
+- Configuration comparison tools
 
 ## Step 4: Customize Your Products
 
@@ -158,13 +172,17 @@ Output directory: `dist`
 
 ## Next Steps
 
-Now that you have ConfigureMax running:
+Now that you have Open Configurator running with advanced features:
 
-1. **Add Your Products**: Replace sample data with your actual products
-2. **Customize Design**: Update colors, fonts, and branding
-3. **Configure Payment**: Integrate with Stripe, PayPal, or your payment provider
-4. **Add Analytics**: Track configuration completion rates and popular options
-5. **Extend Features**: Add user accounts, saved configurations, sharing features
+1. **Add Your Products**: Replace sample data with your actual products and 3D models
+2. **Configure Business Rules**: Set up validation rules and constraints in the rule engine
+3. **Set Up Dynamic Pricing**: Configure volume discounts and conditional pricing rules
+4. **Customize 3D Models**: Add your product 3D models and configuration mappings
+5. **Train AI Recommendations**: Configure recommendation algorithms for your product types
+6. **Customize Design**: Update colors, fonts, and branding to match your company
+7. **Configure Analytics**: Set up conversion tracking and performance monitoring
+8. **Add Payment Integration**: Integrate with Stripe, PayPal, or your payment provider
+9. **Deploy to Production**: Launch your configurator with all advanced features
 
 ## Need Help?
 

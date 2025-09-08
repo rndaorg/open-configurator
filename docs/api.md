@@ -1,12 +1,44 @@
-# ConfigureMax API Reference
+# Open Configurator API Reference
 
-ConfigureMax uses Supabase as its backend, providing a full REST API for all product configuration operations. This document covers the available endpoints and data models.
+Open Configurator uses Supabase as its backend, providing a full REST API for all product configuration operations. This document covers the available endpoints, advanced engines, and data models.
 
 ## Base URL
 
 All API requests are made through the Supabase client:
 ```typescript
 import { supabase } from '@/integrations/supabase/client';
+```
+
+## Advanced Engines
+
+### Rule Engine
+The rule engine provides intelligent validation and constraint management:
+```typescript
+import { RuleEngine } from '@/services/ruleEngine';
+
+const ruleEngine = new RuleEngine();
+await ruleEngine.loadRules(productId);
+const violations = await ruleEngine.validateConfiguration(selectedOptions);
+```
+
+### Pricing Engine
+Dynamic pricing with complex business rules:
+```typescript
+import { PricingEngine } from '@/services/pricingEngine';
+
+const pricingEngine = new PricingEngine();
+await pricingEngine.loadPricingRules(productId);
+const finalPrice = await pricingEngine.calculatePrice(basePrice, selectedOptions, quantity);
+```
+
+### Analytics Tracker
+Comprehensive user behavior tracking:
+```typescript
+import { analyticsTracker } from '@/services/analyticsTracker';
+
+const sessionId = analyticsTracker.startSession(productId);
+analyticsTracker.trackOptionSelection(productId, optionId, valueId);
+analyticsTracker.trackPriceCalculation(productId, finalPrice);
 ```
 
 ## Authentication
@@ -82,6 +114,70 @@ interface ProductConfiguration {
   configuration_data: Record<string, string>; // optionId -> valueId
   created_at: string;
   updated_at: string;
+}
+```
+
+### Rule Definition
+```typescript
+interface RuleDefinition {
+  id: string;
+  product_id: string;
+  rule_type: 'validation' | 'constraint' | 'dependency';
+  rule_data: {
+    conditions: Array<{
+      option_id: string;
+      operator: 'equals' | 'not_equals' | 'in' | 'not_in';
+      values: string[];
+    }>;
+    actions: Array<{
+      type: 'disable' | 'enable' | 'require' | 'price_override';
+      target_option_id?: string;
+      target_value_id?: string;
+      data?: any;
+    }>;
+  };
+  is_active: boolean;
+  created_at: string;
+}
+```
+
+### Pricing Rule
+```typescript
+interface PricingRule {
+  id: string;
+  product_id: string;
+  rule_name: string;
+  rule_type: 'volume_discount' | 'bundle_discount' | 'conditional_pricing';
+  conditions: {
+    min_quantity?: number;
+    max_quantity?: number;
+    required_options?: string[];
+    customer_segment?: string;
+  };
+  discount_type: 'percentage' | 'fixed_amount';
+  discount_value: number;
+  priority: number;
+  is_active: boolean;
+  created_at: string;
+}
+```
+
+### Analytics Session
+```typescript
+interface AnalyticsSession {
+  id: string;
+  product_id: string;
+  session_start: string;
+  session_end?: string;
+  total_interactions: number;
+  final_price?: number;
+  configuration_completed: boolean;
+  conversion_achieved: boolean;
+  session_data: {
+    user_agent?: string;
+    referrer?: string;
+    device_type?: string;
+  };
 }
 ```
 
@@ -206,7 +302,7 @@ const { data, error } = await supabase
 
 ### Product Configurations
 
-#### Save Configuration
+### Save Configuration with Analytics
 ```typescript
 const { data, error } = await supabase
   .from('product_configurations')
@@ -218,17 +314,117 @@ const { data, error } = await supabase
   })
   .select()
   .single();
+
+// Track the save event
+analyticsTracker.trackConfigurationSave(productId, data.id);
 ```
 
-#### Get Saved Configurations
+### Get Saved Configurations with Analytics
 ```typescript
 const { data, error } = await supabase
   .from('product_configurations')
   .select(`
     *,
-    products (name, image_url)
+    products (name, image_url),
+    analytics_sessions (
+      total_interactions,
+      configuration_completed
+    )
   `)
   .order('created_at', { ascending: false });
+```
+
+## Advanced Features API
+
+### Rule Engine Operations
+
+#### Validate Configuration
+```typescript
+const ruleEngine = new RuleEngine();
+await ruleEngine.loadRules(productId);
+
+const validationResult = await ruleEngine.validateConfiguration(selectedOptions);
+if (!validationResult.isValid) {
+  console.log('Validation errors:', validationResult.violations);
+}
+```
+
+#### Get Applied Rules
+```typescript
+const { data, error } = await supabase
+  .from('rule_definitions')
+  .select('*')
+  .eq('product_id', productId)
+  .eq('is_active', true);
+```
+
+### Pricing Engine Operations
+
+#### Calculate Dynamic Price
+```typescript
+const pricingEngine = new PricingEngine();
+await pricingEngine.loadPricingRules(productId);
+
+const finalPrice = await pricingEngine.calculatePrice(
+  basePrice, 
+  selectedOptions, 
+  quantity,
+  customerSegment
+);
+```
+
+#### Get Pricing Rules
+```typescript
+const { data, error } = await supabase
+  .from('pricing_rules')
+  .select('*')
+  .eq('product_id', productId)
+  .eq('is_active', true)
+  .order('priority', { ascending: false });
+```
+
+### 3D Visualization API
+
+#### Load 3D Model Data
+```typescript
+const { data, error } = await supabase
+  .from('product_3d_models')
+  .select('*')
+  .eq('product_id', productId);
+```
+
+### Recommendation Engine
+
+#### Get AI Recommendations
+```typescript
+const { data, error } = await supabase
+  .rpc('get_smart_recommendations', {
+    p_product_id: productId,
+    p_current_config: selectedOptions,
+    p_customer_preferences: preferences
+  });
+```
+
+### Analytics Operations
+
+#### Track User Interaction
+```typescript
+analyticsTracker.trackOptionSelection(productId, optionId, valueId);
+analyticsTracker.trackPriceCalculation(productId, newPrice);
+analyticsTracker.trackRecommendationApplied(productId, source, optionId, valueId);
+```
+
+#### Get Analytics Data
+```typescript
+const { data, error } = await supabase
+  .from('analytics_sessions')
+  .select(`
+    *,
+    analytics_events (*)
+  `)
+  .eq('product_id', productId)
+  .gte('session_start', startDate)
+  .lte('session_start', endDate);
 ```
 
 ## Real-time Subscriptions
@@ -261,26 +457,45 @@ const subscription = supabase
   .subscribe();
 ```
 
-## Price Calculation
+## Advanced Price Calculation
 
-The configurator automatically calculates prices based on:
-1. Product base price
-2. Selected option value price modifiers
+The configurator now includes sophisticated pricing logic:
 
 ```typescript
-const calculateTotalPrice = (product: Product, selectedOptions: Record<string, string>) => {
-  let total = product.base_price;
+const calculateAdvancedPrice = async (
+  product: Product, 
+  selectedOptions: Record<string, string>,
+  quantity: number = 1,
+  customerSegment?: string
+) => {
+  // Load pricing engine
+  const pricingEngine = new PricingEngine();
+  await pricingEngine.loadPricingRules(product.id);
   
+  // Calculate base price with option modifiers
+  let baseTotal = product.base_price;
   product.config_options?.forEach(option => {
     const selectedValueId = selectedOptions[option.id];
     const selectedValue = option.option_values?.find(v => v.id === selectedValueId);
-    
     if (selectedValue) {
-      total += selectedValue.price_modifier;
+      baseTotal += selectedValue.price_modifier;
     }
   });
   
-  return total;
+  // Apply dynamic pricing rules
+  const finalPrice = await pricingEngine.calculatePrice(
+    baseTotal,
+    selectedOptions,
+    quantity,
+    customerSegment
+  );
+  
+  return {
+    basePrice: baseTotal,
+    finalPrice: finalPrice,
+    discountApplied: baseTotal - finalPrice,
+    appliedRules: pricingEngine.getAppliedRules()
+  };
 };
 ```
 

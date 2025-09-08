@@ -1,6 +1,6 @@
-# Contributing to ConfigureMax
+# Contributing to Open Configurator
 
-We love your input! We want to make contributing to ConfigureMax as easy and transparent as possible, whether it's:
+We love your input! We want to make contributing to Open Configurator as easy and transparent as possible, whether it's:
 
 - Reporting a bug
 - Discussing the current state of the code
@@ -59,17 +59,28 @@ We use GitHub issues to track public bugs. Report a bug by [opening a new issue]
 
 ### Project Structure
 ```
-configuremax/
+open-configurator/
 ├── src/
 │   ├── components/          # React components
 │   │   ├── ui/             # Reusable UI components (shadcn/ui)
-│   │   └── ...             # Feature-specific components
+│   │   ├── Navigation.tsx  # Multi-page navigation
+│   │   ├── ProductConfigurator.tsx  # Main configuration interface
+│   │   ├── Product3DVisualization.tsx  # 3D model viewer
+│   │   ├── RecommendationEngine.tsx    # AI-powered recommendations
+│   │   ├── ConfigurationComparison.tsx # Side-by-side comparison
+│   │   └── ...             # Other feature-specific components
 │   ├── hooks/              # Custom React hooks
-│   ├── pages/              # Route components
+│   │   ├── useProducts.ts  # Product data management
+│   │   └── useInventoryCheck.ts  # Real-time inventory
+│   ├── services/           # Business logic engines
+│   │   ├── ruleEngine.ts   # Business rule validation
+│   │   ├── pricingEngine.ts # Dynamic pricing calculations
+│   │   └── analyticsTracker.ts # User behavior tracking
+│   ├── pages/              # Route components (Home, Features, Products)
 │   ├── lib/                # Utility functions
 │   └── integrations/       # External service integrations
 ├── supabase/
-│   ├── migrations/         # Database migrations
+│   ├── migrations/         # Database migrations with advanced schema
 │   └── config.toml        # Supabase configuration
 └── docs/                  # Documentation
 ```
@@ -86,6 +97,9 @@ configuremax/
 - Prefer composition over inheritance
 - Keep components small and focused
 - Use proper prop types
+- Leverage the advanced engines (Rule Engine, Pricing Engine)
+- Implement proper 3D rendering optimization
+- Follow analytics tracking patterns
 
 ### Styling
 - Use Tailwind CSS classes
@@ -101,9 +115,11 @@ configuremax/
 
 ### Example Component
 ```tsx
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
+import { RuleEngine } from '@/services/ruleEngine';
+import { analyticsTracker } from '@/services/analyticsTracker';
 
 interface ProductCardProps {
   product: Product;
@@ -112,11 +128,24 @@ interface ProductCardProps {
 
 export const ProductCard = ({ product, onSelect }: ProductCardProps) => {
   const [isLoading, setIsLoading] = useState(false);
+  const [ruleEngine] = useState(() => new RuleEngine());
+
+  useEffect(() => {
+    // Track card view
+    analyticsTracker.trackProductView(product.id);
+  }, [product.id]);
 
   const handleSelect = async () => {
     setIsLoading(true);
     try {
-      await onSelect(product.id);
+      // Validate product availability with rule engine
+      await ruleEngine.loadRules(product.id);
+      const isAvailable = await ruleEngine.validateProductAvailability(product.id);
+      
+      if (isAvailable) {
+        analyticsTracker.trackProductSelection(product.id);
+        await onSelect(product.id);
+      }
     } finally {
       setIsLoading(false);
     }
@@ -128,60 +157,94 @@ export const ProductCard = ({ product, onSelect }: ProductCardProps) => {
         src={product.image_url} 
         alt={product.name}
         className="w-full h-48 object-cover rounded-t-lg"
+        loading="lazy"
       />
       <div className="p-6 space-y-4">
         <h3 className="text-xl font-semibold">{product.name}</h3>
         <p className="text-muted-foreground">{product.description}</p>
-        <Button 
-          onClick={handleSelect}
-          disabled={isLoading}
-          className="w-full"
-        >
-          {isLoading ? 'Loading...' : 'Configure Product'}
-        </Button>
+        <div className="flex items-center justify-between">
+          <span className="text-2xl font-bold bg-gradient-primary bg-clip-text text-transparent">
+            ${product.base_price.toLocaleString()}
+          </span>
+          <Button 
+            onClick={handleSelect}
+            disabled={isLoading}
+            className="bg-gradient-primary hover:shadow-glow transition-all duration-300"
+          >
+            {isLoading ? 'Loading...' : 'Configure Product'}
+          </Button>
+        </div>
       </div>
     </Card>
   );
 };
 ```
 
-## Database Conventions
+### Database Conventions
 
 ### Tables
 - Use snake_case for table and column names
 - Include `id`, `created_at`, `updated_at` on all tables
 - Use UUIDs for primary keys
 - Enable Row Level Security (RLS) on all tables
+- Include analytics tracking fields where appropriate
+- Design for 3D model associations and rule definitions
 
 ### Migrations
 - Create descriptive migration names
 - Include both up and down migrations
 - Test migrations on sample data
 - Document any breaking changes
+- Consider impact on rule engine and pricing engine
 
 ### Example Migration
 ```sql
--- Add new feature configuration table
-CREATE TABLE IF NOT EXISTS public.feature_configs (
+-- Add advanced analytics table for user behavior tracking
+CREATE TABLE IF NOT EXISTS public.analytics_sessions (
   id UUID NOT NULL DEFAULT gen_random_uuid() PRIMARY KEY,
   product_id UUID REFERENCES public.products(id) ON DELETE CASCADE,
-  feature_name TEXT NOT NULL,
-  is_enabled BOOLEAN NOT NULL DEFAULT false,
-  configuration JSONB,
+  session_start TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
+  session_end TIMESTAMP WITH TIME ZONE,
+  total_interactions INTEGER NOT NULL DEFAULT 0,
+  final_price DECIMAL(10,2),
+  configuration_completed BOOLEAN NOT NULL DEFAULT false,
+  conversion_achieved BOOLEAN NOT NULL DEFAULT false,
+  session_data JSONB,
+  created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now()
+);
+
+-- Enable RLS
+ALTER TABLE public.analytics_sessions ENABLE ROW LEVEL SECURITY;
+
+-- Create policies for analytics data
+CREATE POLICY "Analytics sessions are viewable by everyone" 
+  ON public.analytics_sessions FOR SELECT 
+  USING (true);
+
+CREATE POLICY "Analytics sessions can be created by everyone" 
+  ON public.analytics_sessions FOR INSERT 
+  WITH CHECK (true);
+
+-- Add indexes for performance
+CREATE INDEX idx_analytics_sessions_product_id ON public.analytics_sessions(product_id);
+CREATE INDEX idx_analytics_sessions_date ON public.analytics_sessions(session_start);
+
+-- Add 3D model configuration table
+CREATE TABLE IF NOT EXISTS public.product_3d_models (
+  id UUID NOT NULL DEFAULT gen_random_uuid() PRIMARY KEY,
+  product_id UUID REFERENCES public.products(id) ON DELETE CASCADE,
+  model_url TEXT NOT NULL,
+  model_type TEXT NOT NULL DEFAULT 'gltf',
+  configuration_mappings JSONB,
+  is_active BOOLEAN NOT NULL DEFAULT true,
   created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
   updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now()
 );
 
--- Enable RLS
-ALTER TABLE public.feature_configs ENABLE ROW LEVEL SECURITY;
-
--- Create policies
-CREATE POLICY "Feature configs are viewable by everyone" 
-  ON public.feature_configs FOR SELECT 
+ALTER TABLE public.product_3d_models ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "3D models are viewable by everyone" 
+  ON public.product_3d_models FOR SELECT 
   USING (true);
-
--- Add indexes for performance
-CREATE INDEX idx_feature_configs_product_id ON public.feature_configs(product_id);
 ```
 
 ## Testing
@@ -238,16 +301,39 @@ describe('ProductCard', () => {
 1. Update the database schema in `supabase/migrations/`
 2. Update TypeScript types in `src/integrations/supabase/types.ts`
 3. Add UI components for the new option type
-4. Update the configurator logic
-5. Add tests
-6. Update documentation
+4. Update the configurator logic and rule engine
+5. Add 3D visualization support if applicable
+6. Update pricing engine calculations
+7. Add analytics tracking for the new option type
+8. Add tests
+9. Update documentation
 
-### Adding New Product Categories
+### Adding New Advanced Engine Rules
 
-1. Create database entries for the new category
-2. Add appropriate sample products
-3. Update any category-specific UI logic
-4. Test the full user flow
+1. Define rule logic in the appropriate engine (`ruleEngine.ts` or `pricingEngine.ts`)
+2. Create database entries for rule definitions
+3. Add UI for rule management (admin interface)
+4. Test rule validation and application
+5. Add analytics tracking for rule applications
+6. Document the new rule types
+
+### Adding New 3D Visualization Features
+
+1. Update the `Product3DVisualization.tsx` component
+2. Add new 3D model loading capabilities
+3. Implement configuration-to-3D mapping logic
+4. Optimize performance for new visualization features
+5. Add user interaction tracking
+6. Test across different devices and browsers
+
+### Adding New Analytics Features
+
+1. Update the `analyticsTracker.ts` service
+2. Define new event types and data structures
+3. Update database schema for new analytics data
+4. Add visualization components for new metrics
+5. Implement proper data privacy measures
+6. Test analytics accuracy and performance
 
 ## Documentation
 
@@ -314,4 +400,4 @@ Contributors will be recognized in:
 - Release notes for significant contributions
 - Our community Discord server
 
-Thank you for contributing to ConfigureMax! 🚀
+Thank you for contributing to Open Configurator! 🚀
