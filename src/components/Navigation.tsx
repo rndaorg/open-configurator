@@ -23,7 +23,7 @@ export const Navigation = () => {
           <Link to="/" className="flex items-center space-x-2">
             <Settings className="h-8 w-8 text-primary" />
             <span className="text-xl font-bold bg-gradient-primary bg-clip-text text-transparent">
-              ConfigureMax
+              Open Configurator
             </span>
           </Link>
 
