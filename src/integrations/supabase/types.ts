@@ -309,8 +309,10 @@ export type Database = {
           created_at: string
           id: string
           product_id: string | null
+          session_id: string | null
           total_price: number
           updated_at: string
+          user_id: string | null
         }
         Insert: {
           configuration_data: Json
@@ -318,8 +320,10 @@ export type Database = {
           created_at?: string
           id?: string
           product_id?: string | null
+          session_id?: string | null
           total_price: number
           updated_at?: string
+          user_id?: string | null
         }
         Update: {
           configuration_data?: Json
@@ -327,8 +331,10 @@ export type Database = {
           created_at?: string
           id?: string
           product_id?: string | null
+          session_id?: string | null
           total_price?: number
           updated_at?: string
+          user_id?: string | null
         }
         Relationships: [
           {

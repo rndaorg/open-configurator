@@ -74,14 +74,27 @@ export const ProductConfigurator = ({ productId, onBack }: ProductConfiguratorPr
     
     setIsSaving(true);
     try {
+      // Get current user session
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      // Prepare configuration data with proper security columns
+      const configData: any = {
+        product_id: productId,
+        configuration_name: `${product.name} Configuration`,
+        total_price: totalPrice,
+        configuration_data: selectedOptions
+      };
+      
+      // Add user_id if authenticated, otherwise use session_id
+      if (user) {
+        configData.user_id = user.id;
+      } else {
+        configData.session_id = sessionId;
+      }
+      
       const { error } = await supabase
         .from('product_configurations')
-        .insert({
-          product_id: productId,
-          configuration_name: `${product.name} Configuration`,
-          total_price: totalPrice,
-          configuration_data: selectedOptions
-        });
+        .insert(configData);
       
       if (error) throw error;
       
