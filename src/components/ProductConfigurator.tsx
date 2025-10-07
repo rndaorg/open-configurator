@@ -1,10 +1,14 @@
 import { useState, useEffect } from 'react';
 import { useProductById } from '@/hooks/useProducts';
 import { RuleEngine } from '@/services/ruleEngine';
-import { PricingEngine } from '@/services/pricingEngine';
+import { PricingEngine, PricingResult } from '@/services/pricingEngine';
 import { Product3DVisualization } from '@/components/Product3DVisualization';
 import { RecommendationEngine } from '@/components/RecommendationEngine';
 import { ConfigurationComparison } from '@/components/ConfigurationComparison';
+import { PricingBreakdown } from '@/components/PricingBreakdown';
+import { InventoryStatus } from '@/components/InventoryStatus';
+import { RuleNotifications } from '@/components/RuleNotifications';
+import { QuantitySelector } from '@/components/QuantitySelector';
 import { analyticsTracker } from '@/services/analyticsTracker';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -26,7 +30,9 @@ interface SelectedOptions {
 export const ProductConfigurator = ({ productId, onBack }: ProductConfiguratorProps) => {
   const { data: product, isLoading } = useProductById(productId);
   const [selectedOptions, setSelectedOptions] = useState<SelectedOptions>({});
-  const [totalPrice, setTotalPrice] = useState(0);
+  const [quantity, setQuantity] = useState(1);
+  const [pricingResult, setPricingResult] = useState<PricingResult | null>(null);
+  const [ruleNotifications, setRuleNotifications] = useState<any[]>([]);
   const [isSaving, setIsSaving] = useState(false);
   const [ruleEngine] = useState(() => new RuleEngine());
   const [pricingEngine] = useState(() => new PricingEngine());
@@ -42,25 +48,57 @@ export const ProductConfigurator = ({ productId, onBack }: ProductConfiguratorPr
     }
   }, [product, productId]);
 
-  // Calculate total price when selections change
+  // Calculate pricing and apply rules when selections or quantity change
   useEffect(() => {
     if (!product) return;
     
-    let price = product.base_price;
+    // Apply configuration rules
+    const ruleResult = ruleEngine.applyRules(selectedOptions, product);
     
-    // Add price modifiers from selected options
-    Object.values(selectedOptions).forEach(valueId => {
-      const optionValue = product.config_options
-        ?.flatMap(option => option.option_values)
-        ?.find(value => value.id === valueId);
-      
-      if (optionValue) {
-        price += optionValue.price_modifier;
-      }
+    // Generate rule notifications
+    const notifications: any[] = [];
+    
+    if (ruleResult.restrictions.length > 0) {
+      ruleResult.restrictions.forEach(restriction => {
+        notifications.push({
+          type: 'restriction',
+          message: restriction
+        });
+      });
+    }
+    
+    if (Object.keys(ruleResult.autoSelections).length > 0) {
+      Object.entries(ruleResult.autoSelections).forEach(([optionId, valueId]) => {
+        notifications.push({
+          type: 'auto_select',
+          message: 'Smart recommendation available based on your selections',
+          optionId,
+          valueId
+        });
+      });
+    }
+    
+    setRuleNotifications(notifications);
+    
+    // Calculate pricing with all discounts and rules
+    const pricing = pricingEngine.calculatePrice({
+      basePrice: product.base_price,
+      selectedOptions,
+      quantity,
+      product
     });
     
-    setTotalPrice(price);
-  }, [selectedOptions, product]);
+    // Add rule-based price modifiers
+    if (ruleResult.priceModifiers !== 0) {
+      pricing.finalPrice += ruleResult.priceModifiers;
+      pricing.breakdown.push({
+        item: 'Configuration Rules Adjustment',
+        price: ruleResult.priceModifiers
+      });
+    }
+    
+    setPricingResult(pricing);
+  }, [selectedOptions, quantity, product, ruleEngine, pricingEngine]);
 
   const handleOptionSelect = (optionId: string, valueId: string) => {
     setSelectedOptions(prev => ({
@@ -81,8 +119,12 @@ export const ProductConfigurator = ({ productId, onBack }: ProductConfiguratorPr
       const configData: any = {
         product_id: productId,
         configuration_name: `${product.name} Configuration`,
-        total_price: totalPrice,
-        configuration_data: selectedOptions
+        total_price: pricingResult?.finalPrice || 0,
+        configuration_data: {
+          ...selectedOptions,
+          quantity,
+          pricing: pricingResult
+        }
       };
       
       // Add user_id if authenticated, otherwise use session_id
@@ -158,10 +200,15 @@ export const ProductConfigurator = ({ productId, onBack }: ProductConfiguratorPr
             
             <div className="flex items-center gap-4">
               <div className="text-right">
-                <p className="text-sm text-muted-foreground">Total Price</p>
+                <p className="text-sm text-muted-foreground">Final Price</p>
                 <p className="text-2xl font-bold bg-gradient-primary bg-clip-text text-transparent">
-                  ${totalPrice.toLocaleString()}
+                  ${pricingResult?.finalPrice.toLocaleString() || '0'}
                 </p>
+                {pricingResult && pricingResult.discounts.length > 0 && (
+                  <p className="text-xs text-accent">
+                    Save ${(pricingResult.originalPrice - pricingResult.finalPrice).toLocaleString()}
+                  </p>
+                )}
               </div>
             </div>
           </div>
@@ -192,6 +239,20 @@ export const ProductConfigurator = ({ productId, onBack }: ProductConfiguratorPr
 
           {/* Configuration Options */}
           <div className="space-y-6">
+            {/* Rule Notifications */}
+            {ruleNotifications.length > 0 && (
+              <RuleNotifications
+                notifications={ruleNotifications}
+                onApplyAutoSelection={handleOptionSelect}
+              />
+            )}
+
+            {/* Quantity Selector */}
+            <QuantitySelector
+              quantity={quantity}
+              onQuantityChange={setQuantity}
+            />
+
             {configOptions.length === 0 ? (
               <Card className="glass-card p-8 text-center">
                 <p className="text-muted-foreground">No configuration options available for this product.</p>
@@ -199,108 +260,117 @@ export const ProductConfigurator = ({ productId, onBack }: ProductConfiguratorPr
             ) : (
               configOptions
                 .sort((a, b) => a.display_order - b.display_order)
-                .map((option) => (
-                  <Card key={option.id} className="glass-card p-6">
-                    <div className="space-y-4">
-                      <div className="flex items-center justify-between">
-                        <h3 className="text-lg font-semibold">{option.name}</h3>
-                        {option.is_required && (
-                          <Badge variant="destructive" className="text-xs">
-                            Required
-                          </Badge>
-                        )}
-                      </div>
-                      
-                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                        {option.option_values
-                          ?.filter(value => value.is_available)
-                          ?.sort((a, b) => a.display_order - b.display_order)
-                          ?.map((value) => {
-                            const isSelected = selectedOptions[option.id] === value.id;
-                            const hasUpcharge = value.price_modifier > 0;
-                            
-                            return (
-                              <button
-                                key={value.id}
-                                onClick={() => handleOptionSelect(option.id, value.id)}
-                                className={`p-4 rounded-lg border-2 transition-all duration-300 text-left ${
-                                  isSelected
-                                    ? 'border-primary bg-gradient-glass shadow-glow'
-                                    : 'border-border hover:border-primary/50 hover:bg-muted/50'
-                                }`}
-                              >
-                                {value.hex_color && (
-                                  <div
-                                    className="w-6 h-6 rounded-full mb-2 border border-border"
-                                    style={{ backgroundColor: value.hex_color }}
-                                  />
-                                )}
-                                {value.image_url && (
-                                  <img
-                                    src={value.image_url}
-                                    alt={value.name}
-                                    className="w-full h-16 object-cover rounded mb-2"
-                                  />
-                                )}
-                                <div className="space-y-1">
-                                  <p className="font-medium text-sm">{value.name}</p>
-                                  {hasUpcharge && (
-                                    <p className="text-xs text-accent">
-                                      +${value.price_modifier.toLocaleString()}
-                                    </p>
+                .map((option) => {
+                  const availableValues = ruleEngine.getAvailableOptions(selectedOptions, product, option.id);
+                  
+                  return (
+                    <Card key={option.id} className="glass-card p-6">
+                      <div className="space-y-4">
+                        <div className="flex items-center justify-between">
+                          <h3 className="text-lg font-semibold">{option.name}</h3>
+                          {option.is_required && (
+                            <Badge variant="destructive" className="text-xs">
+                              Required
+                            </Badge>
+                          )}
+                        </div>
+                        
+                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                          {option.option_values
+                            ?.filter(value => value.is_available)
+                            ?.sort((a, b) => a.display_order - b.display_order)
+                            ?.map((value) => {
+                              const isSelected = selectedOptions[option.id] === value.id;
+                              const hasUpcharge = value.price_modifier > 0;
+                              const isRestricted = availableValues.length > 0 && !availableValues.includes(value.id);
+                              
+                              return (
+                                <button
+                                  key={value.id}
+                                  onClick={() => !isRestricted && handleOptionSelect(option.id, value.id)}
+                                  disabled={isRestricted}
+                                  className={`p-4 rounded-lg border-2 transition-all duration-300 text-left ${
+                                    isSelected
+                                      ? 'border-primary bg-gradient-glass shadow-glow'
+                                      : isRestricted
+                                      ? 'border-border bg-muted/20 opacity-50 cursor-not-allowed'
+                                      : 'border-border hover:border-primary/50 hover:bg-muted/50'
+                                  }`}
+                                >
+                                  {value.hex_color && (
+                                    <div
+                                      className="w-6 h-6 rounded-full mb-2 border border-border"
+                                      style={{ backgroundColor: value.hex_color }}
+                                    />
                                   )}
-                                </div>
-                              </button>
-                            );
-                          })}
+                                  {value.image_url && (
+                                    <img
+                                      src={value.image_url}
+                                      alt={value.name}
+                                      className="w-full h-16 object-cover rounded mb-2"
+                                    />
+                                  )}
+                                  <div className="space-y-1">
+                                    <p className="font-medium text-sm">{value.name}</p>
+                                    {hasUpcharge && !isRestricted && (
+                                      <p className="text-xs text-accent">
+                                        +${value.price_modifier.toLocaleString()}
+                                      </p>
+                                    )}
+                                    {isRestricted && (
+                                      <p className="text-xs text-destructive">Not available</p>
+                                    )}
+                                  </div>
+                                  {!isRestricted && <InventoryStatus optionValueId={value.id} />}
+                                </button>
+                              );
+                            })}
+                        </div>
                       </div>
-                    </div>
-                  </Card>
-                ))
+                    </Card>
+                  );
+                })
+            )}
+            
+            {/* Pricing Breakdown */}
+            {pricingResult && (
+              <PricingBreakdown
+                pricingResult={pricingResult}
+                quantity={quantity}
+              />
             )}
             
             {/* Action Buttons */}
             <div className="space-y-4">
-              <Card className="glass-card p-6">
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <span className="text-lg font-semibold">Configuration Total</span>
-                    <span className="text-2xl font-bold bg-gradient-primary bg-clip-text text-transparent">
-                      ${totalPrice.toLocaleString()}
-                    </span>
-                  </div>
-                  
-                  <div className="flex gap-3">
-                    <Button
-                      onClick={handleSaveConfiguration}
-                      disabled={isSaving}
-                      variant="outline"
-                      className="flex-1"
-                    >
-                      {isSaving ? (
-                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                      ) : (
-                        <Save className="w-4 h-4 mr-2" />
-                      )}
-                      Save Config
-                    </Button>
-                    
-                    <Button
-                      disabled={!isConfigurationComplete}
-                      className="flex-1 bg-gradient-primary hover:shadow-glow transition-all duration-300"
-                    >
-                      <ShoppingCart className="w-4 h-4 mr-2" />
-                      Add to Cart
-                    </Button>
-                  </div>
-                  
-                  {!isConfigurationComplete && (
-                    <p className="text-sm text-muted-foreground text-center">
-                      Please complete all required options to proceed
-                    </p>
+              <div className="flex gap-3">
+                <Button
+                  onClick={handleSaveConfiguration}
+                  disabled={isSaving}
+                  variant="outline"
+                  className="flex-1"
+                >
+                  {isSaving ? (
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  ) : (
+                    <Save className="w-4 h-4 mr-2" />
                   )}
-                </div>
-              </Card>
+                  Save Config
+                </Button>
+                
+                <Button
+                  disabled={!isConfigurationComplete}
+                  className="flex-1 bg-gradient-primary hover:shadow-glow transition-all duration-300"
+                >
+                  <ShoppingCart className="w-4 h-4 mr-2" />
+                  Add to Cart
+                </Button>
+              </div>
+              
+              {!isConfigurationComplete && (
+                <p className="text-sm text-muted-foreground text-center">
+                  Please complete all required options to proceed
+                </p>
+              )}
             </div>
           </div>
 
@@ -319,7 +389,7 @@ export const ProductConfigurator = ({ productId, onBack }: ProductConfiguratorPr
               product={product}
               currentConfiguration={{
                 selectedOptions,
-                totalPrice
+                totalPrice: pricingResult?.finalPrice || 0
               }}
             />
           </div>
