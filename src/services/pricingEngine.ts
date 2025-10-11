@@ -140,7 +140,9 @@ export class PricingEngine {
     // Bundle conditions
     if (rule.rule_type === 'bundle') {
       const requiredOptions = conditions.required_options || [];
-      return requiredOptions.every((optionId: string) => 
+      // Ensure requiredOptions is an array before using .every()
+      const optionsArray = Array.isArray(requiredOptions) ? requiredOptions : [];
+      return optionsArray.every((optionId: string) => 
         context.selectedOptions[optionId]
       );
     }
