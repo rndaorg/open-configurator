@@ -10,6 +10,7 @@ import { InventoryStatus } from '@/components/InventoryStatus';
 import { RuleNotifications } from '@/components/RuleNotifications';
 import { QuantitySelector } from '@/components/QuantitySelector';
 import { analyticsTracker } from '@/services/analyticsTracker';
+import { safeValidateConfiguration } from '@/lib/validation';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -108,42 +109,65 @@ export const ProductConfigurator = ({ productId, onBack }: ProductConfiguratorPr
   };
 
   const handleSaveConfiguration = async () => {
-    if (!product) return;
+    if (!product || !pricingResult) return;
     
     setIsSaving(true);
     try {
-      // Get current user session
-      const { data: { user } } = await supabase.auth.getUser();
-      
-      // Prepare configuration data with proper security columns
-      const configData: any = {
+      // Validate input data
+      const configInput = {
         product_id: productId,
         configuration_name: `${product.name} Configuration`,
-        total_price: pricingResult?.finalPrice || 0,
-        configuration_data: {
-          ...selectedOptions,
-          quantity,
-          pricing: pricingResult
-        }
+        total_price: pricingResult.finalPrice,
+        quantity,
+        configuration_data: selectedOptions,
+        session_id: sessionId || undefined
       };
+
+      const validation = safeValidateConfiguration(configInput);
       
-      // Add user_id if authenticated, otherwise use session_id
-      if (user) {
-        configData.user_id = user.id;
-      } else {
-        configData.session_id = sessionId;
+      if (!validation.success) {
+        const errorMessages = Object.entries(validation.errors)
+          .map(([field, messages]) => `${field}: ${messages?.join(', ')}`)
+          .join('\n');
+        toast.error(errorMessages);
+        setIsSaving(false);
+        return;
+      }
+
+      // Get auth token
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      // Call server-side validation and save via Edge Function
+      const response = await supabase.functions.invoke('validate-and-save-configuration', {
+        body: {
+          productId,
+          selectedOptions,
+          quantity,
+          configurationName: `${product.name} Configuration`
+        },
+        headers: session?.access_token ? {
+          Authorization: `Bearer ${session.access_token}`
+        } : undefined
+      });
+
+      if (response.error) {
+        throw response.error;
+      }
+
+      if (response.data?.error) {
+        if (response.data.violations) {
+          toast.error(`Configuration invalid: ${response.data.violations.join(', ')}`);
+        } else {
+          toast.error(response.data.error);
+        }
+        setIsSaving(false);
+        return;
       }
       
-      const { error } = await supabase
-        .from('product_configurations')
-        .insert(configData);
-      
-      if (error) throw error;
-      
       toast.success('Configuration saved successfully!');
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error saving configuration:', error);
-      toast.error('Failed to save configuration');
+      toast.error(error.message || 'Failed to save configuration');
     } finally {
       setIsSaving(false);
     }

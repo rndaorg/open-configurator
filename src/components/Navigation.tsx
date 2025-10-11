@@ -1,11 +1,13 @@
 import { Link, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Settings, Menu, X } from 'lucide-react';
+import { Settings, Menu, X, LogOut, User } from 'lucide-react';
 import { useState } from 'react';
+import { useAuth } from '@/hooks/useAuth';
 
 export const Navigation = () => {
   const location = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { user, signOut } = useAuth();
 
   const navItems = [
     { path: '/', label: 'Home' },
@@ -53,9 +55,24 @@ export const Navigation = () => {
             >
               GitHub
             </Button>
-            <Button size="sm">
-              Get Started
-            </Button>
+            {user ? (
+              <>
+                <Button variant="outline" size="sm" asChild>
+                  <Link to="/auth">
+                    <User className="h-4 w-4 mr-2" />
+                    {user.email}
+                  </Link>
+                </Button>
+                <Button size="sm" variant="ghost" onClick={signOut}>
+                  <LogOut className="h-4 w-4 mr-2" />
+                  Sign Out
+                </Button>
+              </>
+            ) : (
+              <Button size="sm" asChild>
+                <Link to="/auth">Sign In</Link>
+              </Button>
+            )}
           </div>
 
           {/* Mobile menu button */}
@@ -93,9 +110,24 @@ export const Navigation = () => {
                 >
                   GitHub
                 </Button>
-                <Button size="sm">
-                  Get Started
-                </Button>
+                {user ? (
+                  <>
+                    <Button variant="outline" size="sm" asChild>
+                      <Link to="/auth">
+                        <User className="h-4 w-4 mr-2" />
+                        {user.email}
+                      </Link>
+                    </Button>
+                    <Button size="sm" variant="ghost" onClick={signOut}>
+                      <LogOut className="h-4 w-4 mr-2" />
+                      Sign Out
+                    </Button>
+                  </>
+                ) : (
+                  <Button size="sm" asChild>
+                    <Link to="/auth">Sign In</Link>
+                  </Button>
+                )}
               </div>
             </div>
           </div>

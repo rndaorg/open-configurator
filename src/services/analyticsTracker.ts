@@ -293,7 +293,7 @@ class AnalyticsTracker {
 
   // Generate unique session ID
   private generateSessionId(): string {
-    return `config_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    return crypto.randomUUID();
   }
 
   // Cleanup
