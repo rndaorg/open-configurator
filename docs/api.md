@@ -41,11 +41,80 @@ analyticsTracker.trackOptionSelection(productId, optionId, valueId);
 analyticsTracker.trackPriceCalculation(productId, finalPrice);
 ```
 
+## ⚠️ CRITICAL SECURITY WARNING
+
+**DO NOT USE IN PRODUCTION WITHOUT ADDRESSING THESE ISSUES**
+
+### Security Vulnerabilities
+
+The current implementation has critical security issues:
+
+1. **Exposed Business Logic**: `pricing_rules`, `configuration_rules`, and `inventory_levels` tables are publicly readable, exposing competitive pricing strategies and stock information.
+
+2. **Client-Side Security**: All rule validation and pricing calculations are performed client-side and can be bypassed.
+
+3. **No Input Validation**: Missing validation schemas for user inputs.
+
+4. **Weak Session IDs**: Predictable session identifiers allow unauthorized access.
+
+### Required Fixes Before Production
+
+1. **Implement Server-Side Validation**:
+   ```typescript
+   // Create Supabase Edge Function
+   // supabase/functions/validate-configuration/index.ts
+   export const validateConfiguration = async (req: Request) => {
+     const { productId, selectedOptions, quantity } = await req.json();
+     
+     // Server-side rule validation
+     const ruleEngine = new RuleEngine();
+     await ruleEngine.loadRules(productId);
+     const validation = await ruleEngine.validateConfiguration(selectedOptions);
+     
+     if (!validation.isValid) {
+       return new Response(JSON.stringify({ error: validation.violations }), {
+         status: 400
+       });
+     }
+     
+     // Server-side pricing calculation
+     const pricingEngine = new PricingEngine();
+     const finalPrice = await pricingEngine.calculatePrice(...);
+     
+     return new Response(JSON.stringify({ valid: true, finalPrice }));
+   };
+   ```
+
+2. **Restrict RLS Policies**:
+   ```sql
+   -- Make pricing rules admin-only
+   DROP POLICY IF EXISTS "Pricing rules are viewable by everyone" ON pricing_rules;
+   
+   CREATE POLICY "Pricing rules admin only"
+   ON pricing_rules FOR SELECT
+   TO authenticated
+   USING (auth.jwt() ->> 'role' = 'admin');
+   ```
+
+3. **Add Input Validation**:
+   ```typescript
+   import { z } from 'zod';
+   
+   const configurationSchema = z.object({
+     product_id: z.string().uuid(),
+     configuration_name: z.string().min(1).max(100).optional(),
+     total_price: z.number().positive(),
+     configuration_data: z.record(z.string().uuid(), z.string().uuid()),
+     quantity: z.number().int().positive().max(1000)
+   });
+   ```
+
 ## Authentication
 
-ConfigureMax supports both authenticated and anonymous operations:
-- **Public Operations**: Browse products, configure items, save configurations
-- **Admin Operations**: Manage products, categories, and options (requires authentication)
+Open Configurator supports both authenticated and anonymous operations:
+- **Public Operations**: Browse products, configure items (with server-side validation)
+- **Admin Operations**: Manage products, pricing rules, inventory (requires authentication)
+- **Note**: Currently NO authentication is implemented - this MUST be added for production
 
 ## Data Models
 

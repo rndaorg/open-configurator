@@ -160,13 +160,25 @@ open-configurator/
 - **Data-Driven Insights**: Advanced analytics reveal customer preferences and bottlenecks
 - **Future-Proof**: Extensible architecture supports growing business needs
 
+## ⚠️ Security Notice
+
+**IMPORTANT**: This is a demonstration/starter project with known security vulnerabilities. **DO NOT deploy to production** without implementing the security fixes outlined in our [Security Guide](docs/security.md).
+
+Key issues to address:
+- Exposed business logic (pricing rules, inventory)
+- Client-side security enforcement
+- Missing input validation
+- Weak session management
+
+See [Getting Started](docs/getting-started.md#critical-security-notice) for required fixes.
+
 ## 📚 Documentation
 
-- [Getting Started Guide](docs/getting-started.md)
-- [Configuration Options](docs/configuration.md)
-- [API Reference](docs/api.md)
-- [Deployment Guide](docs/deployment.md)
-- [Customization](docs/customization.md)
+- [Getting Started Guide](docs/getting-started.md) - Includes security warnings
+- [API Reference](docs/api.md) - With security considerations
+- [API Specification](docs/api-spec.md) - OpenAPI/Swagger spec
+- [Advanced Features](docs/advanced-features.md) - Security best practices
+- [Security Guide](docs/security.md) - Comprehensive security review
 
 ## 🤝 Contributing
 

@@ -380,12 +380,83 @@ if (isOutOfStock) {
 
 ## 🛡️ Security and Performance
 
-### Security Features
-- **Input Validation**: All user inputs validated through rule engine
+### ⚠️ CRITICAL SECURITY WARNINGS
+
+**The current implementation has MAJOR security vulnerabilities. DO NOT deploy to production without addressing:**
+
+#### 🔴 Critical Issues
+
+1. **Exposed Business Intelligence**
+   - Pricing rules, configuration rules, and inventory levels are publicly readable
+   - Anyone can scrape your pricing strategy, business rules, and stock levels
+   - **Impact**: Competitors gain access to your intellectual property
+
+2. **Client-Side Security Enforcement**
+   - Rule validation and pricing calculations happen in the browser
+   - Malicious users can bypass rules and set arbitrary prices
+   - **Impact**: Revenue loss, invalid orders, business logic bypass
+
+3. **No Input Validation**
+   - User inputs lack validation schemas
+   - Risk of data corruption and injection attacks
+   - **Impact**: Database corruption, potential security breaches
+
+4. **Weak Session Management**
+   - Session IDs use `Date.now() + Math.random()` (predictable)
+   - Attackers can access other users' anonymous configurations
+   - **Impact**: Privacy violation, unauthorized access
+
+#### ✅ Required Security Fixes
+
+**Before Production Deployment:**
+
+1. **Move to Server-Side Processing**
+   ```typescript
+   // Implement Supabase Edge Functions for:
+   // - Rule validation
+   // - Pricing calculation
+   // - Configuration validation
+   // - Inventory checking
+   ```
+
+2. **Restrict Database Access**
+   ```sql
+   -- Lock down sensitive tables
+   ALTER POLICY ON pricing_rules TO authenticated WITH ROLE admin;
+   ALTER POLICY ON configuration_rules TO authenticated WITH ROLE admin;
+   ALTER POLICY ON inventory_levels TO authenticated WITH ROLE admin;
+   ```
+
+3. **Implement Authentication**
+   - Add Supabase Auth
+   - Create admin role system
+   - Implement proper authorization checks
+
+4. **Add Input Validation**
+   ```typescript
+   // Use Zod for all inputs
+   import { z } from 'zod';
+   
+   const configSchema = z.object({
+     product_id: z.string().uuid(),
+     total_price: z.number().positive().max(1000000),
+     configuration_data: z.record(z.string().uuid(), z.string().uuid())
+   });
+   ```
+
+5. **Secure Session Management**
+   ```typescript
+   // Replace with:
+   const sessionId = crypto.randomUUID();
+   ```
+
+### Security Features (To Be Implemented)
+- **Input Validation**: Zod schemas for all user inputs
 - **XSS Protection**: Sanitized data handling
-- **Rate Limiting**: API call throttling
+- **Rate Limiting**: API call throttling via Edge Functions
 - **Audit Logging**: Complete action history
 - **Privacy Compliance**: GDPR-ready analytics
+- **Role-Based Access**: Admin vs. user permissions
 
 ### Performance Optimizations
 - **Lazy Loading**: 3D models and components loaded on demand

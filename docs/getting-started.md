@@ -191,6 +191,44 @@ Now that you have Open Configurator running with advanced features:
 - 💬 [Community Discord](https://discord.gg/configuremax)
 - 📧 [Email Support](mailto:support@configuremax.com)
 
+## ⚠️ CRITICAL SECURITY NOTICE
+
+**IMPORTANT**: The current implementation has several security vulnerabilities that MUST be addressed before production deployment:
+
+### 🔴 Critical Issues
+
+1. **Exposed Business Logic**: Pricing rules, configuration rules, and inventory levels are publicly readable, exposing your competitive pricing strategy and stock levels to anyone.
+
+2. **Client-Side Security Enforcement**: All rule validation and pricing calculations happen in the browser and can be bypassed by malicious users.
+
+3. **Missing Input Validation**: User inputs are not validated, risking data corruption or injection attacks.
+
+### ✅ Required Security Fixes
+
+Before going to production, you MUST:
+
+1. **Move Business Logic Server-Side**: 
+   - Create Supabase Edge Functions for rule validation and pricing
+   - Validate all configurations server-side before saving
+   
+2. **Restrict Database Access**:
+   - Implement admin-only policies for `pricing_rules`, `configuration_rules`, and `inventory_levels`
+   - Add proper authentication and authorization
+
+3. **Add Input Validation**:
+   - Implement Zod schemas for all user inputs
+   - Validate data before database insertion
+
+4. **Secure Session Management**:
+   - Replace predictable session IDs with crypto-secure UUIDs
+   - Implement proper session expiration
+
+### 📖 Security Resources
+
+- [Open Configurator Security Guide](./security.md)
+- [Supabase Security Best Practices](https://supabase.com/docs/guides/auth/row-level-security)
+- [OWASP Top 10](https://owasp.org/www-project-top-ten/)
+
 ## Common Issues
 
 ### Database Connection Issues
