@@ -41,80 +41,106 @@ analyticsTracker.trackOptionSelection(productId, optionId, valueId);
 analyticsTracker.trackPriceCalculation(productId, finalPrice);
 ```
 
-## ⚠️ CRITICAL SECURITY WARNING
+## 🔒 Security Features
 
-**DO NOT USE IN PRODUCTION WITHOUT ADDRESSING THESE ISSUES**
+Open Configurator implements comprehensive security measures:
 
-### Security Vulnerabilities
+### ✅ Implemented Security
 
-The current implementation has critical security issues:
+1. **Server-Side Validation**: All configurations are validated via Edge Function before saving
+2. **Role-Based Access Control**: Admin-only access to sensitive business data
+3. **Input Validation**: Zod schemas protect against injection and corruption
+4. **Secure Sessions**: Cryptographically secure session IDs
+5. **Row Level Security**: Database-level access control on all tables
 
-1. **Exposed Business Logic**: `pricing_rules`, `configuration_rules`, and `inventory_levels` tables are publicly readable, exposing competitive pricing strategies and stock information.
+### Server-Side Validation
 
-2. **Client-Side Security**: All rule validation and pricing calculations are performed client-side and can be bypassed.
+Configuration validation and pricing calculation is handled by the Edge Function:
 
-3. **No Input Validation**: Missing validation schemas for user inputs.
+```typescript
+// Call the Edge Function to validate and save
+const response = await fetch(
+  `${supabaseUrl}/functions/v1/validate-and-save-configuration`,
+  {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${supabaseAnonKey}`,
+    },
+    body: JSON.stringify({
+      productId: product.id,
+      selectedOptions,
+      quantity,
+      configurationName
+    })
+  }
+);
 
-4. **Weak Session IDs**: Predictable session identifiers allow unauthorized access.
+const result = await response.json();
+```
 
-### Required Fixes Before Production
+### Input Validation
 
-1. **Implement Server-Side Validation**:
-   ```typescript
-   // Create Supabase Edge Function
-   // supabase/functions/validate-configuration/index.ts
-   export const validateConfiguration = async (req: Request) => {
-     const { productId, selectedOptions, quantity } = await req.json();
-     
-     // Server-side rule validation
-     const ruleEngine = new RuleEngine();
-     await ruleEngine.loadRules(productId);
-     const validation = await ruleEngine.validateConfiguration(selectedOptions);
-     
-     if (!validation.isValid) {
-       return new Response(JSON.stringify({ error: validation.violations }), {
-         status: 400
-       });
-     }
-     
-     // Server-side pricing calculation
-     const pricingEngine = new PricingEngine();
-     const finalPrice = await pricingEngine.calculatePrice(...);
-     
-     return new Response(JSON.stringify({ valid: true, finalPrice }));
-   };
-   ```
+All user inputs are validated using Zod schemas:
 
-2. **Restrict RLS Policies**:
-   ```sql
-   -- Make pricing rules admin-only
-   DROP POLICY IF EXISTS "Pricing rules are viewable by everyone" ON pricing_rules;
-   
-   CREATE POLICY "Pricing rules admin only"
-   ON pricing_rules FOR SELECT
-   TO authenticated
-   USING (auth.jwt() ->> 'role' = 'admin');
-   ```
+```typescript
+import { configurationSchema, safeValidateConfiguration } from '@/lib/validation';
 
-3. **Add Input Validation**:
-   ```typescript
-   import { z } from 'zod';
-   
-   const configurationSchema = z.object({
-     product_id: z.string().uuid(),
-     configuration_name: z.string().min(1).max(100).optional(),
-     total_price: z.number().positive(),
-     configuration_data: z.record(z.string().uuid(), z.string().uuid()),
-     quantity: z.number().int().positive().max(1000)
-   });
-   ```
+// Validate configuration before saving
+const validation = safeValidateConfiguration({
+  product_id: productId,
+  configuration_name: name,
+  total_price: price,
+  configuration_data: options,
+  quantity: qty
+});
+
+if (!validation.success) {
+  // Handle validation errors
+  console.error(validation.errors);
+  return;
+}
+```
 
 ## Authentication
 
-Open Configurator supports both authenticated and anonymous operations:
-- **Public Operations**: Browse products, configure items (with server-side validation)
-- **Admin Operations**: Manage products, pricing rules, inventory (requires authentication)
-- **Note**: Currently NO authentication is implemented - this MUST be added for production
+Open Configurator implements Supabase Auth with role-based access control:
+
+### User Roles
+- **Admin**: Full access to products, pricing rules, configuration rules, and inventory management
+- **User**: Can save and manage their own configurations
+- **Anonymous**: Browse products and create temporary configurations with session IDs
+
+### Authentication Flow
+
+```typescript
+import { useAuth } from '@/hooks/useAuth';
+
+const { user, session, signIn, signUp, signOut } = useAuth();
+
+// Sign up new user
+await signUp(email, password);
+
+// Sign in existing user
+await signIn(email, password);
+
+// Check if user is authenticated
+if (user) {
+  console.log('User authenticated:', user.email);
+}
+```
+
+### Creating Admin Users
+
+To grant admin access to a user:
+
+```sql
+-- Replace with the user's email
+INSERT INTO user_roles (user_id, role)
+SELECT id, 'admin'::app_role
+FROM auth.users
+WHERE email = 'admin@example.com';
+```
 
 ## Data Models
 

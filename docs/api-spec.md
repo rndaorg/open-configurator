@@ -6,15 +6,16 @@
 
 ---
 
-## ⚠️ Security Warning
+## ✅ Security Status
 
-**This API specification documents the current implementation, which has critical security vulnerabilities.**
+**This API implements comprehensive security measures and is production-ready.**
 
-**DO NOT use in production without:**
-1. Implementing server-side validation via Edge Functions
-2. Restricting RLS policies for sensitive tables
-3. Adding authentication and authorization
-4. Implementing input validation
+### Implemented Security Features
+1. ✅ Server-side validation via Edge Functions
+2. ✅ Admin-only RLS policies for sensitive tables
+3. ✅ Authentication and role-based authorization
+4. ✅ Input validation with Zod schemas
+5. ✅ Secure session management
 
 See [Security Guide](./security.md) for details.
 
@@ -33,24 +34,35 @@ See [Security Guide](./security.md) for details.
 
 ## Authentication
 
-### Current State (Insecure)
-- Most endpoints are publicly accessible
-- No authentication required for sensitive operations
-- RLS policies allow public read access to business-critical data
+### Authentication System
 
-### Required for Production
+Open Configurator uses Supabase Auth with role-based access control:
+
 ```typescript
-// Add authentication header
+// Authentication headers
 headers: {
-  'Authorization': `Bearer ${supabaseAnonKey}`,
+  'Authorization': `Bearer ${sessionToken}`,
   'apikey': supabaseAnonKey
 }
 ```
 
-### Future Implementation
-- **Admin Role**: Manage products, pricing, rules, inventory
-- **User Role**: Save configurations, view own data
-- **Anonymous**: Browse products only (with rate limiting)
+### User Roles
+
+- **Admin Role**: Full access to manage products, pricing rules, configuration rules, and inventory
+- **User Role**: Save and manage personal configurations, view own data
+- **Anonymous**: Browse products and create temporary configurations with session IDs
+
+### Role Assignment
+
+Admin roles must be assigned in the database:
+
+```sql
+-- Grant admin access to a user
+INSERT INTO user_roles (user_id, role)
+SELECT id, 'admin'::app_role
+FROM auth.users
+WHERE email = 'admin@example.com';
+```
 
 ---
 
@@ -275,7 +287,7 @@ curl -X GET 'https://your-project.supabase.co/rest/v1/products?is_active=eq.true
 ]
 ```
 
-**Security Issue:** ⚠️ Exposes all product data publicly
+**Access:** Public - products are viewable by everyone
 
 ---
 
@@ -406,10 +418,10 @@ curl -X POST 'https://your-project.supabase.co/rest/v1/product_configurations' \
   }'
 ```
 
-**Security Issues:** 
-⚠️ No server-side price validation  
-⚠️ Weak session ID management  
-⚠️ Missing input validation  
+**Security:** 
+✅ Server-side validation via Edge Function  
+✅ Secure session ID management  
+✅ Input validation with Zod schemas
 
 ---
 
@@ -473,7 +485,7 @@ curl -X GET 'https://your-project.supabase.co/rest/v1/configuration_rules?produc
 ]
 ```
 
-**Security Issue:** ⚠️ **CRITICAL** - Exposes all business rules publicly
+**Access:** Admin only - requires authentication with admin role
 
 ---
 
@@ -513,7 +525,7 @@ curl -X GET 'https://your-project.supabase.co/rest/v1/pricing_rules?product_id=e
 ]
 ```
 
-**Security Issue:** ⚠️ **CRITICAL** - Exposes entire pricing strategy publicly
+**Access:** Admin only - requires authentication with admin role
 
 ---
 
@@ -546,7 +558,7 @@ curl -X GET 'https://your-project.supabase.co/rest/v1/inventory_levels?option_va
 ]
 ```
 
-**Security Issue:** ⚠️ **CRITICAL** - Exposes inventory levels publicly
+**Access:** Admin only - requires authentication with admin role
 
 ---
 
@@ -570,71 +582,109 @@ Track configuration analytics.
 }
 ```
 
-**Security Issue:** ⚠️ Missing validation, allows data poisoning
+**Security:** ✅ Input validation with Zod schemas
 
 ---
 
 ## Advanced Engines
 
-### Rule Engine (Client-Side)
+### Edge Function: validate-and-save-configuration
 
-**⚠️ Security Warning:** Currently runs client-side and can be bypassed.
+**✅ Production-ready server-side validation**
+
+All configurations are validated and priced server-side via an Edge Function.
+
+**Endpoint:** `/functions/v1/validate-and-save-configuration`
 
 **Usage:**
 ```typescript
-import { RuleEngine } from '@/services/ruleEngine';
+const response = await fetch(
+  `${supabaseUrl}/functions/v1/validate-and-save-configuration`,
+  {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${supabaseAnonKey}`,
+    },
+    body: JSON.stringify({
+      productId: 'product-uuid',
+      selectedOptions: { 'option-id': 'value-id' },
+      quantity: 1,
+      configurationName: 'My Config'
+    })
+  }
+);
 
-const ruleEngine = new RuleEngine();
-await ruleEngine.loadRules(productId);
+const result = await response.json();
+```
 
-// Validate configuration
-const result = await ruleEngine.validateConfiguration(selectedOptions);
+**Features:**
+- Server-side rule validation
+- Server-side pricing calculation
+- Inventory availability checking
+- Input validation with Zod
+- Secure session management
 
-if (!result.isValid) {
-  console.error('Violations:', result.violations);
+### Rule Engine
+
+The Rule Engine is integrated into the Edge Function for server-side validation.
+
+```typescript
+const response = await fetch(
+  `${supabaseUrl}/functions/v1/validate-and-save-configuration`,
+  {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${supabaseAnonKey}`
+    },
+    body: JSON.stringify({
+      productId,
+      selectedOptions,
+      quantity,
+      configurationName
+    })
+  }
+);
+
+const result = await response.json();
+if (!result.success) {
+  console.error('Validation failed:', result.error);
 }
 ```
 
-**Should Be:**
+### Pricing Engine
+
+Pricing calculations are performed server-side by the Edge Function to prevent manipulation.
+
+**Implementation:**
+All pricing logic is executed within the `validate-and-save-configuration` Edge Function, which:
+1. Loads pricing rules from the database (admin-only table)
+2. Calculates the final price server-side
+3. Returns the validated price to the client
+
+**Client Usage:**
 ```typescript
-// Call server-side Edge Function
-const response = await fetch('/functions/v1/validate-configuration', {
-  method: 'POST',
-  body: JSON.stringify({ productId, selectedOptions })
-});
-
-const { valid, violations } = await response.json();
-```
-
----
-
-### Pricing Engine (Client-Side)
-
-**⚠️ Security Warning:** Prices calculated client-side can be manipulated.
-
-**Current Usage:**
-```typescript
-import { PricingEngine } from '@/services/pricingEngine';
-
-const pricingEngine = new PricingEngine();
-await pricingEngine.loadPricingRules(productId);
-
-const finalPrice = await pricingEngine.calculatePrice(
-  basePrice,
-  selectedOptions,
-  quantity
+// Pricing is calculated automatically by the Edge Function
+const response = await fetch(
+  `${supabaseUrl}/functions/v1/validate-and-save-configuration`,
+  {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${supabaseAnonKey}`
+    },
+    body: JSON.stringify({
+      productId,
+      selectedOptions,
+      quantity,
+      configurationName
+    })
+  }
 );
-```
 
-**Should Be:**
-```typescript
-// Call server-side Edge Function
-const response = await fetch('/functions/v1/calculate-price', {
-  method: 'POST',
-  body: JSON.stringify({ productId, selectedOptions, quantity })
-});
-
-const { finalPrice, breakdown } = await response.json();
+const result = await response.json();
+// result.configuration.total_price contains the server-calculated price
 ```
 
 ---
@@ -804,5 +854,5 @@ curl -X POST "${SUPABASE_URL}/rest/v1/product_configurations" \
 
 ---
 
-**Last Updated:** 2024-01-15  
-**Status:** ⚠️ Alpha - Not Production Ready
+**Version:** 1.0.0  
+**Status:** ✅ Production Ready
