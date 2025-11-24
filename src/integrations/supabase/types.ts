@@ -246,6 +246,57 @@ export type Database = {
           },
         ]
       }
+      orders: {
+        Row: {
+          configuration_data: Json
+          configuration_id: string | null
+          created_at: string
+          id: string
+          product_id: string | null
+          status: string
+          total_price: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          configuration_data: Json
+          configuration_id?: string | null
+          created_at?: string
+          id?: string
+          product_id?: string | null
+          status?: string
+          total_price: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          configuration_data?: Json
+          configuration_id?: string | null
+          created_at?: string
+          id?: string
+          product_id?: string | null
+          status?: string
+          total_price?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "orders_configuration_id_fkey"
+            columns: ["configuration_id"]
+            isOneToOne: false
+            referencedRelation: "product_configurations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "orders_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       pricing_rules: {
         Row: {
           conditions: Json

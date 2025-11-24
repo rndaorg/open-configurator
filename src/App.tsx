@@ -7,7 +7,9 @@ import Home from "./pages/Home";
 import Features from "./pages/Features";
 import Products from "./pages/Products";
 import Auth from "./pages/Auth";
+import Profile from "./pages/Profile";
 import NotFound from "./pages/NotFound";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 const queryClient = new QueryClient();
 
@@ -22,6 +24,14 @@ const App = () => (
           <Route path="/features" element={<Features />} />
           <Route path="/products" element={<Products />} />
           <Route path="/auth" element={<Auth />} />
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <Profile />
+              </ProtectedRoute>
+            }
+          />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
