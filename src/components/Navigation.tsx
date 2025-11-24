@@ -58,9 +58,9 @@ export const Navigation = () => {
             {user ? (
               <>
                 <Button variant="outline" size="sm" asChild>
-                  <Link to="/auth">
+                  <Link to="/profile">
                     <User className="h-4 w-4 mr-2" />
-                    {user.email}
+                    Profile
                   </Link>
                 </Button>
                 <Button size="sm" variant="ghost" onClick={signOut}>
@@ -113,9 +113,9 @@ export const Navigation = () => {
                 {user ? (
                   <>
                     <Button variant="outline" size="sm" asChild>
-                      <Link to="/auth">
+                      <Link to="/profile">
                         <User className="h-4 w-4 mr-2" />
-                        {user.email}
+                        Profile
                       </Link>
                     </Button>
                     <Button size="sm" variant="ghost" onClick={signOut}>

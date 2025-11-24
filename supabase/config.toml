@@ -2,3 +2,6 @@ project_id = "yyhowfledpcmdjxrpeel"
 
 [functions.validate-and-save-configuration]
 verify_jwt = false
+
+[functions.personalized-recommendations]
+verify_jwt = false
