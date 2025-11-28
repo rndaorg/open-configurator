@@ -12,6 +12,14 @@ import Cart from "./pages/Cart";
 import Checkout from "./pages/Checkout";
 import NotFound from "./pages/NotFound";
 import ProtectedRoute from "./components/ProtectedRoute";
+import AdminRoute from "./components/AdminRoute";
+import AdminLayout from "./components/AdminLayout";
+import AdminDashboard from "./pages/admin/Dashboard";
+import AdminProducts from "./pages/admin/Products";
+import AdminCategories from "./pages/admin/Categories";
+import AdminConfigOptions from "./pages/admin/ConfigOptions";
+import AdminPricingRules from "./pages/admin/PricingRules";
+import AdminOrders from "./pages/admin/Orders";
 
 const queryClient = new QueryClient();
 
@@ -43,6 +51,21 @@ const App = () => (
               </ProtectedRoute>
             }
           />
+          <Route
+            path="/admin"
+            element={
+              <AdminRoute>
+                <AdminLayout />
+              </AdminRoute>
+            }
+          >
+            <Route index element={<AdminDashboard />} />
+            <Route path="products" element={<AdminProducts />} />
+            <Route path="categories" element={<AdminCategories />} />
+            <Route path="config-options" element={<AdminConfigOptions />} />
+            <Route path="pricing-rules" element={<AdminPricingRules />} />
+            <Route path="orders" element={<AdminOrders />} />
+          </Route>
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
