@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useProductById } from '@/hooks/useProducts';
+import { useCart } from '@/contexts/CartContext';
 import { RuleEngine } from '@/services/ruleEngine';
 import { PricingEngine, PricingResult } from '@/services/pricingEngine';
 import { Product3DVisualization } from '@/components/Product3DVisualization';
@@ -30,6 +31,7 @@ interface SelectedOptions {
 
 export const ProductConfigurator = ({ productId, onBack }: ProductConfiguratorProps) => {
   const { data: product, isLoading } = useProductById(productId);
+  const { addItem } = useCart();
   const [selectedOptions, setSelectedOptions] = useState<SelectedOptions>({});
   const [quantity, setQuantity] = useState(1);
   const [pricingResult, setPricingResult] = useState<PricingResult | null>(null);
@@ -106,6 +108,34 @@ export const ProductConfigurator = ({ productId, onBack }: ProductConfiguratorPr
       ...prev,
       [optionId]: valueId
     }));
+  };
+
+  const handleAddToCart = () => {
+    if (!product || !pricingResult) return;
+    
+    // Get configuration display names
+    const configurationDisplay: Record<string, string> = {};
+    configOptions.forEach(option => {
+      if (selectedOptions[option.id]) {
+        const selectedValue = option.option_values?.find(
+          v => v.id === selectedOptions[option.id]
+        );
+        if (selectedValue) {
+          configurationDisplay[option.name] = selectedValue.name;
+        }
+      }
+    });
+
+    addItem({
+      productId,
+      productName: product.name,
+      productImage: product.image_url,
+      basePrice: product.base_price,
+      configuration: selectedOptions,
+      configurationDisplay,
+      totalPrice: pricingResult.finalPrice,
+      quantity,
+    });
   };
 
   const handleSaveConfiguration = async () => {
@@ -384,6 +414,7 @@ export const ProductConfigurator = ({ productId, onBack }: ProductConfiguratorPr
                 <Button
                   disabled={!isConfigurationComplete}
                   className="flex-1 bg-gradient-primary hover:shadow-glow transition-all duration-300"
+                  onClick={handleAddToCart}
                 >
                   <ShoppingCart className="w-4 h-4 mr-2" />
                   Add to Cart

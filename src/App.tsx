@@ -8,6 +8,8 @@ import Features from "./pages/Features";
 import Products from "./pages/Products";
 import Auth from "./pages/Auth";
 import Profile from "./pages/Profile";
+import Cart from "./pages/Cart";
+import Checkout from "./pages/Checkout";
 import NotFound from "./pages/NotFound";
 import ProtectedRoute from "./components/ProtectedRoute";
 
@@ -24,6 +26,15 @@ const App = () => (
           <Route path="/features" element={<Features />} />
           <Route path="/products" element={<Products />} />
           <Route path="/auth" element={<Auth />} />
+          <Route path="/cart" element={<Cart />} />
+          <Route
+            path="/checkout"
+            element={
+              <ProtectedRoute>
+                <Checkout />
+              </ProtectedRoute>
+            }
+          />
           <Route
             path="/profile"
             element={

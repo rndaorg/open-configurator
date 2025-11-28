@@ -1,13 +1,16 @@
 import { Link, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Settings, Menu, X, LogOut, User } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { Settings, Menu, X, LogOut, User, ShoppingCart } from 'lucide-react';
 import { useState } from 'react';
 import { useAuth } from '@/hooks/useAuth';
+import { useCart } from '@/contexts/CartContext';
 
 export const Navigation = () => {
   const location = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { user, signOut } = useAuth();
+  const { itemCount } = useCart();
 
   const navItems = [
     { path: '/', label: 'Home' },
@@ -48,6 +51,16 @@ export const Navigation = () => {
 
           {/* Desktop CTA */}
           <div className="hidden md:flex items-center space-x-4">
+            <Button variant="ghost" size="sm" className="relative" asChild>
+              <Link to="/cart">
+                <ShoppingCart className="h-5 w-5" />
+                {itemCount > 0 && (
+                  <Badge className="absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center p-0 text-xs">
+                    {itemCount}
+                  </Badge>
+                )}
+              </Link>
+            </Button>
             <Button
               variant="outline"
               size="sm"
@@ -103,6 +116,17 @@ export const Navigation = () => {
                 </Link>
               ))}
               <div className="flex flex-col space-y-2 pt-4">
+                <Button variant="outline" size="sm" className="relative" asChild>
+                  <Link to="/cart">
+                    <ShoppingCart className="h-4 w-4 mr-2" />
+                    Cart
+                    {itemCount > 0 && (
+                      <Badge className="ml-2 h-5 w-5 flex items-center justify-center p-0 text-xs">
+                        {itemCount}
+                      </Badge>
+                    )}
+                  </Link>
+                </Button>
                 <Button
                   variant="outline"
                   size="sm"
