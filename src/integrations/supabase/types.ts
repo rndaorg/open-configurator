@@ -246,13 +246,65 @@ export type Database = {
           },
         ]
       }
+      order_items: {
+        Row: {
+          configuration_data: Json
+          created_at: string
+          id: string
+          order_id: string
+          product_id: string | null
+          quantity: number
+          total_price: number
+          unit_price: number
+        }
+        Insert: {
+          configuration_data: Json
+          created_at?: string
+          id?: string
+          order_id: string
+          product_id?: string | null
+          quantity?: number
+          total_price: number
+          unit_price: number
+        }
+        Update: {
+          configuration_data?: Json
+          created_at?: string
+          id?: string
+          order_id?: string
+          product_id?: string | null
+          quantity?: number
+          total_price?: number
+          unit_price?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "order_items_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "order_items_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       orders: {
         Row: {
           configuration_data: Json
           configuration_id: string | null
           created_at: string
           id: string
+          payment_status: string | null
           product_id: string | null
+          quantity: number
+          shipping_address: Json | null
+          shipping_method: string | null
           status: string
           total_price: number
           updated_at: string
@@ -263,7 +315,11 @@ export type Database = {
           configuration_id?: string | null
           created_at?: string
           id?: string
+          payment_status?: string | null
           product_id?: string | null
+          quantity?: number
+          shipping_address?: Json | null
+          shipping_method?: string | null
           status?: string
           total_price: number
           updated_at?: string
@@ -274,7 +330,11 @@ export type Database = {
           configuration_id?: string | null
           created_at?: string
           id?: string
+          payment_status?: string | null
           product_id?: string | null
+          quantity?: number
+          shipping_address?: Json | null
+          shipping_method?: string | null
           status?: string
           total_price?: number
           updated_at?: string
