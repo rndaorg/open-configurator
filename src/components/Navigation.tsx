@@ -1,16 +1,18 @@
 import { Link, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Settings, Menu, X, LogOut, User, ShoppingCart } from 'lucide-react';
+import { Settings, Menu, X, LogOut, User, ShoppingCart, Shield } from 'lucide-react';
 import { useState } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { useCart } from '@/contexts/CartContext';
+import { useAdminCheck } from '@/hooks/useAdminCheck';
 
 export const Navigation = () => {
   const location = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { user, signOut } = useAuth();
   const { itemCount } = useCart();
+  const { isAdmin } = useAdminCheck();
 
   const navItems = [
     { path: '/', label: 'Home' },
@@ -76,6 +78,14 @@ export const Navigation = () => {
                     Profile
                   </Link>
                 </Button>
+                {isAdmin && (
+                  <Button variant="outline" size="sm" asChild>
+                    <Link to="/admin">
+                      <Shield className="h-4 w-4 mr-2" />
+                      Admin
+                    </Link>
+                  </Button>
+                )}
                 <Button size="sm" variant="ghost" onClick={signOut}>
                   <LogOut className="h-4 w-4 mr-2" />
                   Sign Out
@@ -142,6 +152,14 @@ export const Navigation = () => {
                         Profile
                       </Link>
                     </Button>
+                    {isAdmin && (
+                      <Button variant="outline" size="sm" asChild>
+                        <Link to="/admin">
+                          <Shield className="h-4 w-4 mr-2" />
+                          Admin
+                        </Link>
+                      </Button>
+                    )}
                     <Button size="sm" variant="ghost" onClick={signOut}>
                       <LogOut className="h-4 w-4 mr-2" />
                       Sign Out
