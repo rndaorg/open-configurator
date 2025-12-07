@@ -17,7 +17,7 @@ export function useAdminCheck() {
 
       try {
         const { data, error } = await supabase
-          .rpc('has_role', { _user_id: user.id, _role: 'admin' });
+          .rpc('has_role', { _role: 'admin', _user_id: user.id });
         
         if (error) throw error;
         setIsAdmin(data || false);
