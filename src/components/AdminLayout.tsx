@@ -1,26 +1,28 @@
 import { Link, Outlet, useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { LayoutDashboard, Package, FolderTree, Settings, DollarSign, ShoppingCart } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import Footer from './Footer';
 
-const navigation = [
-  { name: 'Dashboard', href: '/admin', icon: LayoutDashboard },
-  { name: 'Products', href: '/admin/products', icon: Package },
-  { name: 'Categories', href: '/admin/categories', icon: FolderTree },
-  { name: 'Config Options', href: '/admin/config-options', icon: Settings },
-  { name: 'Pricing Rules', href: '/admin/pricing-rules', icon: DollarSign },
-  { name: 'Orders', href: '/admin/orders', icon: ShoppingCart },
-];
-
 export default function AdminLayout() {
+  const { t } = useTranslation();
   const location = useLocation();
+
+  const navigation = [
+    { name: t('admin.dashboard'), href: '/admin', icon: LayoutDashboard },
+    { name: t('admin.products'), href: '/admin/products', icon: Package },
+    { name: t('admin.categories'), href: '/admin/categories', icon: FolderTree },
+    { name: t('admin.configOptions'), href: '/admin/config-options', icon: Settings },
+    { name: t('admin.pricingRules'), href: '/admin/pricing-rules', icon: DollarSign },
+    { name: t('admin.orders'), href: '/admin/orders', icon: ShoppingCart },
+  ];
 
   return (
     <div className="min-h-screen flex flex-col">
       <div className="flex-1 flex">
-        <aside className="w-64 bg-muted/30 border-r">
+        <aside className="w-64 bg-muted/30 border-e">
           <div className="p-6">
-            <h2 className="text-lg font-semibold">Admin Panel</h2>
+            <h2 className="text-lg font-semibold">{t('nav.admin')}</h2>
           </div>
           <nav className="space-y-1 px-3">
             {navigation.map((item) => {
@@ -37,7 +39,7 @@ export default function AdminLayout() {
                   )}
                 >
                   <item.icon className="h-5 w-5" />
-                  {item.name}
+                  <span>{item.name}</span>
                 </Link>
               );
             })}
