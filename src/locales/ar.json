@@ -1,0 +1,141 @@
+{
+  "common": {
+    "loading": "جاري التحميل...",
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "delete": "حذف",
+    "edit": "تعديل",
+    "add": "إضافة",
+    "search": "بحث",
+    "filter": "تصفية",
+    "submit": "إرسال",
+    "back": "رجوع",
+    "next": "التالي",
+    "previous": "السابق",
+    "yes": "نعم",
+    "no": "لا",
+    "confirm": "تأكيد",
+    "close": "إغلاق",
+    "view": "عرض",
+    "actions": "إجراءات"
+  },
+  "nav": {
+    "home": "الرئيسية",
+    "features": "المميزات",
+    "products": "المنتجات",
+    "cart": "السلة",
+    "profile": "الملف الشخصي",
+    "login": "تسجيل الدخول",
+    "logout": "تسجيل الخروج",
+    "admin": "الإدارة"
+  },
+  "auth": {
+    "signIn": "تسجيل الدخول",
+    "signUp": "إنشاء حساب",
+    "email": "البريد الإلكتروني",
+    "password": "كلمة المرور",
+    "forgotPassword": "هل نسيت كلمة المرور؟",
+    "noAccount": "ليس لديك حساب؟",
+    "hasAccount": "لديك حساب بالفعل؟",
+    "fullName": "الاسم الكامل"
+  },
+  "products": {
+    "title": "المنتجات",
+    "catalog": "كتالوج المنتجات",
+    "configure": "تخصيص",
+    "addToCart": "أضف إلى السلة",
+    "basePrice": "السعر الأساسي",
+    "totalPrice": "السعر الإجمالي",
+    "quantity": "الكمية",
+    "outOfStock": "غير متوفر",
+    "inStock": "متوفر",
+    "lowStock": "مخزون منخفض",
+    "category": "الفئة",
+    "description": "الوصف",
+    "specifications": "المواصفات"
+  },
+  "cart": {
+    "title": "سلة التسوق",
+    "empty": "سلة التسوق فارغة",
+    "subtotal": "المجموع الفرعي",
+    "total": "المجموع",
+    "checkout": "إتمام الشراء",
+    "continueShopping": "متابعة التسوق",
+    "remove": "إزالة",
+    "items": "{{count}} منتج",
+    "items_other": "{{count}} منتجات"
+  },
+  "checkout": {
+    "title": "إتمام الشراء",
+    "shipping": "الشحن",
+    "payment": "الدفع",
+    "review": "المراجعة",
+    "confirmation": "التأكيد",
+    "shippingAddress": "عنوان الشحن",
+    "paymentMethod": "طريقة الدفع",
+    "orderSummary": "ملخص الطلب",
+    "placeOrder": "تأكيد الطلب",
+    "orderConfirmed": "تم تأكيد الطلب!",
+    "thankYou": "شكراً لطلبك"
+  },
+  "admin": {
+    "dashboard": "لوحة التحكم",
+    "products": "المنتجات",
+    "categories": "الفئات",
+    "configOptions": "خيارات التخصيص",
+    "pricingRules": "قواعد التسعير",
+    "orders": "الطلبات",
+    "totalProducts": "إجمالي المنتجات",
+    "totalCategories": "إجمالي الفئات",
+    "totalOrders": "إجمالي الطلبات",
+    "totalRevenue": "إجمالي الإيرادات",
+    "management": "الإدارة",
+    "addProduct": "إضافة منتج",
+    "addCategory": "إضافة فئة",
+    "productName": "اسم المنتج",
+    "status": "الحالة",
+    "active": "نشط",
+    "inactive": "غير نشط"
+  },
+  "profile": {
+    "title": "الملف الشخصي",
+    "orderHistory": "سجل الطلبات",
+    "savedConfigs": "التخصيصات المحفوظة",
+    "preferences": "التفضيلات",
+    "settings": "الإعدادات"
+  },
+  "features": {
+    "title": "المميزات",
+    "ruleEngine": "محرك القواعد",
+    "dynamicPricing": "التسعير الديناميكي",
+    "visualization3D": "العرض ثلاثي الأبعاد",
+    "aiRecommendations": "توصيات الذكاء الاصطناعي",
+    "inventoryManagement": "إدارة المخزون",
+    "analytics": "التحليلات"
+  },
+  "home": {
+    "hero": {
+      "title": "ابنِ منتجات مخصصة",
+      "subtitle": "خصص وشاهد واطلب منتجات مخصصة مع أداة التخصيص القوية لدينا",
+      "cta": "ابدأ الآن"
+    },
+    "welcome": "مرحباً"
+  },
+  "settings": {
+    "language": "اللغة",
+    "currency": "العملة",
+    "region": "المنطقة",
+    "theme": "المظهر"
+  },
+  "errors": {
+    "general": "حدث خطأ ما",
+    "notFound": "الصفحة غير موجودة",
+    "unauthorized": "وصول غير مصرح",
+    "validation": "يرجى التحقق من المدخلات"
+  },
+  "dates": {
+    "today": "اليوم",
+    "yesterday": "أمس",
+    "tomorrow": "غداً"
+  }
+}

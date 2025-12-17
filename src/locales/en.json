@@ -1,0 +1,141 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "add": "Add",
+    "search": "Search",
+    "filter": "Filter",
+    "submit": "Submit",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "yes": "Yes",
+    "no": "No",
+    "confirm": "Confirm",
+    "close": "Close",
+    "view": "View",
+    "actions": "Actions"
+  },
+  "nav": {
+    "home": "Home",
+    "features": "Features",
+    "products": "Products",
+    "cart": "Cart",
+    "profile": "Profile",
+    "login": "Login",
+    "logout": "Logout",
+    "admin": "Admin"
+  },
+  "auth": {
+    "signIn": "Sign In",
+    "signUp": "Sign Up",
+    "email": "Email",
+    "password": "Password",
+    "forgotPassword": "Forgot Password?",
+    "noAccount": "Don't have an account?",
+    "hasAccount": "Already have an account?",
+    "fullName": "Full Name"
+  },
+  "products": {
+    "title": "Products",
+    "catalog": "Product Catalog",
+    "configure": "Configure",
+    "addToCart": "Add to Cart",
+    "basePrice": "Base Price",
+    "totalPrice": "Total Price",
+    "quantity": "Quantity",
+    "outOfStock": "Out of Stock",
+    "inStock": "In Stock",
+    "lowStock": "Low Stock",
+    "category": "Category",
+    "description": "Description",
+    "specifications": "Specifications"
+  },
+  "cart": {
+    "title": "Shopping Cart",
+    "empty": "Your cart is empty",
+    "subtotal": "Subtotal",
+    "total": "Total",
+    "checkout": "Checkout",
+    "continueShopping": "Continue Shopping",
+    "remove": "Remove",
+    "items": "{{count}} item",
+    "items_other": "{{count}} items"
+  },
+  "checkout": {
+    "title": "Checkout",
+    "shipping": "Shipping",
+    "payment": "Payment",
+    "review": "Review",
+    "confirmation": "Confirmation",
+    "shippingAddress": "Shipping Address",
+    "paymentMethod": "Payment Method",
+    "orderSummary": "Order Summary",
+    "placeOrder": "Place Order",
+    "orderConfirmed": "Order Confirmed!",
+    "thankYou": "Thank you for your order"
+  },
+  "admin": {
+    "dashboard": "Dashboard",
+    "products": "Products",
+    "categories": "Categories",
+    "configOptions": "Config Options",
+    "pricingRules": "Pricing Rules",
+    "orders": "Orders",
+    "totalProducts": "Total Products",
+    "totalCategories": "Total Categories",
+    "totalOrders": "Total Orders",
+    "totalRevenue": "Total Revenue",
+    "management": "Management",
+    "addProduct": "Add Product",
+    "addCategory": "Add Category",
+    "productName": "Product Name",
+    "status": "Status",
+    "active": "Active",
+    "inactive": "Inactive"
+  },
+  "profile": {
+    "title": "Profile",
+    "orderHistory": "Order History",
+    "savedConfigs": "Saved Configurations",
+    "preferences": "Preferences",
+    "settings": "Settings"
+  },
+  "features": {
+    "title": "Features",
+    "ruleEngine": "Rule Engine",
+    "dynamicPricing": "Dynamic Pricing",
+    "visualization3D": "3D Visualization",
+    "aiRecommendations": "AI Recommendations",
+    "inventoryManagement": "Inventory Management",
+    "analytics": "Analytics"
+  },
+  "home": {
+    "hero": {
+      "title": "Build Custom Products",
+      "subtitle": "Configure, visualize, and order custom products with our powerful configurator",
+      "cta": "Get Started"
+    },
+    "welcome": "Welcome"
+  },
+  "settings": {
+    "language": "Language",
+    "currency": "Currency",
+    "region": "Region",
+    "theme": "Theme"
+  },
+  "errors": {
+    "general": "Something went wrong",
+    "notFound": "Page not found",
+    "unauthorized": "Unauthorized access",
+    "validation": "Please check your input"
+  },
+  "dates": {
+    "today": "Today",
+    "yesterday": "Yesterday",
+    "tomorrow": "Tomorrow"
+  }
+}

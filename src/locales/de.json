@@ -1,0 +1,141 @@
+{
+  "common": {
+    "loading": "Wird geladen...",
+    "save": "Speichern",
+    "cancel": "Abbrechen",
+    "delete": "Löschen",
+    "edit": "Bearbeiten",
+    "add": "Hinzufügen",
+    "search": "Suchen",
+    "filter": "Filtern",
+    "submit": "Absenden",
+    "back": "Zurück",
+    "next": "Weiter",
+    "previous": "Zurück",
+    "yes": "Ja",
+    "no": "Nein",
+    "confirm": "Bestätigen",
+    "close": "Schließen",
+    "view": "Ansehen",
+    "actions": "Aktionen"
+  },
+  "nav": {
+    "home": "Startseite",
+    "features": "Funktionen",
+    "products": "Produkte",
+    "cart": "Warenkorb",
+    "profile": "Profil",
+    "login": "Anmelden",
+    "logout": "Abmelden",
+    "admin": "Admin"
+  },
+  "auth": {
+    "signIn": "Anmelden",
+    "signUp": "Registrieren",
+    "email": "E-Mail",
+    "password": "Passwort",
+    "forgotPassword": "Passwort vergessen?",
+    "noAccount": "Kein Konto?",
+    "hasAccount": "Bereits ein Konto?",
+    "fullName": "Vollständiger Name"
+  },
+  "products": {
+    "title": "Produkte",
+    "catalog": "Produktkatalog",
+    "configure": "Konfigurieren",
+    "addToCart": "In den Warenkorb",
+    "basePrice": "Grundpreis",
+    "totalPrice": "Gesamtpreis",
+    "quantity": "Menge",
+    "outOfStock": "Nicht verfügbar",
+    "inStock": "Auf Lager",
+    "lowStock": "Niedriger Bestand",
+    "category": "Kategorie",
+    "description": "Beschreibung",
+    "specifications": "Spezifikationen"
+  },
+  "cart": {
+    "title": "Warenkorb",
+    "empty": "Ihr Warenkorb ist leer",
+    "subtotal": "Zwischensumme",
+    "total": "Gesamt",
+    "checkout": "Zur Kasse",
+    "continueShopping": "Weiter einkaufen",
+    "remove": "Entfernen",
+    "items": "{{count}} Artikel",
+    "items_other": "{{count}} Artikel"
+  },
+  "checkout": {
+    "title": "Kasse",
+    "shipping": "Versand",
+    "payment": "Zahlung",
+    "review": "Überprüfung",
+    "confirmation": "Bestätigung",
+    "shippingAddress": "Lieferadresse",
+    "paymentMethod": "Zahlungsmethode",
+    "orderSummary": "Bestellübersicht",
+    "placeOrder": "Bestellung aufgeben",
+    "orderConfirmed": "Bestellung bestätigt!",
+    "thankYou": "Vielen Dank für Ihre Bestellung"
+  },
+  "admin": {
+    "dashboard": "Dashboard",
+    "products": "Produkte",
+    "categories": "Kategorien",
+    "configOptions": "Konfigurationsoptionen",
+    "pricingRules": "Preisregeln",
+    "orders": "Bestellungen",
+    "totalProducts": "Produkte Gesamt",
+    "totalCategories": "Kategorien Gesamt",
+    "totalOrders": "Bestellungen Gesamt",
+    "totalRevenue": "Gesamtumsatz",
+    "management": "Verwaltung",
+    "addProduct": "Produkt hinzufügen",
+    "addCategory": "Kategorie hinzufügen",
+    "productName": "Produktname",
+    "status": "Status",
+    "active": "Aktiv",
+    "inactive": "Inaktiv"
+  },
+  "profile": {
+    "title": "Profil",
+    "orderHistory": "Bestellverlauf",
+    "savedConfigs": "Gespeicherte Konfigurationen",
+    "preferences": "Einstellungen",
+    "settings": "Einstellungen"
+  },
+  "features": {
+    "title": "Funktionen",
+    "ruleEngine": "Regel-Engine",
+    "dynamicPricing": "Dynamische Preisgestaltung",
+    "visualization3D": "3D-Visualisierung",
+    "aiRecommendations": "KI-Empfehlungen",
+    "inventoryManagement": "Bestandsverwaltung",
+    "analytics": "Analytik"
+  },
+  "home": {
+    "hero": {
+      "title": "Individuelle Produkte erstellen",
+      "subtitle": "Konfigurieren, visualisieren und bestellen Sie individuelle Produkte mit unserem leistungsstarken Konfigurator",
+      "cta": "Loslegen"
+    },
+    "welcome": "Willkommen"
+  },
+  "settings": {
+    "language": "Sprache",
+    "currency": "Währung",
+    "region": "Region",
+    "theme": "Thema"
+  },
+  "errors": {
+    "general": "Etwas ist schiefgelaufen",
+    "notFound": "Seite nicht gefunden",
+    "unauthorized": "Unbefugter Zugriff",
+    "validation": "Bitte überprüfen Sie Ihre Eingabe"
+  },
+  "dates": {
+    "today": "Heute",
+    "yesterday": "Gestern",
+    "tomorrow": "Morgen"
+  }
+}

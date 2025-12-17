@@ -118,6 +118,24 @@ All colors MUST be HSL.
   body {
     @apply bg-background text-foreground;
   }
+
+  /* RTL Support */
+  html[dir="rtl"] {
+    direction: rtl;
+  }
+
+  html[dir="rtl"] body {
+    text-align: right;
+  }
+
+  /* Arabic font support */
+  .font-arabic {
+    font-family: 'Noto Sans Arabic', 'Tahoma', 'Arial', sans-serif;
+  }
+
+  html[dir="rtl"] {
+    font-family: 'Noto Sans Arabic', 'Tahoma', system-ui, -apple-system, sans-serif;
+  }
 }
 
 /* Custom Utilities */
@@ -144,6 +162,15 @@ All colors MUST be HSL.
   
   .animate-slide-up {
     animation: slideUp 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  /* RTL-aware spacing utilities */
+  .flip-rtl {
+    transform: scaleX(1);
+  }
+
+  html[dir="rtl"] .flip-rtl {
+    transform: scaleX(-1);
   }
 }
 

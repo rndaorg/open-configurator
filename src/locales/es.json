@@ -1,0 +1,141 @@
+{
+  "common": {
+    "loading": "Cargando...",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "add": "Añadir",
+    "search": "Buscar",
+    "filter": "Filtrar",
+    "submit": "Enviar",
+    "back": "Atrás",
+    "next": "Siguiente",
+    "previous": "Anterior",
+    "yes": "Sí",
+    "no": "No",
+    "confirm": "Confirmar",
+    "close": "Cerrar",
+    "view": "Ver",
+    "actions": "Acciones"
+  },
+  "nav": {
+    "home": "Inicio",
+    "features": "Características",
+    "products": "Productos",
+    "cart": "Carrito",
+    "profile": "Perfil",
+    "login": "Iniciar Sesión",
+    "logout": "Cerrar Sesión",
+    "admin": "Admin"
+  },
+  "auth": {
+    "signIn": "Iniciar Sesión",
+    "signUp": "Registrarse",
+    "email": "Correo Electrónico",
+    "password": "Contraseña",
+    "forgotPassword": "¿Olvidaste tu contraseña?",
+    "noAccount": "¿No tienes cuenta?",
+    "hasAccount": "¿Ya tienes cuenta?",
+    "fullName": "Nombre Completo"
+  },
+  "products": {
+    "title": "Productos",
+    "catalog": "Catálogo de Productos",
+    "configure": "Configurar",
+    "addToCart": "Añadir al Carrito",
+    "basePrice": "Precio Base",
+    "totalPrice": "Precio Total",
+    "quantity": "Cantidad",
+    "outOfStock": "Agotado",
+    "inStock": "En Stock",
+    "lowStock": "Stock Bajo",
+    "category": "Categoría",
+    "description": "Descripción",
+    "specifications": "Especificaciones"
+  },
+  "cart": {
+    "title": "Carrito de Compras",
+    "empty": "Tu carrito está vacío",
+    "subtotal": "Subtotal",
+    "total": "Total",
+    "checkout": "Finalizar Compra",
+    "continueShopping": "Seguir Comprando",
+    "remove": "Eliminar",
+    "items": "{{count}} artículo",
+    "items_other": "{{count}} artículos"
+  },
+  "checkout": {
+    "title": "Finalizar Compra",
+    "shipping": "Envío",
+    "payment": "Pago",
+    "review": "Revisar",
+    "confirmation": "Confirmación",
+    "shippingAddress": "Dirección de Envío",
+    "paymentMethod": "Método de Pago",
+    "orderSummary": "Resumen del Pedido",
+    "placeOrder": "Realizar Pedido",
+    "orderConfirmed": "¡Pedido Confirmado!",
+    "thankYou": "Gracias por tu pedido"
+  },
+  "admin": {
+    "dashboard": "Panel de Control",
+    "products": "Productos",
+    "categories": "Categorías",
+    "configOptions": "Opciones de Configuración",
+    "pricingRules": "Reglas de Precios",
+    "orders": "Pedidos",
+    "totalProducts": "Total de Productos",
+    "totalCategories": "Total de Categorías",
+    "totalOrders": "Total de Pedidos",
+    "totalRevenue": "Ingresos Totales",
+    "management": "Gestión",
+    "addProduct": "Añadir Producto",
+    "addCategory": "Añadir Categoría",
+    "productName": "Nombre del Producto",
+    "status": "Estado",
+    "active": "Activo",
+    "inactive": "Inactivo"
+  },
+  "profile": {
+    "title": "Perfil",
+    "orderHistory": "Historial de Pedidos",
+    "savedConfigs": "Configuraciones Guardadas",
+    "preferences": "Preferencias",
+    "settings": "Ajustes"
+  },
+  "features": {
+    "title": "Características",
+    "ruleEngine": "Motor de Reglas",
+    "dynamicPricing": "Precios Dinámicos",
+    "visualization3D": "Visualización 3D",
+    "aiRecommendations": "Recomendaciones IA",
+    "inventoryManagement": "Gestión de Inventario",
+    "analytics": "Analíticas"
+  },
+  "home": {
+    "hero": {
+      "title": "Construye Productos Personalizados",
+      "subtitle": "Configura, visualiza y pide productos personalizados con nuestro potente configurador",
+      "cta": "Comenzar"
+    },
+    "welcome": "Bienvenido"
+  },
+  "settings": {
+    "language": "Idioma",
+    "currency": "Moneda",
+    "region": "Región",
+    "theme": "Tema"
+  },
+  "errors": {
+    "general": "Algo salió mal",
+    "notFound": "Página no encontrada",
+    "unauthorized": "Acceso no autorizado",
+    "validation": "Por favor revisa tu entrada"
+  },
+  "dates": {
+    "today": "Hoy",
+    "yesterday": "Ayer",
+    "tomorrow": "Mañana"
+  }
+}

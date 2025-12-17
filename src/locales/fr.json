@@ -1,0 +1,141 @@
+{
+  "common": {
+    "loading": "Chargement...",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "add": "Ajouter",
+    "search": "Rechercher",
+    "filter": "Filtrer",
+    "submit": "Soumettre",
+    "back": "Retour",
+    "next": "Suivant",
+    "previous": "Précédent",
+    "yes": "Oui",
+    "no": "Non",
+    "confirm": "Confirmer",
+    "close": "Fermer",
+    "view": "Voir",
+    "actions": "Actions"
+  },
+  "nav": {
+    "home": "Accueil",
+    "features": "Fonctionnalités",
+    "products": "Produits",
+    "cart": "Panier",
+    "profile": "Profil",
+    "login": "Connexion",
+    "logout": "Déconnexion",
+    "admin": "Admin"
+  },
+  "auth": {
+    "signIn": "Se Connecter",
+    "signUp": "S'inscrire",
+    "email": "Email",
+    "password": "Mot de passe",
+    "forgotPassword": "Mot de passe oublié ?",
+    "noAccount": "Pas de compte ?",
+    "hasAccount": "Déjà un compte ?",
+    "fullName": "Nom Complet"
+  },
+  "products": {
+    "title": "Produits",
+    "catalog": "Catalogue de Produits",
+    "configure": "Configurer",
+    "addToCart": "Ajouter au Panier",
+    "basePrice": "Prix de Base",
+    "totalPrice": "Prix Total",
+    "quantity": "Quantité",
+    "outOfStock": "Rupture de Stock",
+    "inStock": "En Stock",
+    "lowStock": "Stock Faible",
+    "category": "Catégorie",
+    "description": "Description",
+    "specifications": "Spécifications"
+  },
+  "cart": {
+    "title": "Panier",
+    "empty": "Votre panier est vide",
+    "subtotal": "Sous-total",
+    "total": "Total",
+    "checkout": "Commander",
+    "continueShopping": "Continuer vos achats",
+    "remove": "Supprimer",
+    "items": "{{count}} article",
+    "items_other": "{{count}} articles"
+  },
+  "checkout": {
+    "title": "Commande",
+    "shipping": "Livraison",
+    "payment": "Paiement",
+    "review": "Vérification",
+    "confirmation": "Confirmation",
+    "shippingAddress": "Adresse de Livraison",
+    "paymentMethod": "Mode de Paiement",
+    "orderSummary": "Résumé de la Commande",
+    "placeOrder": "Passer la Commande",
+    "orderConfirmed": "Commande Confirmée !",
+    "thankYou": "Merci pour votre commande"
+  },
+  "admin": {
+    "dashboard": "Tableau de Bord",
+    "products": "Produits",
+    "categories": "Catégories",
+    "configOptions": "Options de Configuration",
+    "pricingRules": "Règles de Prix",
+    "orders": "Commandes",
+    "totalProducts": "Total Produits",
+    "totalCategories": "Total Catégories",
+    "totalOrders": "Total Commandes",
+    "totalRevenue": "Revenu Total",
+    "management": "Gestion",
+    "addProduct": "Ajouter un Produit",
+    "addCategory": "Ajouter une Catégorie",
+    "productName": "Nom du Produit",
+    "status": "Statut",
+    "active": "Actif",
+    "inactive": "Inactif"
+  },
+  "profile": {
+    "title": "Profil",
+    "orderHistory": "Historique des Commandes",
+    "savedConfigs": "Configurations Sauvegardées",
+    "preferences": "Préférences",
+    "settings": "Paramètres"
+  },
+  "features": {
+    "title": "Fonctionnalités",
+    "ruleEngine": "Moteur de Règles",
+    "dynamicPricing": "Prix Dynamiques",
+    "visualization3D": "Visualisation 3D",
+    "aiRecommendations": "Recommandations IA",
+    "inventoryManagement": "Gestion des Stocks",
+    "analytics": "Analytique"
+  },
+  "home": {
+    "hero": {
+      "title": "Créez des Produits Personnalisés",
+      "subtitle": "Configurez, visualisez et commandez des produits personnalisés avec notre puissant configurateur",
+      "cta": "Commencer"
+    },
+    "welcome": "Bienvenue"
+  },
+  "settings": {
+    "language": "Langue",
+    "currency": "Devise",
+    "region": "Région",
+    "theme": "Thème"
+  },
+  "errors": {
+    "general": "Une erreur est survenue",
+    "notFound": "Page non trouvée",
+    "unauthorized": "Accès non autorisé",
+    "validation": "Veuillez vérifier vos données"
+  },
+  "dates": {
+    "today": "Aujourd'hui",
+    "yesterday": "Hier",
+    "tomorrow": "Demain"
+  }
+}
