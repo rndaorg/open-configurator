@@ -525,6 +525,47 @@ export type Database = {
         }
         Relationships: []
       }
+      search_analytics: {
+        Row: {
+          clicked_product_id: string | null
+          created_at: string
+          filters_applied: Json | null
+          id: string
+          results_count: number
+          search_query: string
+          session_id: string | null
+          user_id: string | null
+        }
+        Insert: {
+          clicked_product_id?: string | null
+          created_at?: string
+          filters_applied?: Json | null
+          id?: string
+          results_count?: number
+          search_query: string
+          session_id?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          clicked_product_id?: string | null
+          created_at?: string
+          filters_applied?: Json | null
+          id?: string
+          results_count?: number
+          search_query?: string
+          session_id?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "search_analytics_clicked_product_id_fkey"
+            columns: ["clicked_product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_preferences: {
         Row: {
           created_at: string
