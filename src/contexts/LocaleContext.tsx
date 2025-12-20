@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import { useTranslation } from 'react-i18next';
+import i18n from 'i18next';
 import { languages, rtlLanguages, type LanguageCode } from '@/lib/i18n';
 
 // Exchange rates relative to USD (simplified - in production use real API)
@@ -46,8 +46,6 @@ interface LocaleContextType {
 const LocaleContext = createContext<LocaleContextType | undefined>(undefined);
 
 export function LocaleProvider({ children }: { children: React.ReactNode }) {
-  const { i18n } = useTranslation();
-  
   const [language, setLanguageState] = useState<LanguageCode>(() => {
     const stored = localStorage.getItem('language');
     return (stored as LanguageCode) || 'en';
@@ -74,7 +72,7 @@ export function LocaleProvider({ children }: { children: React.ReactNode }) {
       document.documentElement.dir = newConfig.dir;
       document.documentElement.lang = lang;
     }
-  }, [i18n]);
+  }, []);
 
   const setCurrency = useCallback((curr: string) => {
     setCurrencyState(curr);
@@ -140,7 +138,7 @@ export function LocaleProvider({ children }: { children: React.ReactNode }) {
     i18n.changeLanguage(language);
     document.documentElement.dir = dir;
     document.documentElement.lang = language;
-  }, [language, dir, i18n]);
+  }, [language, dir]);
 
   const value: LocaleContextType = {
     language,
