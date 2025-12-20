@@ -170,5 +170,17 @@
     "today": "Today",
     "yesterday": "Yesterday",
     "tomorrow": "Tomorrow"
+  },
+  "notifications": {
+    "title": "Notifications",
+    "empty": "No notifications",
+    "markAllRead": "Mark all read",
+    "orderStatus": "Order Status",
+    "inventoryAlert": "Inventory Alert",
+    "priceChange": "Price Change",
+    "system": "System",
+    "orderUpdated": "Your order status has been updated",
+    "lowStock": "Low stock alert",
+    "priceDropped": "Price dropped on an item you viewed"
   }
 }

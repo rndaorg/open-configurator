@@ -170,5 +170,17 @@
     "today": "Aujourd'hui",
     "yesterday": "Hier",
     "tomorrow": "Demain"
+  },
+  "notifications": {
+    "title": "Notifications",
+    "empty": "Aucune notification",
+    "markAllRead": "Tout marquer comme lu",
+    "orderStatus": "Statut de commande",
+    "inventoryAlert": "Alerte d'inventaire",
+    "priceChange": "Changement de prix",
+    "system": "Système",
+    "orderUpdated": "Le statut de votre commande a été mis à jour",
+    "lowStock": "Alerte stock bas",
+    "priceDropped": "Le prix a baissé sur un article que vous avez consulté"
   }
 }

@@ -8,6 +8,8 @@ import { useAuth } from '@/hooks/useAuth';
 import { useCart } from '@/contexts/CartContext';
 import { useAdminCheck } from '@/hooks/useAdminCheck';
 import { LanguageSelector } from '@/components/LanguageSelector';
+import { NotificationCenter } from '@/components/NotificationCenter';
+import { useRealtimeUpdates } from '@/hooks/useRealtimeUpdates';
 
 export const Navigation = () => {
   const { t } = useTranslation();
@@ -16,6 +18,9 @@ export const Navigation = () => {
   const { user, signOut } = useAuth();
   const { itemCount } = useCart();
   const { isAdmin } = useAdminCheck();
+
+  // Enable realtime updates for orders and inventory
+  useRealtimeUpdates({ showToasts: true });
 
   const navItems = [
     { path: '/', label: t('nav.home') },
@@ -56,6 +61,7 @@ export const Navigation = () => {
 
           {/* Desktop CTA */}
           <div className="hidden md:flex items-center gap-4">
+            {user && <NotificationCenter />}
             <LanguageSelector showCurrency />
             <Button variant="ghost" size="sm" className="relative" asChild>
               <Link to="/cart">
