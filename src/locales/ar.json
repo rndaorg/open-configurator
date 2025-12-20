@@ -170,5 +170,17 @@
     "today": "اليوم",
     "yesterday": "أمس",
     "tomorrow": "غداً"
+  },
+  "notifications": {
+    "title": "الإشعارات",
+    "empty": "لا توجد إشعارات",
+    "markAllRead": "تحديد الكل كمقروء",
+    "orderStatus": "حالة الطلب",
+    "inventoryAlert": "تنبيه المخزون",
+    "priceChange": "تغيير السعر",
+    "system": "النظام",
+    "orderUpdated": "تم تحديث حالة طلبك",
+    "lowStock": "تنبيه انخفاض المخزون",
+    "priceDropped": "انخفض سعر منتج شاهدته"
   }
 }

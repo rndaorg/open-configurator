@@ -170,5 +170,17 @@
     "today": "Heute",
     "yesterday": "Gestern",
     "tomorrow": "Morgen"
+  },
+  "notifications": {
+    "title": "Benachrichtigungen",
+    "empty": "Keine Benachrichtigungen",
+    "markAllRead": "Alle als gelesen markieren",
+    "orderStatus": "Bestellstatus",
+    "inventoryAlert": "Lagerbestandswarnung",
+    "priceChange": "Preisänderung",
+    "system": "System",
+    "orderUpdated": "Ihr Bestellstatus wurde aktualisiert",
+    "lowStock": "Niedriger Lagerbestand",
+    "priceDropped": "Preis gefallen bei einem Artikel, den Sie angesehen haben"
   }
 }
