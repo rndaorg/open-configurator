@@ -20,6 +20,7 @@ import AdminCategories from "./pages/admin/Categories";
 import AdminConfigOptions from "./pages/admin/ConfigOptions";
 import AdminPricingRules from "./pages/admin/PricingRules";
 import AdminOrders from "./pages/admin/Orders";
+import AdminReports from "./pages/admin/Reports";
 
 const queryClient = new QueryClient();
 
@@ -65,6 +66,7 @@ const App = () => (
             <Route path="config-options" element={<AdminConfigOptions />} />
             <Route path="pricing-rules" element={<AdminPricingRules />} />
             <Route path="orders" element={<AdminOrders />} />
+            <Route path="reports" element={<AdminReports />} />
           </Route>
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />

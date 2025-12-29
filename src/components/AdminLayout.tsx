@@ -1,6 +1,6 @@
 import { Link, Outlet, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { LayoutDashboard, Package, FolderTree, Settings, DollarSign, ShoppingCart } from 'lucide-react';
+import { LayoutDashboard, Package, FolderTree, Settings, DollarSign, ShoppingCart, BarChart3 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import Footer from './Footer';
 
@@ -15,6 +15,7 @@ export default function AdminLayout() {
     { name: t('admin.configOptions'), href: '/admin/config-options', icon: Settings },
     { name: t('admin.pricingRules'), href: '/admin/pricing-rules', icon: DollarSign },
     { name: t('admin.orders'), href: '/admin/orders', icon: ShoppingCart },
+    { name: t('admin.reports'), href: '/admin/reports', icon: BarChart3 },
   ];
 
   return (
