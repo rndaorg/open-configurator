@@ -118,6 +118,7 @@
     "configOptions": "Config Options",
     "pricingRules": "Pricing Rules",
     "orders": "Orders",
+    "reports": "Reports",
     "totalProducts": "Total Products",
     "totalCategories": "Total Categories",
     "totalOrders": "Total Orders",
@@ -129,6 +130,21 @@
     "status": "Status",
     "active": "Active",
     "inactive": "Inactive"
+  },
+  "reports": {
+    "title": "Reports & Analytics",
+    "tabs": { "sales": "Sales", "funnel": "Funnel", "customers": "Customers", "abTesting": "A/B Testing", "export": "Export" },
+    "datePresets": { "last7Days": "7 Days", "last30Days": "30 Days", "last90Days": "90 Days" },
+    "totalRevenue": "Total Revenue", "totalOrders": "Total Orders", "avgOrderValue": "Avg Order Value", "uniqueProducts": "Categories Sold",
+    "revenueOverTime": "Revenue Over Time", "revenueByCategory": "Revenue by Category", "ordersByStatus": "Orders by Status",
+    "conversionFunnel": "Conversion Funnel", "overallConversion": "Overall Conversion Rate", "stageConversionRates": "Stage Conversion Rates", "abandonmentPoints": "Abandonment Points",
+    "funnel": { "productViews": "Product Views", "configurationsStarted": "Configs Started", "configurationsCompleted": "Configs Completed", "ordersPlaced": "Orders Placed", "ordersCompleted": "Orders Completed" },
+    "uniqueCustomers": "Unique Customers", "repeatRate": "Repeat Rate", "avgCustomerValue": "Avg Customer Value", "avgSessionDuration": "Avg Session",
+    "customerAcquisition": "Customer Acquisition", "topSearchQueries": "Top Search Queries", "customerSegments": "Customer Segments",
+    "segments": { "priceConscious": "Price Conscious", "qualityFocused": "Quality Focused", "frequentBuyer": "Frequent Buyer", "configurator": "Configurator", "researcher": "Researcher" },
+    "abTests": { "active": "Active", "completed": "Completed", "paused": "Paused", "activeTests": "Active Tests", "completedTests": "Completed Tests", "avgLift": "Avg Lift", "winner": "Winner", "control": "Control", "visitors": "visitors", "statisticalConfidence": "Statistical Confidence", "variantComparison": "Variant Comparison", "noTests": "No A/B Tests", "noTestsDesc": "Create experiments to test different configurations", "checkoutFlow": "Checkout Flow Test", "checkoutFlowDesc": "Testing simplified vs original checkout", "productPage": "Product Page Layout", "productPageDesc": "Testing image sizes and video previews", "pricingDisplay": "Pricing Display", "pricingDisplayDesc": "Testing savings badge visibility" },
+    "export": { "title": "Export Reports", "description": "Download reports in various formats", "format": "Export Format", "dateRange": "Date Range", "preview": "Preview", "andMore": "...and {{count}} more rows", "download": "Download Report", "exporting": "Exporting...", "success": "Export Complete", "successDesc": "Downloaded {{filename}}", "error": "Export Failed", "errorDesc": "Please try again", "noData": "No Data", "noDataDesc": "No data available for export", "types": { "sales": "Sales Report", "salesDesc": "Revenue and orders", "orders": "Orders Report", "ordersDesc": "Order details", "customers": "Customer Report", "customersDesc": "Customer analytics", "products": "Products Report", "productsDesc": "Product catalog", "full": "Full Report", "fullDesc": "Complete summary" } },
+    "scheduled": { "title": "Scheduled Reports", "description": "Automate report generation", "comingSoon": "Coming Soon", "comingSoonDesc": "Scheduled report generation will be available soon" }
   },
   "profile": {
     "title": "Profile",
