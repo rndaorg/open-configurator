@@ -182,5 +182,78 @@
     "orderUpdated": "Le statut de votre commande a été mis à jour",
     "lowStock": "Alerte stock bas",
     "priceDropped": "Le prix a baissé sur un article que vous avez consulté"
+  },
+  "reports": {
+    "title": "Rapports et Analytique",
+    "datePresets": {
+      "last7Days": "7 derniers jours",
+      "last30Days": "30 derniers jours",
+      "last90Days": "90 derniers jours"
+    },
+    "tabs": {
+      "sales": "Ventes",
+      "funnel": "Entonnoir",
+      "customers": "Clients",
+      "abTesting": "Tests A/B",
+      "export": "Exporter"
+    },
+    "sales": {
+      "title": "Analytique des Ventes",
+      "revenue": "Chiffre d'affaires",
+      "orders": "Commandes",
+      "avgOrderValue": "Valeur Moyenne",
+      "conversionRate": "Taux de Conversion",
+      "revenueOverTime": "Chiffre d'affaires dans le Temps",
+      "salesByCategory": "Ventes par Catégorie",
+      "ordersByStatus": "Commandes par Statut"
+    },
+    "funnel": {
+      "title": "Entonnoir de Conversion",
+      "stages": "Étapes de l'Entonnoir",
+      "conversionRates": "Taux de Conversion",
+      "abandonmentPoints": "Points d'Abandon",
+      "visitors": "Visiteurs",
+      "productViews": "Vues Produits",
+      "addedToCart": "Ajouté au Panier",
+      "checkout": "Paiement",
+      "purchased": "Acheté"
+    },
+    "customers": {
+      "title": "Insights Clients",
+      "acquisition": "Acquisition Clients",
+      "repeatRate": "Taux de Clients Récurrents",
+      "topSearches": "Recherches Principales",
+      "segments": "Segments Comportementaux",
+      "newCustomers": "Nouveaux Clients",
+      "returningCustomers": "Clients Récurrents"
+    },
+    "abTesting": {
+      "title": "Résultats Tests A/B",
+      "activeTests": "Tests Actifs",
+      "completedTests": "Tests Terminés",
+      "winner": "Gagnant",
+      "confidence": "Confiance",
+      "variant": "Variante",
+      "control": "Contrôle",
+      "conversionRate": "Taux de Conversion",
+      "sampleSize": "Taille de l'Échantillon"
+    },
+    "export": {
+      "title": "Exporter les Rapports",
+      "format": "Format",
+      "dateRange": "Plage de Dates",
+      "includeData": "Inclure les Données",
+      "salesData": "Données de Ventes",
+      "orderData": "Données de Commandes",
+      "customerData": "Données Clients",
+      "productData": "Données Produits",
+      "generate": "Générer le Rapport",
+      "download": "Télécharger",
+      "schedule": "Planifier le Rapport",
+      "frequency": "Fréquence",
+      "daily": "Quotidien",
+      "weekly": "Hebdomadaire",
+      "monthly": "Mensuel"
+    }
   }
 }

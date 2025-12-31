@@ -182,5 +182,78 @@
     "orderUpdated": "El estado de tu pedido ha sido actualizado",
     "lowStock": "Alerta de stock bajo",
     "priceDropped": "El precio bajó en un artículo que viste"
+  },
+  "reports": {
+    "title": "Informes y Analíticas",
+    "datePresets": {
+      "last7Days": "Últimos 7 días",
+      "last30Days": "Últimos 30 días",
+      "last90Days": "Últimos 90 días"
+    },
+    "tabs": {
+      "sales": "Ventas",
+      "funnel": "Embudo",
+      "customers": "Clientes",
+      "abTesting": "Pruebas A/B",
+      "export": "Exportar"
+    },
+    "sales": {
+      "title": "Analítica de Ventas",
+      "revenue": "Ingresos",
+      "orders": "Pedidos",
+      "avgOrderValue": "Valor Promedio",
+      "conversionRate": "Tasa de Conversión",
+      "revenueOverTime": "Ingresos a lo Largo del Tiempo",
+      "salesByCategory": "Ventas por Categoría",
+      "ordersByStatus": "Pedidos por Estado"
+    },
+    "funnel": {
+      "title": "Embudo de Conversión",
+      "stages": "Etapas del Embudo",
+      "conversionRates": "Tasas de Conversión",
+      "abandonmentPoints": "Puntos de Abandono",
+      "visitors": "Visitantes",
+      "productViews": "Vistas de Productos",
+      "addedToCart": "Añadido al Carrito",
+      "checkout": "Checkout",
+      "purchased": "Comprado"
+    },
+    "customers": {
+      "title": "Insights de Clientes",
+      "acquisition": "Adquisición de Clientes",
+      "repeatRate": "Tasa de Clientes Recurrentes",
+      "topSearches": "Principales Búsquedas",
+      "segments": "Segmentos de Comportamiento",
+      "newCustomers": "Nuevos Clientes",
+      "returningCustomers": "Clientes Recurrentes"
+    },
+    "abTesting": {
+      "title": "Resultados de Pruebas A/B",
+      "activeTests": "Pruebas Activas",
+      "completedTests": "Pruebas Completadas",
+      "winner": "Ganador",
+      "confidence": "Confianza",
+      "variant": "Variante",
+      "control": "Control",
+      "conversionRate": "Tasa de Conversión",
+      "sampleSize": "Tamaño de Muestra"
+    },
+    "export": {
+      "title": "Exportar Informes",
+      "format": "Formato",
+      "dateRange": "Rango de Fechas",
+      "includeData": "Incluir Datos",
+      "salesData": "Datos de Ventas",
+      "orderData": "Datos de Pedidos",
+      "customerData": "Datos de Clientes",
+      "productData": "Datos de Productos",
+      "generate": "Generar Informe",
+      "download": "Descargar",
+      "schedule": "Programar Informe",
+      "frequency": "Frecuencia",
+      "daily": "Diario",
+      "weekly": "Semanal",
+      "monthly": "Mensual"
+    }
   }
 }

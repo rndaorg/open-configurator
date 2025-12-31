@@ -182,5 +182,78 @@
     "orderUpdated": "تم تحديث حالة طلبك",
     "lowStock": "تنبيه انخفاض المخزون",
     "priceDropped": "انخفض سعر منتج شاهدته"
+  },
+  "reports": {
+    "title": "التقارير والتحليلات",
+    "datePresets": {
+      "last7Days": "آخر 7 أيام",
+      "last30Days": "آخر 30 يوم",
+      "last90Days": "آخر 90 يوم"
+    },
+    "tabs": {
+      "sales": "المبيعات",
+      "funnel": "القمع",
+      "customers": "العملاء",
+      "abTesting": "اختبارات A/B",
+      "export": "تصدير"
+    },
+    "sales": {
+      "title": "تحليلات المبيعات",
+      "revenue": "الإيرادات",
+      "orders": "الطلبات",
+      "avgOrderValue": "متوسط القيمة",
+      "conversionRate": "معدل التحويل",
+      "revenueOverTime": "الإيرادات عبر الزمن",
+      "salesByCategory": "المبيعات حسب الفئة",
+      "ordersByStatus": "الطلبات حسب الحالة"
+    },
+    "funnel": {
+      "title": "قمع التحويل",
+      "stages": "مراحل القمع",
+      "conversionRates": "معدلات التحويل",
+      "abandonmentPoints": "نقاط التخلي",
+      "visitors": "الزوار",
+      "productViews": "مشاهدات المنتج",
+      "addedToCart": "أضيف للسلة",
+      "checkout": "الدفع",
+      "purchased": "تم الشراء"
+    },
+    "customers": {
+      "title": "رؤى العملاء",
+      "acquisition": "اكتساب العملاء",
+      "repeatRate": "معدل العملاء المتكررين",
+      "topSearches": "أهم عمليات البحث",
+      "segments": "شرائح السلوك",
+      "newCustomers": "عملاء جدد",
+      "returningCustomers": "عملاء عائدون"
+    },
+    "abTesting": {
+      "title": "نتائج اختبارات A/B",
+      "activeTests": "الاختبارات النشطة",
+      "completedTests": "الاختبارات المكتملة",
+      "winner": "الفائز",
+      "confidence": "الثقة",
+      "variant": "المتغير",
+      "control": "التحكم",
+      "conversionRate": "معدل التحويل",
+      "sampleSize": "حجم العينة"
+    },
+    "export": {
+      "title": "تصدير التقارير",
+      "format": "التنسيق",
+      "dateRange": "نطاق التاريخ",
+      "includeData": "تضمين البيانات",
+      "salesData": "بيانات المبيعات",
+      "orderData": "بيانات الطلبات",
+      "customerData": "بيانات العملاء",
+      "productData": "بيانات المنتجات",
+      "generate": "إنشاء التقرير",
+      "download": "تحميل",
+      "schedule": "جدولة التقرير",
+      "frequency": "التكرار",
+      "daily": "يومي",
+      "weekly": "أسبوعي",
+      "monthly": "شهري"
+    }
   }
 }
