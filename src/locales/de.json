@@ -182,5 +182,78 @@
     "orderUpdated": "Ihr Bestellstatus wurde aktualisiert",
     "lowStock": "Niedriger Lagerbestand",
     "priceDropped": "Preis gefallen bei einem Artikel, den Sie angesehen haben"
+  },
+  "reports": {
+    "title": "Berichte und Analytik",
+    "datePresets": {
+      "last7Days": "Letzte 7 Tage",
+      "last30Days": "Letzte 30 Tage",
+      "last90Days": "Letzte 90 Tage"
+    },
+    "tabs": {
+      "sales": "Verkäufe",
+      "funnel": "Trichter",
+      "customers": "Kunden",
+      "abTesting": "A/B-Tests",
+      "export": "Exportieren"
+    },
+    "sales": {
+      "title": "Verkaufsanalyse",
+      "revenue": "Umsatz",
+      "orders": "Bestellungen",
+      "avgOrderValue": "Durchschnittswert",
+      "conversionRate": "Konversionsrate",
+      "revenueOverTime": "Umsatz über Zeit",
+      "salesByCategory": "Verkäufe nach Kategorie",
+      "ordersByStatus": "Bestellungen nach Status"
+    },
+    "funnel": {
+      "title": "Konversionstrichter",
+      "stages": "Trichterstufen",
+      "conversionRates": "Konversionsraten",
+      "abandonmentPoints": "Abbruchpunkte",
+      "visitors": "Besucher",
+      "productViews": "Produktansichten",
+      "addedToCart": "In Warenkorb gelegt",
+      "checkout": "Kasse",
+      "purchased": "Gekauft"
+    },
+    "customers": {
+      "title": "Kundeneinblicke",
+      "acquisition": "Kundenakquise",
+      "repeatRate": "Stammkundenrate",
+      "topSearches": "Top-Suchanfragen",
+      "segments": "Verhaltenssegmente",
+      "newCustomers": "Neue Kunden",
+      "returningCustomers": "Stammkunden"
+    },
+    "abTesting": {
+      "title": "A/B-Test Ergebnisse",
+      "activeTests": "Aktive Tests",
+      "completedTests": "Abgeschlossene Tests",
+      "winner": "Gewinner",
+      "confidence": "Konfidenz",
+      "variant": "Variante",
+      "control": "Kontrolle",
+      "conversionRate": "Konversionsrate",
+      "sampleSize": "Stichprobengröße"
+    },
+    "export": {
+      "title": "Berichte Exportieren",
+      "format": "Format",
+      "dateRange": "Datumsbereich",
+      "includeData": "Daten einschließen",
+      "salesData": "Verkaufsdaten",
+      "orderData": "Bestelldaten",
+      "customerData": "Kundendaten",
+      "productData": "Produktdaten",
+      "generate": "Bericht erstellen",
+      "download": "Herunterladen",
+      "schedule": "Bericht planen",
+      "frequency": "Häufigkeit",
+      "daily": "Täglich",
+      "weekly": "Wöchentlich",
+      "monthly": "Monatlich"
+    }
   }
 }
