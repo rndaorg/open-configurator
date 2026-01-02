@@ -594,6 +594,413 @@ const calculateAdvancedPrice = async (
 };
 ```
 
+## External Integrations
+
+Open Configurator provides comprehensive integrations with popular services via Edge Functions.
+
+### Stripe Payments
+
+Full payment processing with Stripe including payment intents, confirmations, refunds, and webhooks.
+
+**Edge Function:** `/functions/v1/stripe-payment`
+
+#### Create Payment Intent
+```typescript
+const response = await fetch(
+  `${supabaseUrl}/functions/v1/stripe-payment/create-payment-intent`,
+  {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${supabaseAnonKey}`,
+    },
+    body: JSON.stringify({
+      amount: 1599.99,
+      currency: 'usd',
+      orderId: 'order-uuid',
+      customerEmail: 'customer@example.com',
+      metadata: { product_name: 'Custom Bike' }
+    })
+  }
+);
+
+const { clientSecret, paymentIntentId } = await response.json();
+```
+
+#### Confirm Payment
+```typescript
+const response = await fetch(
+  `${supabaseUrl}/functions/v1/stripe-payment/confirm-payment`,
+  {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${supabaseAnonKey}`,
+    },
+    body: JSON.stringify({
+      paymentIntentId: 'pi_xxx',
+      orderId: 'order-uuid'
+    })
+  }
+);
+```
+
+#### Process Refund
+```typescript
+const response = await fetch(
+  `${supabaseUrl}/functions/v1/stripe-payment/refund`,
+  {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${supabaseAnonKey}`,
+    },
+    body: JSON.stringify({
+      paymentIntentId: 'pi_xxx',
+      amount: 500.00, // Optional partial refund
+      reason: 'customer_request'
+    })
+  }
+);
+```
+
+**Required Secret:** `STRIPE_SECRET_KEY`
+
+---
+
+### SendGrid Email
+
+Transactional email support for order confirmations, status updates, and custom emails.
+
+**Edge Function:** `/functions/v1/sendgrid-email`
+
+#### Send Custom Email
+```typescript
+const response = await fetch(
+  `${supabaseUrl}/functions/v1/sendgrid-email/send`,
+  {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${supabaseAnonKey}`,
+    },
+    body: JSON.stringify({
+      to: 'customer@example.com',
+      subject: 'Your Configuration is Ready',
+      html: '<h1>Hello!</h1><p>Your custom configuration is ready.</p>',
+      from: 'notifications@yourstore.com'
+    })
+  }
+);
+```
+
+#### Send Order Confirmation
+```typescript
+const response = await fetch(
+  `${supabaseUrl}/functions/v1/sendgrid-email/order-confirmation`,
+  {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${supabaseAnonKey}`,
+    },
+    body: JSON.stringify({
+      orderId: 'order-uuid',
+      customerEmail: 'customer@example.com',
+      customerName: 'John Doe',
+      productName: 'Mountain Bike Pro',
+      configurationSummary: 'Large Frame, Red Color, Carbon Wheels',
+      totalPrice: 1599.99,
+      orderDate: '2024-01-15'
+    })
+  }
+);
+```
+
+#### Send Status Update
+```typescript
+const response = await fetch(
+  `${supabaseUrl}/functions/v1/sendgrid-email/status-update`,
+  {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${supabaseAnonKey}`,
+    },
+    body: JSON.stringify({
+      customerEmail: 'customer@example.com',
+      customerName: 'John Doe',
+      orderId: 'order-uuid',
+      newStatus: 'shipped',
+      trackingNumber: '1Z999AA10123456784'
+    })
+  }
+);
+```
+
+**Required Secrets:** `SENDGRID_API_KEY`, `SENDGRID_FROM_EMAIL`
+
+---
+
+### External Inventory Systems
+
+Sync inventory with Shopify, WooCommerce, or custom inventory APIs.
+
+**Edge Function:** `/functions/v1/external-inventory`
+
+#### Sync from Provider
+```typescript
+const response = await fetch(
+  `${supabaseUrl}/functions/v1/external-inventory/sync`,
+  {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${supabaseAnonKey}`,
+    },
+    body: JSON.stringify({
+      provider: 'shopify', // or 'woocommerce', 'custom'
+      apiUrl: 'https://your-store.myshopify.com', // for custom
+      apiKey: 'optional-override-key'
+    })
+  }
+);
+
+const { synced, updated, timestamp } = await response.json();
+```
+
+#### Check Inventory
+```typescript
+const response = await fetch(
+  `${supabaseUrl}/functions/v1/external-inventory/check`,
+  {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${supabaseAnonKey}`,
+    },
+    body: JSON.stringify({
+      skus: ['sku-001', 'sku-002', 'sku-003']
+    })
+  }
+);
+
+const { inventory } = await response.json();
+// [{ sku: 'sku-001', available: 15, isLowStock: false }, ...]
+```
+
+#### Reserve Inventory
+```typescript
+const response = await fetch(
+  `${supabaseUrl}/functions/v1/external-inventory/reserve`,
+  {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${supabaseAnonKey}`,
+    },
+    body: JSON.stringify({
+      sku: 'sku-001',
+      quantity: 2,
+      orderId: 'order-uuid'
+    })
+  }
+);
+```
+
+**Optional Secrets:** `SHOPIFY_API_KEY`, `SHOPIFY_STORE_URL`, `WOOCOMMERCE_URL`, `WOOCOMMERCE_CONSUMER_KEY`, `WOOCOMMERCE_CONSUMER_SECRET`
+
+---
+
+### CRM Integration
+
+Sync contacts, create deals, and log activities in HubSpot, Salesforce, or Pipedrive.
+
+**Edge Function:** `/functions/v1/crm-integration`
+
+#### Sync Contact
+```typescript
+const response = await fetch(
+  `${supabaseUrl}/functions/v1/crm-integration/sync-contact`,
+  {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${supabaseAnonKey}`,
+    },
+    body: JSON.stringify({
+      provider: 'hubspot', // or 'salesforce', 'pipedrive'
+      email: 'customer@example.com',
+      firstName: 'John',
+      lastName: 'Doe',
+      phone: '+1234567890',
+      company: 'Acme Inc',
+      customFields: {
+        last_product_viewed: 'Mountain Bike Pro',
+        total_configurations: 5
+      }
+    })
+  }
+);
+```
+
+#### Create Deal
+```typescript
+const response = await fetch(
+  `${supabaseUrl}/functions/v1/crm-integration/create-deal`,
+  {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${supabaseAnonKey}`,
+    },
+    body: JSON.stringify({
+      provider: 'hubspot',
+      contactEmail: 'customer@example.com',
+      title: 'Mountain Bike Pro - Custom Configuration',
+      value: 1599.99,
+      stage: 'appointmentscheduled',
+      productId: 'product-uuid',
+      configurationId: 'config-uuid'
+    })
+  }
+);
+```
+
+#### Log Activity
+```typescript
+const response = await fetch(
+  `${supabaseUrl}/functions/v1/crm-integration/log-activity`,
+  {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${supabaseAnonKey}`,
+    },
+    body: JSON.stringify({
+      provider: 'hubspot',
+      contactEmail: 'customer@example.com',
+      activityType: 'Configuration Saved',
+      description: 'Customer saved a custom Mountain Bike configuration',
+      productId: 'product-uuid'
+    })
+  }
+);
+```
+
+**Optional Secrets:** `HUBSPOT_API_KEY`, `SALESFORCE_ACCESS_TOKEN`, `SALESFORCE_INSTANCE_URL`, `PIPEDRIVE_API_KEY`
+
+---
+
+### Social Media Sharing
+
+Generate shareable links and embed codes for configurations.
+
+**Edge Function:** `/functions/v1/social-sharing`
+
+#### Generate Share Link
+```typescript
+const response = await fetch(
+  `${supabaseUrl}/functions/v1/social-sharing/generate-link`,
+  {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${supabaseAnonKey}`,
+    },
+    body: JSON.stringify({
+      productId: 'product-uuid',
+      productName: 'Mountain Bike Pro',
+      configurationId: 'config-uuid',
+      configurationName: 'My Custom Build',
+      imageUrl: 'https://example.com/config-preview.jpg',
+      totalPrice: 1599.99,
+      selectedOptions: { 'frame-size': 'large', 'color': 'red' }
+    })
+  }
+);
+
+const { shareUrl, shareId, socialLinks, ogTags } = await response.json();
+// socialLinks includes: facebook, twitter, linkedin, pinterest, whatsapp, email
+```
+
+#### Generate Embed Code
+```typescript
+const response = await fetch(
+  `${supabaseUrl}/functions/v1/social-sharing/generate-embed`,
+  {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${supabaseAnonKey}`,
+    },
+    body: JSON.stringify({
+      configurationId: 'config-uuid',
+      width: 400,
+      height: 500,
+      theme: 'dark'
+    })
+  }
+);
+
+const { embedUrl, embedCode } = await response.json();
+// embedCode contains ready-to-use <iframe> HTML
+```
+
+#### Resolve Shared Link
+```typescript
+const response = await fetch(
+  `${supabaseUrl}/functions/v1/social-sharing/resolve`,
+  {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${supabaseAnonKey}`,
+    },
+    body: JSON.stringify({
+      shareId: 'abc12345',
+      data: 'base64-encoded-data-from-url'
+    })
+  }
+);
+
+const { product, selectedOptions, configurationDetails } = await response.json();
+```
+
+---
+
+### Scheduled Reports
+
+Generate and export reports on a schedule.
+
+**Edge Function:** `/functions/v1/generate-scheduled-report`
+
+#### Generate Report
+```typescript
+const response = await fetch(
+  `${supabaseUrl}/functions/v1/generate-scheduled-report`,
+  {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${supabaseAnonKey}`,
+    },
+    body: JSON.stringify({
+      reportType: 'sales', // or 'customers', 'products', 'funnel'
+      dateRange: {
+        start: '2024-01-01',
+        end: '2024-01-31'
+      },
+      format: 'json' // or 'csv'
+    })
+  }
+);
+
+const report = await response.json();
+```
+
+---
+
 ## Error Handling
 
 All API operations should include proper error handling:
@@ -650,5 +1057,5 @@ For integration testing, create a separate test database and use the same client
 ## Need Help?
 
 - 📖 [Supabase Documentation](https://supabase.com/docs)
-- 🔧 [ConfigureMax GitHub Issues](https://github.com/your-username/configuremax/issues)
-- 💬 [Community Support](https://discord.gg/configuremax)
+- 🔧 [Open Configurator GitHub Issues](https://github.com/your-username/open-configurator/issues)
+- 💬 [Community Support](https://discord.gg/open-configurator)

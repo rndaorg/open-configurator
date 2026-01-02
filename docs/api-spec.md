@@ -757,18 +757,239 @@ X-RateLimit-Reset: 1642345678
 
 ---
 
-## Webhooks (Future)
+## External Integration Endpoints
 
-### Configuration Saved
+### Stripe Payment Integration
+
+**Base Endpoint:** `/functions/v1/stripe-payment`
+
+| Action | Method | Path | Description |
+|--------|--------|------|-------------|
+| Create Payment Intent | POST | `/create-payment-intent` | Initiate a payment |
+| Confirm Payment | POST | `/confirm-payment` | Verify payment status |
+| Process Refund | POST | `/refund` | Issue full or partial refund |
+| Webhook | POST | `/webhook` | Handle Stripe events |
+
+**Request: Create Payment Intent**
 ```json
 {
-  "event": "configuration.saved",
-  "data": {
-    "id": "config_id",
-    "product_id": "product_id",
-    "total_price": 1599.99
-  },
+  "amount": 1599.99,
+  "currency": "usd",
+  "orderId": "uuid",
+  "customerEmail": "customer@example.com",
+  "metadata": { "product": "Mountain Bike" }
+}
+```
+
+**Response:**
+```json
+{
+  "clientSecret": "pi_xxx_secret_xxx",
+  "paymentIntentId": "pi_xxx"
+}
+```
+
+**Required Secret:** `STRIPE_SECRET_KEY`
+
+---
+
+### SendGrid Email Integration
+
+**Base Endpoint:** `/functions/v1/sendgrid-email`
+
+| Action | Method | Path | Description |
+|--------|--------|------|-------------|
+| Send Email | POST | `/send` | Send custom email |
+| Order Confirmation | POST | `/order-confirmation` | Send order confirmation |
+| Status Update | POST | `/status-update` | Send order status update |
+
+**Request: Order Confirmation**
+```json
+{
+  "orderId": "uuid",
+  "customerEmail": "customer@example.com",
+  "customerName": "John Doe",
+  "productName": "Mountain Bike Pro",
+  "configurationSummary": "Large Frame, Red, Carbon Wheels",
+  "totalPrice": 1599.99,
+  "orderDate": "2024-01-15"
+}
+```
+
+**Required Secrets:** `SENDGRID_API_KEY`, `SENDGRID_FROM_EMAIL`
+
+---
+
+### External Inventory Integration
+
+**Base Endpoint:** `/functions/v1/external-inventory`
+
+| Action | Method | Path | Description |
+|--------|--------|------|-------------|
+| Sync Inventory | POST | `/sync` | Sync from external provider |
+| Check Stock | POST | `/check` | Check availability |
+| Reserve Stock | POST | `/reserve` | Reserve for order |
+| Release Stock | POST | `/release` | Release reservation |
+| Webhook | POST | `/webhook` | Handle inventory updates |
+
+**Request: Sync**
+```json
+{
+  "provider": "shopify",
+  "apiUrl": "https://store.myshopify.com",
+  "apiKey": "optional-override"
+}
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "synced": 150,
+  "updated": 145,
   "timestamp": "2024-01-15T10:00:00Z"
+}
+```
+
+**Supported Providers:** `shopify`, `woocommerce`, `custom`
+
+---
+
+### CRM Integration
+
+**Base Endpoint:** `/functions/v1/crm-integration`
+
+| Action | Method | Path | Description |
+|--------|--------|------|-------------|
+| Sync Contact | POST | `/sync-contact` | Create/update CRM contact |
+| Create Deal | POST | `/create-deal` | Create sales opportunity |
+| Log Activity | POST | `/log-activity` | Record customer activity |
+| Webhook | POST | `/webhook` | Handle CRM events |
+
+**Request: Create Deal**
+```json
+{
+  "provider": "hubspot",
+  "contactEmail": "customer@example.com",
+  "title": "Custom Configuration",
+  "value": 1599.99,
+  "stage": "appointmentscheduled",
+  "productId": "uuid",
+  "configurationId": "uuid"
+}
+```
+
+**Supported Providers:** `hubspot`, `salesforce`, `pipedrive`
+
+---
+
+### Social Sharing Integration
+
+**Base Endpoint:** `/functions/v1/social-sharing`
+
+| Action | Method | Path | Description |
+|--------|--------|------|-------------|
+| Generate Link | POST | `/generate-link` | Create shareable URL |
+| Track Share | POST | `/track-share` | Track share analytics |
+| Track View | POST | `/track-view` | Track link views |
+| Resolve Link | POST | `/resolve` | Decode shared config |
+| Generate Embed | POST | `/generate-embed` | Create embed code |
+
+**Request: Generate Link**
+```json
+{
+  "productId": "uuid",
+  "productName": "Mountain Bike Pro",
+  "configurationId": "uuid",
+  "configurationName": "My Custom Build",
+  "imageUrl": "https://example.com/preview.jpg",
+  "totalPrice": 1599.99,
+  "selectedOptions": { "color": "red", "size": "large" }
+}
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "shareUrl": "https://app.example.com/shared/abc123",
+  "shareId": "abc123",
+  "socialLinks": {
+    "facebook": "https://facebook.com/sharer/...",
+    "twitter": "https://twitter.com/intent/tweet?...",
+    "linkedin": "https://linkedin.com/sharing/...",
+    "pinterest": "https://pinterest.com/pin/create/...",
+    "whatsapp": "https://wa.me/?text=...",
+    "email": "mailto:?subject=...&body=..."
+  },
+  "ogTags": {
+    "og:title": "My Custom Build",
+    "og:description": "Check out this custom configuration",
+    "og:image": "https://example.com/preview.jpg"
+  }
+}
+```
+
+---
+
+### Scheduled Reports
+
+**Base Endpoint:** `/functions/v1/generate-scheduled-report`
+
+| Report Type | Description |
+|-------------|-------------|
+| `sales` | Revenue, order count, average order value |
+| `customers` | New customers, repeat rates, top buyers |
+| `products` | Best sellers, configuration popularity |
+| `funnel` | Conversion rates, abandonment analysis |
+
+**Request:**
+```json
+{
+  "reportType": "sales",
+  "dateRange": {
+    "start": "2024-01-01",
+    "end": "2024-01-31"
+  },
+  "format": "json"
+}
+```
+
+---
+
+## Webhooks
+
+### Stripe Webhook Events
+
+Configure webhook endpoint: `/functions/v1/stripe-payment/webhook`
+
+Supported events:
+- `payment_intent.succeeded`
+- `payment_intent.payment_failed`
+
+### Inventory Webhook Events
+
+Configure webhook endpoint: `/functions/v1/external-inventory/webhook`
+
+Expected payload:
+```json
+{
+  "type": "inventory_update",
+  "sku": "option-value-uuid",
+  "quantity": 50
+}
+```
+
+### CRM Webhook Events
+
+Configure webhook endpoint: `/functions/v1/crm-integration/webhook`
+
+Expected payload:
+```json
+{
+  "type": "deal.updated",
+  "orderId": "order-uuid",
+  "stage": "won"
 }
 ```
 
@@ -820,24 +1041,55 @@ curl -X GET "${SUPABASE_URL}/rest/v1/products?select=*" \
   -H "apikey: ${SUPABASE_ANON_KEY}" \
   -H "Authorization: Bearer ${SUPABASE_ANON_KEY}"
 
-# Save configuration
-curl -X POST "${SUPABASE_URL}/rest/v1/product_configurations" \
-  -H "apikey: ${SUPABASE_ANON_KEY}" \
+# Create payment intent
+curl -X POST "${SUPABASE_URL}/functions/v1/stripe-payment/create-payment-intent" \
   -H "Authorization: Bearer ${SUPABASE_ANON_KEY}" \
   -H "Content-Type: application/json" \
-  -H "Prefer: return=representation" \
   -d '{
-    "product_id": "550e8400-e29b-41d4-a716-446655440000",
-    "total_price": 1599.99,
-    "configuration_data": {}
+    "amount": 1599.99,
+    "orderId": "order-uuid",
+    "customerEmail": "test@example.com"
+  }'
+
+# Generate share link
+curl -X POST "${SUPABASE_URL}/functions/v1/social-sharing/generate-link" \
+  -H "Authorization: Bearer ${SUPABASE_ANON_KEY}" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "productId": "product-uuid",
+    "productName": "Test Product",
+    "configurationId": "config-uuid",
+    "totalPrice": 999.99,
+    "selectedOptions": {}
   }'
 ```
 
 ---
 
+## Required Secrets Configuration
+
+| Secret | Integration | Required |
+|--------|-------------|----------|
+| `STRIPE_SECRET_KEY` | Stripe Payments | Yes |
+| `STRIPE_WEBHOOK_SECRET` | Stripe Webhooks | No |
+| `SENDGRID_API_KEY` | SendGrid Email | Yes |
+| `SENDGRID_FROM_EMAIL` | SendGrid Email | Yes |
+| `HUBSPOT_API_KEY` | HubSpot CRM | No |
+| `SALESFORCE_ACCESS_TOKEN` | Salesforce CRM | No |
+| `SALESFORCE_INSTANCE_URL` | Salesforce CRM | No |
+| `PIPEDRIVE_API_KEY` | Pipedrive CRM | No |
+| `SHOPIFY_API_KEY` | Shopify Inventory | No |
+| `SHOPIFY_STORE_URL` | Shopify Inventory | No |
+| `WOOCOMMERCE_URL` | WooCommerce Inventory | No |
+| `WOOCOMMERCE_CONSUMER_KEY` | WooCommerce Inventory | No |
+| `WOOCOMMERCE_CONSUMER_SECRET` | WooCommerce Inventory | No |
+| `APP_URL` | Social Sharing | No |
+
+---
+
 ## Versioning
 
-**Current Version:** 1.0.0 (Alpha - Not Production Ready)
+**Current Version:** 1.0.0
 
 **Version Policy:**
 - Major version for breaking changes
