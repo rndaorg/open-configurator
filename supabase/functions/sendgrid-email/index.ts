@@ -32,12 +32,14 @@ serve(async (req) => {
   }
 
   try {
-    const sendgridApiKey = Deno.env.get("SENDGRID_API_KEY");
-    if (!sendgridApiKey) {
-      throw new Error("SENDGRID_API_KEY not configured");
-    }
+    // Demo mode: use dummy API key for demonstration
+    const sendgridApiKey = Deno.env.get("SENDGRID_API_KEY") || "SG.demo_key_for_demonstration";
+    const isDemoMode = !Deno.env.get("SENDGRID_API_KEY");
+    const defaultFrom = Deno.env.get("SENDGRID_FROM_EMAIL") || "demo@example.com";
 
-    const defaultFrom = Deno.env.get("SENDGRID_FROM_EMAIL") || "noreply@example.com";
+    if (isDemoMode) {
+      console.log("Running in DEMO MODE - returning simulated responses");
+    }
     const url = new URL(req.url);
     const action = url.pathname.split("/").pop();
 
@@ -47,6 +49,19 @@ serve(async (req) => {
         const { to, subject, html, text, templateId, dynamicTemplateData, from, replyTo } = body;
 
         const toAddresses = Array.isArray(to) ? to : [to];
+
+        // Demo mode: return simulated success
+        if (isDemoMode) {
+          return new Response(JSON.stringify({ 
+            success: true, 
+            message: "Demo mode: Email would be sent",
+            demo: true,
+            recipients: toAddresses,
+            subject
+          }), {
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
+          });
+        }
         
         const emailPayload: Record<string, unknown> = {
           personalizations: toAddresses.map(email => ({
@@ -91,6 +106,19 @@ serve(async (req) => {
       case "order-confirmation": {
         const body: OrderConfirmationData = await req.json();
         const { orderId, customerEmail, customerName, productName, configurationSummary, totalPrice, orderDate } = body;
+
+        // Demo mode: return simulated success
+        if (isDemoMode) {
+          return new Response(JSON.stringify({ 
+            success: true, 
+            demo: true,
+            message: "Demo mode: Order confirmation email would be sent",
+            recipient: customerEmail,
+            orderId
+          }), {
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
+          });
+        }
 
         const html = `
           <!DOCTYPE html>
@@ -160,6 +188,20 @@ serve(async (req) => {
 
       case "status-update": {
         const { customerEmail, customerName, orderId, newStatus, trackingNumber } = await req.json();
+
+        // Demo mode: return simulated success
+        if (isDemoMode) {
+          return new Response(JSON.stringify({ 
+            success: true, 
+            demo: true,
+            message: "Demo mode: Status update email would be sent",
+            recipient: customerEmail,
+            orderId,
+            newStatus
+          }), {
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
+          });
+        }
 
         const statusMessages: Record<string, string> = {
           processing: "Your order is being processed",

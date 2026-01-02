@@ -26,9 +26,12 @@ serve(async (req) => {
   }
 
   try {
-    const stripeSecretKey = Deno.env.get("STRIPE_SECRET_KEY");
-    if (!stripeSecretKey) {
-      throw new Error("STRIPE_SECRET_KEY not configured");
+    // Demo mode: use dummy API key for demonstration
+    const stripeSecretKey = Deno.env.get("STRIPE_SECRET_KEY") || "sk_test_demo_key_for_demonstration";
+    const isDemoMode = !Deno.env.get("STRIPE_SECRET_KEY");
+
+    if (isDemoMode) {
+      console.log("Running in DEMO MODE - returning simulated responses");
     }
 
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
@@ -42,6 +45,19 @@ serve(async (req) => {
       case "create-payment-intent": {
         const body: PaymentRequest = await req.json();
         const { amount, currency = "usd", orderId, customerEmail, metadata } = body;
+
+        // Demo mode: return simulated response
+        if (isDemoMode) {
+          const demoPaymentId = `pi_demo_${Date.now()}`;
+          return new Response(JSON.stringify({
+            clientSecret: `${demoPaymentId}_secret_demo`,
+            paymentIntentId: demoPaymentId,
+            demo: true,
+            message: "Demo mode: This is a simulated payment intent"
+          }), {
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
+          });
+        }
 
         // Create payment intent via Stripe API
         const response = await fetch("https://api.stripe.com/v1/payment_intents", {
@@ -87,6 +103,18 @@ serve(async (req) => {
       case "confirm-payment": {
         const { paymentIntentId, orderId } = await req.json();
 
+        // Demo mode: return simulated success
+        if (isDemoMode) {
+          return new Response(JSON.stringify({ 
+            success: true, 
+            status: "paid",
+            demo: true,
+            message: "Demo mode: Payment confirmed successfully"
+          }), {
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
+          });
+        }
+
         // Verify payment status
         const response = await fetch(`https://api.stripe.com/v1/payment_intents/${paymentIntentId}`, {
           headers: { "Authorization": `Bearer ${stripeSecretKey}` },
@@ -116,6 +144,19 @@ serve(async (req) => {
       case "refund": {
         const body: RefundRequest = await req.json();
         const { paymentIntentId, amount, reason } = body;
+
+        // Demo mode: return simulated refund
+        if (isDemoMode) {
+          return new Response(JSON.stringify({ 
+            success: true, 
+            refundId: `re_demo_${Date.now()}`,
+            status: "succeeded",
+            demo: true,
+            message: "Demo mode: Refund processed successfully"
+          }), {
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
+          });
+        }
 
         const params: Record<string, string> = {
           payment_intent: paymentIntentId,
