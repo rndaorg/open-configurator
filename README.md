@@ -162,15 +162,15 @@ open-configurator/
 
 ## ⚠️ Security Notice
 
-**IMPORTANT**: This is a demonstration/starter project with known security vulnerabilities. **DO NOT deploy to production** without implementing the security fixes outlined in our [Security Guide](docs/security.md).
+**Note**: This project implements enterprise-grade security features including authentication, RBAC, RLS, and server-side validation. See our [Security Guide](docs/security.md) for full details on the security implementation.
 
-Key issues to address:
-- Exposed business logic (pricing rules, inventory)
-- Client-side security enforcement
-- Missing input validation
-- Weak session management
-
-See [Getting Started](docs/getting-started.md#critical-security-notice) for required fixes.
+Security features implemented:
+- ✅ Authentication System (Supabase Auth)
+- ✅ Role-Based Access Control (RBAC)
+- ✅ Row Level Security (RLS) on all tables
+- ✅ Server-Side Validation via Edge Functions
+- ✅ Input Validation with Zod schemas
+- ✅ Secure Session Management
 
 ## 📚 Documentation
 
@@ -197,9 +197,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 🌟 Support
 
 - ⭐ Star this repository if you find it helpful
-- 🐛 [Report bugs](https://github.com/your-username/configuremax/issues)
-- 💡 [Request features](https://github.com/your-username/configuremax/issues)
-- 📧 [Contact us](mailto:support@configuremax.com)
+- 🐛 [Report bugs](https://github.com/rndaorg/open-configurator/issues)
+- 💡 [Request features](https://github.com/rndaorg/open-configurator/issues)
+- 📧 [Contact us](mailto:support@openconfigurator.dev)
 
 ## 🚀 Deploy Your Own
 

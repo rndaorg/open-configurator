@@ -524,7 +524,7 @@ const { data, error } = await supabase
 
 ## Real-time Subscriptions
 
-ConfigureMax supports real-time updates using Supabase's real-time features:
+Open Configurator supports real-time updates using Supabase's real-time features:
 
 ### Subscribe to Product Updates
 ```typescript
@@ -1057,5 +1057,5 @@ For integration testing, create a separate test database and use the same client
 ## Need Help?
 
 - 📖 [Supabase Documentation](https://supabase.com/docs)
-- 🔧 [Open Configurator GitHub Issues](https://github.com/your-username/open-configurator/issues)
+- 🔧 [Open Configurator GitHub Issues](https://github.com/rndaorg/open-configurator/issues)
 - 💬 [Community Support](https://discord.gg/open-configurator)

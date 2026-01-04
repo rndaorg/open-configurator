@@ -1100,8 +1100,8 @@ curl -X POST "${SUPABASE_URL}/functions/v1/social-sharing/generate-link" \
 
 ## Support
 
-- **Issues:** [GitHub Issues](https://github.com/your-org/open-configurator/issues)
-- **Security:** security@your-domain.com
+- **Issues:** [GitHub Issues](https://github.com/rndaorg/open-configurator/issues)
+- **Security:** security@openconfigurator.dev
 - **Docs:** [Full Documentation](./README.md)
 
 ---
