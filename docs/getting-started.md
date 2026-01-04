@@ -122,7 +122,7 @@ Open `http://localhost:5173` in your browser. You should see:
 
 ### Configuration Option Types
 
-ConfigureMax supports several option types:
+Open Configurator supports several option types:
 - **Selection**: Single choice from multiple options
 - **Color**: Color picker with hex values
 - **Size**: Numerical or text-based sizing
@@ -161,7 +161,7 @@ The app uses a design token system in:
 3. Your configurator will be live with SSL and global CDN
 
 ### Manual Deployment
-ConfigureMax works with any static hosting provider:
+Open Configurator works with any static hosting provider:
 - Vercel
 - Netlify
 - GitHub Pages
@@ -187,9 +187,9 @@ Now that you have Open Configurator running with advanced features:
 ## Need Help?
 
 - 📖 [Full Documentation](./README.md)
-- 🐛 [Report Issues](https://github.com/your-username/configuremax/issues)
-- 💬 [Community Discord](https://discord.gg/configuremax)
-- 📧 [Email Support](mailto:support@configuremax.com)
+- 🐛 [Report Issues](https://github.com/rndaorg/open-configurator/issues)
+- 💬 [Community Discord](https://discord.gg/open-configurator)
+- 📧 [Email Support](mailto:support@openconfigurator.dev)
 
 ## ✅ Security Implementation
 

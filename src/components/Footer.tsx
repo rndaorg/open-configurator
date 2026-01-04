@@ -1,4 +1,4 @@
-import { Github, Mail, Globe } from 'lucide-react';
+import { Github, Mail, Globe, Boxes } from 'lucide-react';
 
 export const Footer = () => {
   return (
@@ -8,8 +8,8 @@ export const Footer = () => {
           {/* Brand */}
           <div className="space-y-4">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-gradient-primary rounded-lg" />
-              <span className="text-xl font-bold">ConfigureMax</span>
+              <Boxes className="w-8 h-8 text-primary" />
+              <span className="text-xl font-bold">Open Configurator</span>
             </div>
             <p className="text-muted-foreground text-sm">
               The universal product configurator. Build and customize your perfect products with our intuitive configurator.
@@ -33,8 +33,8 @@ export const Footer = () => {
             <div className="space-y-2 text-sm text-muted-foreground">
               <a href="/docs/getting-started" className="block hover:text-primary transition-colors">Getting Started</a>
               <a href="/docs/examples" className="block hover:text-primary transition-colors">Examples</a>
-              <a href="https://github.com/your-username/configuremax" className="block hover:text-primary transition-colors">GitHub</a>
-              <a href="mailto:support@configuremax.com" className="block hover:text-primary transition-colors">Support</a>
+              <a href="https://github.com/rndaorg/open-configurator" className="block hover:text-primary transition-colors">GitHub</a>
+              <a href="mailto:support@openconfigurator.dev" className="block hover:text-primary transition-colors">Support</a>
             </div>
           </div>
 
@@ -43,7 +43,7 @@ export const Footer = () => {
             <h3 className="font-semibold">Connect</h3>
             <div className="flex gap-3">
               <a 
-                href="https://github.com/your-username/configuremax" 
+                href="https://github.com/rndaorg/open-configurator" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="w-10 h-10 bg-muted hover:bg-muted/80 rounded-lg flex items-center justify-center transition-colors"
@@ -51,13 +51,13 @@ export const Footer = () => {
                 <Github className="w-5 h-5" />
               </a>
               <a 
-                href="mailto:hello@configuremax.com"
+                href="mailto:hello@openconfigurator.dev"
                 className="w-10 h-10 bg-muted hover:bg-muted/80 rounded-lg flex items-center justify-center transition-colors"
               >
                 <Mail className="w-5 h-5" />
               </a>
               <a 
-                href="https://configuremax.com" 
+                href="https://openconfigurator.dev" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="w-10 h-10 bg-muted hover:bg-muted/80 rounded-lg flex items-center justify-center transition-colors"
@@ -70,7 +70,7 @@ export const Footer = () => {
 
         <div className="border-t border-border mt-8 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-sm text-muted-foreground">
-            © 2024 ConfigureMax. All rights reserved.
+            © 2025 Open Configurator. All rights reserved.
           </p>
           <div className="flex gap-6 text-sm text-muted-foreground">
             <a href="/privacy" className="hover:text-primary transition-colors">Privacy Policy</a>

@@ -2,7 +2,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Settings, Menu, X, LogOut, User, ShoppingCart, Shield } from 'lucide-react';
+import { Boxes, Menu, X, LogOut, User, ShoppingCart, Shield } from 'lucide-react';
 import { useState } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { useCart } from '@/contexts/CartContext';
@@ -36,7 +36,7 @@ export const Navigation = () => {
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2">
-            <Settings className="h-8 w-8 text-primary" />
+            <Boxes className="h-8 w-8 text-primary" />
             <span className="text-xl font-bold bg-gradient-primary bg-clip-text text-transparent">
               Open Configurator
             </span>
@@ -76,7 +76,7 @@ export const Navigation = () => {
             <Button
               variant="outline"
               size="sm"
-              onClick={() => window.open('https://github.com/your-username/configuremax', '_blank')}
+              onClick={() => window.open('https://github.com/rndaorg/open-configurator', '_blank')}
             >
               GitHub
             </Button>
@@ -151,7 +151,7 @@ export const Navigation = () => {
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() => window.open('https://github.com/your-username/configuremax', '_blank')}
+                  onClick={() => window.open('https://github.com/rndaorg/open-configurator', '_blank')}
                 >
                   GitHub
                 </Button>
