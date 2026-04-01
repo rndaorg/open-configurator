@@ -1,22 +1,49 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-interface InventoryItem {
-  sku: string;
-  quantity: number;
-  location?: string;
-  lastUpdated?: string;
+const SyncRequestSchema = z.object({
+  provider: z.enum(["shopify", "woocommerce", "custom"]),
+  apiUrl: z.string().url().max(2000).optional(),
+  apiKey: z.string().max(500).optional(),
+});
+
+const CheckRequestSchema = z.object({
+  skus: z.array(z.string().uuid()).max(100),
+});
+
+const ReserveRequestSchema = z.object({
+  sku: z.string().uuid(),
+  quantity: z.number().int().positive().max(10000),
+  orderId: z.string().uuid().optional(),
+});
+
+const ReleaseRequestSchema = z.object({
+  sku: z.string().uuid(),
+  quantity: z.number().int().positive().max(10000),
+});
+
+async function requireAdmin(req: Request, supabase: any) {
+  const authHeader = req.headers.get("Authorization");
+  if (!authHeader) return false;
+  const token = authHeader.replace("Bearer ", "");
+  const { data: { user } } = await supabase.auth.getUser(token);
+  if (!user) return false;
+  const { data: isAdmin } = await supabase.rpc('has_role', { _user_id: user.id, _role: 'admin' });
+  return !!isAdmin;
 }
 
-interface SyncRequest {
-  provider: "shopify" | "woocommerce" | "custom";
-  apiUrl?: string;
-  apiKey?: string;
+async function requireAuth(req: Request, supabase: any) {
+  const authHeader = req.headers.get("Authorization");
+  if (!authHeader) return null;
+  const token = authHeader.replace("Bearer ", "");
+  const { data: { user } } = await supabase.auth.getUser(token);
+  return user;
 }
 
 serve(async (req) => {
@@ -34,19 +61,27 @@ serve(async (req) => {
 
     switch (action) {
       case "sync": {
-        const body: SyncRequest = await req.json();
-        const { provider, apiUrl, apiKey } = body;
+        if (!await requireAdmin(req, supabase)) {
+          return new Response(JSON.stringify({ error: "Admin access required" }), {
+            status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
+          });
+        }
 
-        let externalInventory: InventoryItem[] = [];
+        const parsed = SyncRequestSchema.safeParse(await req.json());
+        if (!parsed.success) {
+          return new Response(JSON.stringify({ error: "Invalid input", details: parsed.error.flatten().fieldErrors }), {
+            status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
+          });
+        }
+        const { provider, apiUrl, apiKey } = parsed.data;
+
+        let externalInventory: { sku: string; quantity: number; location?: string; lastUpdated?: string }[] = [];
 
         switch (provider) {
           case "shopify": {
             const shopifyApiKey = apiKey || Deno.env.get("SHOPIFY_API_KEY");
             const shopifyStore = Deno.env.get("SHOPIFY_STORE_URL");
-            
-            if (!shopifyApiKey || !shopifyStore) {
-              throw new Error("Shopify credentials not configured");
-            }
+            if (!shopifyApiKey || !shopifyStore) throw new Error("Shopify credentials not configured");
 
             const response = await fetch(`${shopifyStore}/admin/api/2024-01/inventory_levels.json`, {
               headers: { "X-Shopify-Access-Token": shopifyApiKey },
@@ -63,15 +98,11 @@ serve(async (req) => {
             }
             break;
           }
-
           case "woocommerce": {
             const wooUrl = apiUrl || Deno.env.get("WOOCOMMERCE_URL");
             const wooKey = apiKey || Deno.env.get("WOOCOMMERCE_CONSUMER_KEY");
             const wooSecret = Deno.env.get("WOOCOMMERCE_CONSUMER_SECRET");
-            
-            if (!wooUrl || !wooKey) {
-              throw new Error("WooCommerce credentials not configured");
-            }
+            if (!wooUrl || !wooKey) throw new Error("WooCommerce credentials not configured");
 
             const auth = btoa(`${wooKey}:${wooSecret}`);
             const response = await fetch(`${wooUrl}/wp-json/wc/v3/products?per_page=100`, {
@@ -88,24 +119,16 @@ serve(async (req) => {
             }
             break;
           }
-
           case "custom": {
-            if (!apiUrl) {
-              throw new Error("Custom API URL required");
-            }
-
+            if (!apiUrl) throw new Error("Custom API URL required");
             const response = await fetch(apiUrl, {
               headers: apiKey ? { "Authorization": `Bearer ${apiKey}` } : {},
             });
-
-            if (response.ok) {
-              externalInventory = await response.json();
-            }
+            if (response.ok) externalInventory = await response.json();
             break;
           }
         }
 
-        // Update local inventory levels
         let updated = 0;
         for (const item of externalInventory) {
           const { error } = await supabase
@@ -115,14 +138,11 @@ serve(async (req) => {
               available_quantity: item.quantity,
               updated_at: item.lastUpdated || new Date().toISOString(),
             }, { onConflict: "option_value_id" });
-
           if (!error) updated++;
         }
 
         return new Response(JSON.stringify({
-          success: true,
-          synced: externalInventory.length,
-          updated,
+          success: true, synced: externalInventory.length, updated,
           timestamp: new Date().toISOString(),
         }), {
           headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -130,12 +150,24 @@ serve(async (req) => {
       }
 
       case "check": {
-        const { skus } = await req.json();
+        const user = await requireAuth(req, supabase);
+        if (!user) {
+          return new Response(JSON.stringify({ error: "Authentication required" }), {
+            status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
+          });
+        }
+
+        const parsed = CheckRequestSchema.safeParse(await req.json());
+        if (!parsed.success) {
+          return new Response(JSON.stringify({ error: "Invalid input", details: parsed.error.flatten().fieldErrors }), {
+            status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
+          });
+        }
 
         const { data, error } = await supabase
           .from("inventory_levels")
           .select("option_value_id, available_quantity, reserved_quantity, low_stock_threshold")
-          .in("option_value_id", skus);
+          .in("option_value_id", parsed.data.skus);
 
         if (error) throw error;
 
@@ -151,7 +183,20 @@ serve(async (req) => {
       }
 
       case "reserve": {
-        const { sku, quantity, orderId } = await req.json();
+        const user = await requireAuth(req, supabase);
+        if (!user) {
+          return new Response(JSON.stringify({ error: "Authentication required" }), {
+            status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
+          });
+        }
+
+        const parsed = ReserveRequestSchema.safeParse(await req.json());
+        if (!parsed.success) {
+          return new Response(JSON.stringify({ error: "Invalid input", details: parsed.error.flatten().fieldErrors }), {
+            status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
+          });
+        }
+        const { sku, quantity } = parsed.data;
 
         const { data: current, error: fetchError } = await supabase
           .from("inventory_levels")
@@ -164,12 +209,9 @@ serve(async (req) => {
         const availableToReserve = current.available_quantity - current.reserved_quantity;
         if (availableToReserve < quantity) {
           return new Response(JSON.stringify({
-            success: false,
-            error: "Insufficient inventory",
-            available: availableToReserve,
+            success: false, error: "Insufficient inventory", available: availableToReserve,
           }), {
-            status: 400,
-            headers: { ...corsHeaders, "Content-Type": "application/json" },
+            status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
           });
         }
 
@@ -186,7 +228,19 @@ serve(async (req) => {
       }
 
       case "release": {
-        const { sku, quantity } = await req.json();
+        if (!await requireAdmin(req, supabase)) {
+          return new Response(JSON.stringify({ error: "Admin access required" }), {
+            status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
+          });
+        }
+
+        const parsed = ReleaseRequestSchema.safeParse(await req.json());
+        if (!parsed.success) {
+          return new Response(JSON.stringify({ error: "Invalid input", details: parsed.error.flatten().fieldErrors }), {
+            status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
+          });
+        }
+        const { sku, quantity } = parsed.data;
 
         const { data: current, error: fetchError } = await supabase
           .from("inventory_levels")
@@ -211,9 +265,8 @@ serve(async (req) => {
       }
 
       case "webhook": {
-        // Handle incoming webhooks from external inventory systems
         const event = await req.json();
-        console.log("Received inventory webhook:", JSON.stringify(event).substring(0, 200));
+        console.log("Received inventory webhook");
 
         if (event.type === "inventory_update" && event.sku) {
           await supabase
@@ -231,11 +284,13 @@ serve(async (req) => {
       }
 
       default:
-        throw new Error(`Unknown action: ${action}`);
+        return new Response(JSON.stringify({ error: "Unknown action" }), {
+          status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
     }
   } catch (error) {
     console.error("External inventory error:", error);
-    return new Response(JSON.stringify({ error: error.message }), {
+    return new Response(JSON.stringify({ error: "An error occurred processing your request" }), {
       status: 400,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });

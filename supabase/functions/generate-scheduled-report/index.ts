@@ -1,18 +1,19 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-interface ReportConfig {
-  reportType: "sales" | "orders" | "customers" | "products" | "full";
-  dateFrom: string;
-  dateTo: string;
-  format: "json" | "csv";
-  recipientEmail?: string;
-}
+const ReportConfigSchema = z.object({
+  reportType: z.enum(["sales", "orders", "customers", "products", "full"]).default("full"),
+  dateFrom: z.string().max(100).optional(),
+  dateTo: z.string().max(100).optional(),
+  format: z.enum(["json", "csv"]).default("json"),
+  recipientEmail: z.string().email().max(255).optional(),
+});
 
 serve(async (req) => {
   if (req.method === "OPTIONS") {
@@ -24,10 +25,38 @@ serve(async (req) => {
     const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-    const { reportType = "full", dateFrom, dateTo, format = "json" }: ReportConfig = await req.json();
+    // Require admin authentication
+    const authHeader = req.headers.get("Authorization");
+    if (!authHeader) {
+      return new Response(JSON.stringify({ error: "Authentication required" }), {
+        status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    const token = authHeader.replace("Bearer ", "");
+    const { data: { user } } = await supabase.auth.getUser(token);
+    if (!user) {
+      return new Response(JSON.stringify({ error: "Authentication required" }), {
+        status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    const { data: isAdmin } = await supabase.rpc('has_role', { _user_id: user.id, _role: 'admin' });
+    if (!isAdmin) {
+      return new Response(JSON.stringify({ error: "Admin access required" }), {
+        status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
 
-    const fromDate = dateFrom || new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
-    const toDate = dateTo || new Date().toISOString();
+    // Validate input
+    const parsed = ReportConfigSchema.safeParse(await req.json());
+    if (!parsed.success) {
+      return new Response(JSON.stringify({ error: "Invalid input", details: parsed.error.flatten().fieldErrors }), {
+        status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    const { reportType, format } = parsed.data;
+    const fromDate = parsed.data.dateFrom || new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
+    const toDate = parsed.data.dateTo || new Date().toISOString();
 
     console.log(`Generating ${reportType} report from ${fromDate} to ${toDate}`);
 
@@ -56,16 +85,9 @@ serve(async (req) => {
         return acc;
       }, {}) || {};
 
-      reportData.sales = {
-        totalRevenue,
-        totalOrders,
-        avgOrderValue,
-        ordersByStatus,
-        orders: orders || [],
-      };
+      reportData.sales = { totalRevenue, totalOrders, avgOrderValue, ordersByStatus, orders: orders || [] };
     }
 
-    // Fetch customer data
     if (reportType === "customers" || reportType === "full") {
       const { data: profiles, error: profilesError } = await supabase
         .from("profiles")
@@ -84,7 +106,6 @@ serve(async (req) => {
 
       if (searchError) throw searchError;
 
-      // Aggregate top searches
       const searchCounts = searchAnalytics?.reduce((acc: Record<string, number>, s) => {
         acc[s.search_query] = (acc[s.search_query] || 0) + 1;
         return acc;
@@ -95,13 +116,9 @@ serve(async (req) => {
         .slice(0, 10)
         .map(([query, count]) => ({ query, count }));
 
-      reportData.customers = {
-        newCustomers: profiles?.length || 0,
-        topSearches,
-      };
+      reportData.customers = { newCustomers: profiles?.length || 0, topSearches };
     }
 
-    // Fetch product data
     if (reportType === "products" || reportType === "full") {
       const { data: products, error: productsError } = await supabase
         .from("products")
@@ -123,7 +140,6 @@ serve(async (req) => {
       };
     }
 
-    // Fetch configuration analytics
     if (reportType === "full") {
       const { data: configAnalytics, error: configError } = await supabase
         .from("configuration_analytics")
@@ -144,16 +160,10 @@ serve(async (req) => {
         return acc;
       }, {}) || {};
 
-      reportData.conversionFunnel = {
-        avgCompletionRate,
-        abandonmentPoints,
-        totalSessions: configAnalytics?.length || 0,
-      };
+      reportData.conversionFunnel = { avgCompletionRate, abandonmentPoints, totalSessions: configAnalytics?.length || 0 };
     }
 
-    // Format response
     if (format === "csv") {
-      // Convert to CSV format
       const csvData = convertToCSV(reportData);
       return new Response(csvData, {
         headers: {
@@ -170,7 +180,7 @@ serve(async (req) => {
   } catch (error) {
     console.error("Error generating report:", error);
     return new Response(
-      JSON.stringify({ error: error.message }),
+      JSON.stringify({ error: "An error occurred generating the report" }),
       { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   }
