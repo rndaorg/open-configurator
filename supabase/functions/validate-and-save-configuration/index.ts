@@ -1,20 +1,23 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
-interface ConfigurationRequest {
-  productId: string;
-  selectedOptions: Record<string, string>;
-  quantity: number;
-  configurationName?: string;
-}
+const ConfigurationRequestSchema = z.object({
+  productId: z.string().uuid("Invalid product ID"),
+  selectedOptions: z.record(z.string().uuid(), z.string().uuid()).refine(
+    (opts) => Object.keys(opts).length <= 50,
+    "Too many options selected (max 50)"
+  ),
+  quantity: z.number().int().min(1).max(10000),
+  configurationName: z.string().max(255).optional(),
+});
 
 serve(async (req) => {
-  // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
@@ -36,7 +39,17 @@ serve(async (req) => {
       userId = user?.id ?? null;
     }
 
-    const { productId, selectedOptions, quantity, configurationName }: ConfigurationRequest = await req.json();
+    // Parse and validate input
+    const rawBody = await req.json();
+    const parsed = ConfigurationRequestSchema.safeParse(rawBody);
+    if (!parsed.success) {
+      return new Response(
+        JSON.stringify({ error: 'Invalid input', details: parsed.error.flatten().fieldErrors }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    const { productId, selectedOptions, quantity, configurationName } = parsed.data;
 
     console.log('Validating configuration for product:', productId);
 
@@ -133,7 +146,7 @@ serve(async (req) => {
   } catch (error: any) {
     console.error('Error in validate-and-save-configuration:', error);
     return new Response(
-      JSON.stringify({ error: error.message }),
+      JSON.stringify({ error: 'An error occurred processing your request' }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   }
@@ -189,7 +202,6 @@ function calculatePrice(
 ): number {
   let price = Number(basePrice);
 
-  // Apply pricing rules
   for (const rule of pricingRules) {
     if (!evaluateConditions(rule.conditions, options)) {
       continue;
@@ -199,12 +211,10 @@ function calculatePrice(
       continue;
     }
 
-    // Check time validity
     const now = new Date();
     if (rule.valid_from && new Date(rule.valid_from) > now) continue;
     if (rule.valid_until && new Date(rule.valid_until) < now) continue;
 
-    // Apply discount
     if (rule.discount_type === 'percentage') {
       price -= price * (Number(rule.discount_value) / 100);
     } else if (rule.discount_type === 'fixed') {

@@ -1,29 +1,50 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-interface EmailRequest {
-  to: string | string[];
-  subject: string;
-  html?: string;
-  text?: string;
-  templateId?: string;
-  dynamicTemplateData?: Record<string, unknown>;
-  from?: string;
-  replyTo?: string;
-}
+const SendEmailSchema = z.object({
+  to: z.union([z.string().email(), z.array(z.string().email()).max(50)]),
+  subject: z.string().min(1).max(500),
+  html: z.string().max(100000).optional(),
+  text: z.string().max(100000).optional(),
+  templateId: z.string().max(255).optional(),
+  dynamicTemplateData: z.record(z.unknown()).optional(),
+  from: z.string().email().optional(),
+  replyTo: z.string().email().optional(),
+});
 
-interface OrderConfirmationData {
-  orderId: string;
-  customerEmail: string;
-  customerName: string;
-  productName: string;
-  configurationSummary: string;
-  totalPrice: number;
-  orderDate: string;
+const OrderConfirmationSchema = z.object({
+  orderId: z.string().uuid(),
+  customerEmail: z.string().email(),
+  customerName: z.string().max(255),
+  productName: z.string().max(255),
+  configurationSummary: z.string().max(5000),
+  totalPrice: z.number().positive(),
+  orderDate: z.string().max(100),
+});
+
+const StatusUpdateSchema = z.object({
+  customerEmail: z.string().email(),
+  customerName: z.string().max(255),
+  orderId: z.string().uuid(),
+  newStatus: z.string().max(50),
+  trackingNumber: z.string().max(100).optional(),
+});
+
+async function requireAdmin(req: Request, supabase: any) {
+  const authHeader = req.headers.get("Authorization");
+  if (!authHeader) throw new Error("AUTH_REQUIRED");
+  const token = authHeader.replace("Bearer ", "");
+  const { data: { user } } = await supabase.auth.getUser(token);
+  if (!user) throw new Error("AUTH_REQUIRED");
+  const { data: isAdmin } = await supabase.rpc('has_role', { _user_id: user.id, _role: 'admin' });
+  if (!isAdmin) throw new Error("ADMIN_REQUIRED");
+  return user;
 }
 
 serve(async (req) => {
@@ -32,7 +53,6 @@ serve(async (req) => {
   }
 
   try {
-    // Demo mode: use dummy API key for demonstration
     const sendgridApiKey = Deno.env.get("SENDGRID_API_KEY") || "SG.demo_key_for_demonstration";
     const isDemoMode = !Deno.env.get("SENDGRID_API_KEY");
     const defaultFrom = Deno.env.get("SENDGRID_FROM_EMAIL") || "demo@example.com";
@@ -40,27 +60,48 @@ serve(async (req) => {
     if (isDemoMode) {
       console.log("Running in DEMO MODE - returning simulated responses");
     }
+
+    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+    const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+    const supabase = createClient(supabaseUrl, supabaseServiceKey);
+
     const url = new URL(req.url);
     const action = url.pathname.split("/").pop();
 
+    // All email sending requires admin auth
+    try {
+      await requireAdmin(req, supabase);
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : "";
+      if (msg === "AUTH_REQUIRED") {
+        return new Response(JSON.stringify({ error: "Authentication required" }), {
+          status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+      if (msg === "ADMIN_REQUIRED") {
+        return new Response(JSON.stringify({ error: "Admin access required" }), {
+          status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+      throw e;
+    }
+
     switch (action) {
       case "send": {
-        const body: EmailRequest = await req.json();
-        const { to, subject, html, text, templateId, dynamicTemplateData, from, replyTo } = body;
-
+        const parsed = SendEmailSchema.safeParse(await req.json());
+        if (!parsed.success) {
+          return new Response(JSON.stringify({ error: "Invalid input", details: parsed.error.flatten().fieldErrors }), {
+            status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
+          });
+        }
+        const { to, subject, html, text, templateId, dynamicTemplateData, from, replyTo } = parsed.data;
         const toAddresses = Array.isArray(to) ? to : [to];
 
-        // Demo mode: return simulated success
         if (isDemoMode) {
           return new Response(JSON.stringify({ 
-            success: true, 
-            message: "Demo mode: Email would be sent",
-            demo: true,
-            recipients: toAddresses,
-            subject
-          }), {
-            headers: { ...corsHeaders, "Content-Type": "application/json" },
-          });
+            success: true, message: "Demo mode: Email would be sent", demo: true,
+            recipients: toAddresses, subject
+          }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
         }
         
         const emailPayload: Record<string, unknown> = {
@@ -71,25 +112,18 @@ serve(async (req) => {
           from: { email: from || defaultFrom },
           subject,
         };
-
-        if (replyTo) {
-          emailPayload.reply_to = { email: replyTo };
-        }
-
+        if (replyTo) emailPayload.reply_to = { email: replyTo };
         if (templateId) {
           emailPayload.template_id = templateId;
         } else {
           emailPayload.content = [];
-          if (text) emailPayload.content.push({ type: "text/plain", value: text });
-          if (html) emailPayload.content.push({ type: "text/html", value: html });
+          if (text) (emailPayload.content as any[]).push({ type: "text/plain", value: text });
+          if (html) (emailPayload.content as any[]).push({ type: "text/html", value: html });
         }
 
         const response = await fetch("https://api.sendgrid.com/v3/mail/send", {
           method: "POST",
-          headers: {
-            "Authorization": `Bearer ${sendgridApiKey}`,
-            "Content-Type": "application/json",
-          },
+          headers: { "Authorization": `Bearer ${sendgridApiKey}`, "Content-Type": "application/json" },
           body: JSON.stringify(emailPayload),
         });
 
@@ -104,20 +138,19 @@ serve(async (req) => {
       }
 
       case "order-confirmation": {
-        const body: OrderConfirmationData = await req.json();
-        const { orderId, customerEmail, customerName, productName, configurationSummary, totalPrice, orderDate } = body;
+        const parsed = OrderConfirmationSchema.safeParse(await req.json());
+        if (!parsed.success) {
+          return new Response(JSON.stringify({ error: "Invalid input", details: parsed.error.flatten().fieldErrors }), {
+            status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
+          });
+        }
+        const { orderId, customerEmail, customerName, productName, configurationSummary, totalPrice, orderDate } = parsed.data;
 
-        // Demo mode: return simulated success
         if (isDemoMode) {
           return new Response(JSON.stringify({ 
-            success: true, 
-            demo: true,
-            message: "Demo mode: Order confirmation email would be sent",
-            recipient: customerEmail,
-            orderId
-          }), {
-            headers: { ...corsHeaders, "Content-Type": "application/json" },
-          });
+            success: true, demo: true, message: "Demo mode: Order confirmation email would be sent",
+            recipient: customerEmail, orderId
+          }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
         }
 
         const html = `
@@ -136,13 +169,10 @@ serve(async (req) => {
           </head>
           <body>
             <div class="container">
-              <div class="header">
-                <h1>Order Confirmation</h1>
-              </div>
+              <div class="header"><h1>Order Confirmation</h1></div>
               <div class="content">
                 <p>Dear ${customerName},</p>
-                <p>Thank you for your order! We're excited to confirm your purchase.</p>
-                
+                <p>Thank you for your order!</p>
                 <div class="order-details">
                   <h3>Order #${orderId.substring(0, 8).toUpperCase()}</h3>
                   <p><strong>Product:</strong> ${productName}</p>
@@ -151,12 +181,9 @@ serve(async (req) => {
                   <p><strong>Order Date:</strong> ${orderDate}</p>
                   <p class="total">Total: $${totalPrice.toFixed(2)}</p>
                 </div>
-                
                 <p>We'll notify you when your order ships.</p>
               </div>
-              <div class="footer">
-                <p>If you have any questions, please contact our support team.</p>
-              </div>
+              <div class="footer"><p>If you have any questions, please contact our support team.</p></div>
             </div>
           </body>
           </html>
@@ -164,10 +191,7 @@ serve(async (req) => {
 
         const response = await fetch("https://api.sendgrid.com/v3/mail/send", {
           method: "POST",
-          headers: {
-            "Authorization": `Bearer ${sendgridApiKey}`,
-            "Content-Type": "application/json",
-          },
+          headers: { "Authorization": `Bearer ${sendgridApiKey}`, "Content-Type": "application/json" },
           body: JSON.stringify({
             personalizations: [{ to: [{ email: customerEmail }] }],
             from: { email: defaultFrom },
@@ -176,10 +200,7 @@ serve(async (req) => {
           }),
         });
 
-        if (!response.ok) {
-          const errorText = await response.text();
-          throw new Error(`SendGrid error: ${errorText}`);
-        }
+        if (!response.ok) throw new Error(`SendGrid error: ${await response.text()}`);
 
         return new Response(JSON.stringify({ success: true }), {
           headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -187,20 +208,19 @@ serve(async (req) => {
       }
 
       case "status-update": {
-        const { customerEmail, customerName, orderId, newStatus, trackingNumber } = await req.json();
+        const parsed = StatusUpdateSchema.safeParse(await req.json());
+        if (!parsed.success) {
+          return new Response(JSON.stringify({ error: "Invalid input", details: parsed.error.flatten().fieldErrors }), {
+            status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
+          });
+        }
+        const { customerEmail, customerName, orderId, newStatus, trackingNumber } = parsed.data;
 
-        // Demo mode: return simulated success
         if (isDemoMode) {
           return new Response(JSON.stringify({ 
-            success: true, 
-            demo: true,
-            message: "Demo mode: Status update email would be sent",
-            recipient: customerEmail,
-            orderId,
-            newStatus
-          }), {
-            headers: { ...corsHeaders, "Content-Type": "application/json" },
-          });
+            success: true, demo: true, message: "Demo mode: Status update email would be sent",
+            recipient: customerEmail, orderId, newStatus
+          }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
         }
 
         const statusMessages: Record<string, string> = {
@@ -223,10 +243,7 @@ serve(async (req) => {
 
         const response = await fetch("https://api.sendgrid.com/v3/mail/send", {
           method: "POST",
-          headers: {
-            "Authorization": `Bearer ${sendgridApiKey}`,
-            "Content-Type": "application/json",
-          },
+          headers: { "Authorization": `Bearer ${sendgridApiKey}`, "Content-Type": "application/json" },
           body: JSON.stringify({
             personalizations: [{ to: [{ email: customerEmail }] }],
             from: { email: defaultFrom },
@@ -235,10 +252,7 @@ serve(async (req) => {
           }),
         });
 
-        if (!response.ok) {
-          const errorText = await response.text();
-          throw new Error(`SendGrid error: ${errorText}`);
-        }
+        if (!response.ok) throw new Error(`SendGrid error: ${await response.text()}`);
 
         return new Response(JSON.stringify({ success: true }), {
           headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -246,11 +260,13 @@ serve(async (req) => {
       }
 
       default:
-        throw new Error(`Unknown action: ${action}`);
+        return new Response(JSON.stringify({ error: "Unknown action" }), {
+          status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
     }
   } catch (error) {
     console.error("SendGrid email error:", error);
-    return new Response(JSON.stringify({ error: error.message }), {
+    return new Response(JSON.stringify({ error: "An error occurred processing your request" }), {
       status: 400,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });

@@ -1,10 +1,15 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.0";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
+
+const RequestSchema = z.object({
+  userId: z.string().uuid(),
+});
 
 serve(async (req) => {
   if (req.method === "OPTIONS") {
@@ -16,7 +21,37 @@ serve(async (req) => {
     const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    const { userId } = await req.json();
+    // Validate auth
+    const authHeader = req.headers.get("Authorization");
+    if (!authHeader) {
+      return new Response(JSON.stringify({ error: "Authentication required" }), {
+        status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    const token = authHeader.replace("Bearer ", "");
+    const { data: { user } } = await supabase.auth.getUser(token);
+    if (!user) {
+      return new Response(JSON.stringify({ error: "Authentication required" }), {
+        status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    // Validate input
+    const parsed = RequestSchema.safeParse(await req.json());
+    if (!parsed.success) {
+      return new Response(JSON.stringify({ error: "Invalid input", details: parsed.error.flatten().fieldErrors }), {
+        status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    const { userId } = parsed.data;
+
+    // Ensure user can only get their own recommendations
+    if (user.id !== userId) {
+      return new Response(JSON.stringify({ error: "Forbidden" }), {
+        status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
 
     // Get user's interaction history
     const { data: preferences, error: prefError } = await supabase
@@ -28,7 +63,6 @@ serve(async (req) => {
 
     if (prefError) throw prefError;
 
-    // Get user's configuration history
     const { data: configurations, error: configError } = await supabase
       .from("product_configurations")
       .select("*, products(*)")
@@ -38,7 +72,6 @@ serve(async (req) => {
 
     if (configError) throw configError;
 
-    // Get user's order history
     const { data: orders, error: orderError } = await supabase
       .from("orders")
       .select("product_id, configuration_data")
@@ -48,53 +81,37 @@ serve(async (req) => {
 
     if (orderError) throw orderError;
 
-    // Calculate product affinity scores
     const productScores = new Map<string, number>();
 
-    // Score from preferences (highest weight)
     preferences?.forEach((pref) => {
       const score = Number(pref.interaction_score) * 3;
-      productScores.set(
-        pref.product_id,
-        (productScores.get(pref.product_id) || 0) + score
-      );
+      productScores.set(pref.product_id, (productScores.get(pref.product_id) || 0) + score);
     });
 
-    // Score from configurations (medium weight)
     configurations?.forEach((config) => {
       if (config.product_id) {
-        productScores.set(
-          config.product_id,
-          (productScores.get(config.product_id) || 0) + 2
-        );
+        productScores.set(config.product_id, (productScores.get(config.product_id) || 0) + 2);
       }
     });
 
-    // Score from orders (highest conversion weight)
     orders?.forEach((order) => {
       if (order.product_id) {
-        productScores.set(
-          order.product_id,
-          (productScores.get(order.product_id) || 0) + 5
-        );
+        productScores.set(order.product_id, (productScores.get(order.product_id) || 0) + 5);
       }
     });
 
-    // Get top products based on scores
     const sortedProducts = Array.from(productScores.entries())
       .sort((a, b) => b[1] - a[1])
       .slice(0, 5)
       .map(([productId]) => productId);
 
-    // Fetch recommended products
     const { data: recommendedProducts, error: recError } = await supabase
       .from("products")
       .select("*")
-      .in("id", sortedProducts);
+      .in("id", sortedProducts.length > 0 ? sortedProducts : ["00000000-0000-0000-0000-000000000000"]);
 
     if (recError) throw recError;
 
-    // If no personalized recommendations, get popular products
     let finalRecommendations = recommendedProducts || [];
     
     if (finalRecommendations.length < 3) {
@@ -107,9 +124,7 @@ serve(async (req) => {
       if (popError) throw popError;
       
       finalRecommendations = [...finalRecommendations, ...(popularProducts || [])]
-        .filter((product, index, self) => 
-          index === self.findIndex((p) => p.id === product.id)
-        )
+        .filter((product, index, self) => index === self.findIndex((p) => p.id === product.id))
         .slice(0, 5);
     }
 
@@ -121,18 +136,13 @@ serve(async (req) => {
           ? "Based on your browsing and purchase history"
           : "Popular products",
       }),
-      {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      }
+      { headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   } catch (error) {
     console.error("Error generating recommendations:", error);
     return new Response(
-      JSON.stringify({ error: error instanceof Error ? error.message : "Unknown error" }),
-      {
-        status: 500,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      }
+      JSON.stringify({ error: "An error occurred generating recommendations" }),
+      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   }
 });

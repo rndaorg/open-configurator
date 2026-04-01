@@ -1,23 +1,37 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-interface PaymentRequest {
-  amount: number;
-  currency?: string;
-  orderId: string;
-  customerEmail: string;
-  metadata?: Record<string, string>;
-}
+const PaymentRequestSchema = z.object({
+  amount: z.number().positive().max(999999),
+  currency: z.string().length(3).default("usd"),
+  orderId: z.string().uuid(),
+  customerEmail: z.string().email().max(255),
+  metadata: z.record(z.string().max(500)).optional(),
+});
 
-interface RefundRequest {
-  paymentIntentId: string;
-  amount?: number;
-  reason?: string;
+const ConfirmPaymentSchema = z.object({
+  paymentIntentId: z.string().max(255),
+  orderId: z.string().uuid(),
+});
+
+const RefundSchema = z.object({
+  paymentIntentId: z.string().max(255),
+  amount: z.number().positive().max(999999).optional(),
+  reason: z.string().max(255).optional(),
+});
+
+async function getAuthenticatedUser(req: Request, supabase: any) {
+  const authHeader = req.headers.get("Authorization");
+  if (!authHeader) return null;
+  const token = authHeader.replace("Bearer ", "");
+  const { data: { user } } = await supabase.auth.getUser(token);
+  return user;
 }
 
 serve(async (req) => {
@@ -26,7 +40,6 @@ serve(async (req) => {
   }
 
   try {
-    // Demo mode: use dummy API key for demonstration
     const stripeSecretKey = Deno.env.get("STRIPE_SECRET_KEY") || "sk_test_demo_key_for_demonstration";
     const isDemoMode = !Deno.env.get("STRIPE_SECRET_KEY");
 
@@ -41,12 +54,28 @@ serve(async (req) => {
     const url = new URL(req.url);
     const action = url.pathname.split("/").pop();
 
+    // Webhook doesn't require auth
+    if (action !== "webhook") {
+      const user = await getAuthenticatedUser(req, supabase);
+      if (!user) {
+        return new Response(JSON.stringify({ error: "Authentication required" }), {
+          status: 401,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+    }
+
     switch (action) {
       case "create-payment-intent": {
-        const body: PaymentRequest = await req.json();
-        const { amount, currency = "usd", orderId, customerEmail, metadata } = body;
+        const rawBody = await req.json();
+        const parsed = PaymentRequestSchema.safeParse(rawBody);
+        if (!parsed.success) {
+          return new Response(JSON.stringify({ error: "Invalid input", details: parsed.error.flatten().fieldErrors }), {
+            status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
+          });
+        }
+        const { amount, currency, orderId, customerEmail, metadata } = parsed.data;
 
-        // Demo mode: return simulated response
         if (isDemoMode) {
           const demoPaymentId = `pi_demo_${Date.now()}`;
           return new Response(JSON.stringify({
@@ -59,7 +88,6 @@ serve(async (req) => {
           });
         }
 
-        // Create payment intent via Stripe API
         const response = await fetch("https://api.stripe.com/v1/payment_intents", {
           method: "POST",
           headers: {
@@ -83,7 +111,6 @@ serve(async (req) => {
           throw new Error(paymentIntent.error.message);
         }
 
-        // Update order with payment intent ID
         await supabase
           .from("orders")
           .update({ 
@@ -101,21 +128,24 @@ serve(async (req) => {
       }
 
       case "confirm-payment": {
-        const { paymentIntentId, orderId } = await req.json();
+        const rawBody = await req.json();
+        const parsed = ConfirmPaymentSchema.safeParse(rawBody);
+        if (!parsed.success) {
+          return new Response(JSON.stringify({ error: "Invalid input", details: parsed.error.flatten().fieldErrors }), {
+            status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
+          });
+        }
+        const { paymentIntentId, orderId } = parsed.data;
 
-        // Demo mode: return simulated success
         if (isDemoMode) {
           return new Response(JSON.stringify({ 
-            success: true, 
-            status: "paid",
-            demo: true,
+            success: true, status: "paid", demo: true,
             message: "Demo mode: Payment confirmed successfully"
           }), {
             headers: { ...corsHeaders, "Content-Type": "application/json" },
           });
         }
 
-        // Verify payment status
         const response = await fetch(`https://api.stripe.com/v1/payment_intents/${paymentIntentId}`, {
           headers: { "Authorization": `Bearer ${stripeSecretKey}` },
         });
@@ -134,33 +164,41 @@ serve(async (req) => {
         }
 
         return new Response(JSON.stringify({ 
-          success: false, 
-          status: paymentIntent.status 
+          success: false, status: paymentIntent.status 
         }), {
           headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
 
       case "refund": {
-        const body: RefundRequest = await req.json();
-        const { paymentIntentId, amount, reason } = body;
+        const rawBody = await req.json();
+        const parsed = RefundSchema.safeParse(rawBody);
+        if (!parsed.success) {
+          return new Response(JSON.stringify({ error: "Invalid input", details: parsed.error.flatten().fieldErrors }), {
+            status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
+          });
+        }
+        const { paymentIntentId, amount, reason } = parsed.data;
 
-        // Demo mode: return simulated refund
+        // Refunds require admin
+        const user = await getAuthenticatedUser(req, supabase);
+        const { data: isAdmin } = await supabase.rpc('has_role', { _user_id: user?.id, _role: 'admin' });
+        if (!isAdmin) {
+          return new Response(JSON.stringify({ error: "Admin access required" }), {
+            status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
+          });
+        }
+
         if (isDemoMode) {
           return new Response(JSON.stringify({ 
-            success: true, 
-            refundId: `re_demo_${Date.now()}`,
-            status: "succeeded",
-            demo: true,
-            message: "Demo mode: Refund processed successfully"
+            success: true, refundId: `re_demo_${Date.now()}`, status: "succeeded",
+            demo: true, message: "Demo mode: Refund processed successfully"
           }), {
             headers: { ...corsHeaders, "Content-Type": "application/json" },
           });
         }
 
-        const params: Record<string, string> = {
-          payment_intent: paymentIntentId,
-        };
+        const params: Record<string, string> = { payment_intent: paymentIntentId };
         if (amount) params.amount = Math.round(amount * 100).toString();
         if (reason) params.reason = reason;
 
@@ -174,15 +212,10 @@ serve(async (req) => {
         });
 
         const refund = await response.json();
-
-        if (refund.error) {
-          throw new Error(refund.error.message);
-        }
+        if (refund.error) throw new Error(refund.error.message);
 
         return new Response(JSON.stringify({ 
-          success: true, 
-          refundId: refund.id,
-          status: refund.status 
+          success: true, refundId: refund.id, status: refund.status 
         }), {
           headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
@@ -190,16 +223,12 @@ serve(async (req) => {
 
       case "webhook": {
         const body = await req.text();
-        const sig = req.headers.get("stripe-signature");
-        const webhookSecret = Deno.env.get("STRIPE_WEBHOOK_SECRET");
-
-        // Verify webhook signature (simplified - production should use stripe library)
-        console.log("Received Stripe webhook:", body.substring(0, 100));
+        console.log("Received Stripe webhook");
 
         const event = JSON.parse(body);
 
         switch (event.type) {
-          case "payment_intent.succeeded":
+          case "payment_intent.succeeded": {
             const paymentIntent = event.data.object;
             if (paymentIntent.metadata?.order_id) {
               await supabase
@@ -208,8 +237,8 @@ serve(async (req) => {
                 .eq("id", paymentIntent.metadata.order_id);
             }
             break;
-
-          case "payment_intent.payment_failed":
+          }
+          case "payment_intent.payment_failed": {
             const failedPayment = event.data.object;
             if (failedPayment.metadata?.order_id) {
               await supabase
@@ -218,6 +247,7 @@ serve(async (req) => {
                 .eq("id", failedPayment.metadata.order_id);
             }
             break;
+          }
         }
 
         return new Response(JSON.stringify({ received: true }), {
@@ -226,11 +256,13 @@ serve(async (req) => {
       }
 
       default:
-        throw new Error(`Unknown action: ${action}`);
+        return new Response(JSON.stringify({ error: "Unknown action" }), {
+          status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
     }
   } catch (error) {
     console.error("Stripe payment error:", error);
-    return new Response(JSON.stringify({ error: error.message }), {
+    return new Response(JSON.stringify({ error: "An error occurred processing your request" }), {
       status: 400,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
