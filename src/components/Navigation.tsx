@@ -26,6 +26,7 @@ export const Navigation = () => {
     { path: '/', label: t('nav.home') },
     { path: '/features', label: t('nav.features') },
     { path: '/products', label: t('nav.products') },
+    { path: '/pricing', label: 'Pricing' },
   ];
 
   const isActive = (path: string) => location.pathname === path;

@@ -5,3 +5,9 @@ verify_jwt = false
 
 [functions.personalized-recommendations]
 verify_jwt = false
+
+[functions.subscription-checkout]
+verify_jwt = false
+
+[functions.subscription-manage]
+verify_jwt = false

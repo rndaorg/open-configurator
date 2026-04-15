@@ -10,6 +10,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { toast } from 'sonner';
 import { formatDistanceToNow } from 'date-fns';
+import { SubscriptionManagement } from '@/components/SubscriptionManagement';
 
 interface Profile {
   full_name: string | null;
@@ -145,10 +146,11 @@ export default function Profile() {
         <h1 className="text-4xl font-bold mb-8">My Profile</h1>
 
         <Tabs defaultValue="profile" className="w-full">
-          <TabsList className="grid w-full grid-cols-3 mb-8">
+          <TabsList className="grid w-full grid-cols-4 mb-8">
             <TabsTrigger value="profile">Profile</TabsTrigger>
-            <TabsTrigger value="configurations">Saved Configurations</TabsTrigger>
-            <TabsTrigger value="orders">Order History</TabsTrigger>
+            <TabsTrigger value="subscription">Subscription</TabsTrigger>
+            <TabsTrigger value="configurations">Configurations</TabsTrigger>
+            <TabsTrigger value="orders">Orders</TabsTrigger>
           </TabsList>
 
           <TabsContent value="profile">
@@ -187,6 +189,10 @@ export default function Profile() {
                 </form>
               </CardContent>
             </Card>
+          </TabsContent>
+
+          <TabsContent value="subscription">
+            <SubscriptionManagement />
           </TabsContent>
 
           <TabsContent value="configurations">
