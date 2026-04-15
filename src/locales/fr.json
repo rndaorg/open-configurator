@@ -1,0 +1,259 @@
+{
+  "common": {
+    "loading": "Chargement...",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "add": "Ajouter",
+    "search": "Rechercher",
+    "filter": "Filtrer",
+    "submit": "Soumettre",
+    "back": "Retour",
+    "next": "Suivant",
+    "previous": "Précédent",
+    "yes": "Oui",
+    "no": "Non",
+    "confirm": "Confirmer",
+    "close": "Fermer",
+    "view": "Voir",
+    "actions": "Actions"
+  },
+  "nav": {
+    "home": "Accueil",
+    "features": "Fonctionnalités",
+    "products": "Produits",
+    "cart": "Panier",
+    "profile": "Profil",
+    "login": "Connexion",
+    "logout": "Déconnexion",
+    "admin": "Admin"
+  },
+  "auth": {
+    "signIn": "Se Connecter",
+    "signUp": "S'inscrire",
+    "email": "Email",
+    "password": "Mot de passe",
+    "forgotPassword": "Mot de passe oublié ?",
+    "noAccount": "Pas de compte ?",
+    "hasAccount": "Déjà un compte ?",
+    "fullName": "Nom Complet"
+  },
+  "products": {
+    "title": "Produits",
+    "catalog": "Catalogue de Produits",
+    "configure": "Configurer",
+    "addToCart": "Ajouter au Panier",
+    "basePrice": "Prix de Base",
+    "totalPrice": "Prix Total",
+    "quantity": "Quantité",
+    "outOfStock": "Rupture de Stock",
+    "inStock": "En Stock",
+    "lowStock": "Stock Faible",
+    "category": "Catégorie",
+    "description": "Description",
+    "specifications": "Spécifications"
+  },
+  "search": {
+    "title": "Découvrez",
+    "subtitle": "Nos Produits",
+    "description": "Recherchez et filtrez pour trouver exactement ce dont vous avez besoin",
+    "placeholder": "Rechercher des produits...",
+    "suggestions": "Suggestions",
+    "product": "Produit",
+    "category": "Catégorie",
+    "popularSearches": "Recherches Populaires",
+    "searches": "recherches",
+    "noSuggestions": "Aucune suggestion trouvée",
+    "tryDifferentTerms": "Essayez d'autres termes",
+    "filters": "Filtres",
+    "clearAll": "Tout effacer",
+    "resultsCount": "{{count}} produits trouvés",
+    "sortBy": "Trier par",
+    "sort": {
+      "relevance": "Pertinence",
+      "priceAsc": "Prix: Croissant",
+      "priceDesc": "Prix: Décroissant",
+      "nameAsc": "Nom: A à Z",
+      "nameDesc": "Nom: Z à A",
+      "newest": "Plus Récents"
+    },
+    "categories": "Catégories",
+    "noCategories": "Pas de catégories",
+    "priceRange": "Fourchette de Prix",
+    "activeFilters": "Filtres Actifs",
+    "noResults": "Aucun produit trouvé",
+    "noResultsQuery": "Aucun résultat pour \"{{query}}\"",
+    "noResultsFilters": "Essayez d'ajuster les filtres",
+    "clearFilters": "Effacer les Filtres"
+  },
+  "cart": {
+    "title": "Panier",
+    "empty": "Votre panier est vide",
+    "subtotal": "Sous-total",
+    "total": "Total",
+    "checkout": "Commander",
+    "continueShopping": "Continuer vos achats",
+    "remove": "Supprimer",
+    "items": "{{count}} article",
+    "items_other": "{{count}} articles"
+  },
+  "checkout": {
+    "title": "Commande",
+    "shipping": "Livraison",
+    "payment": "Paiement",
+    "review": "Vérification",
+    "confirmation": "Confirmation",
+    "shippingAddress": "Adresse de Livraison",
+    "paymentMethod": "Mode de Paiement",
+    "orderSummary": "Résumé de la Commande",
+    "placeOrder": "Passer la Commande",
+    "orderConfirmed": "Commande Confirmée !",
+    "thankYou": "Merci pour votre commande"
+  },
+  "admin": {
+    "dashboard": "Tableau de Bord",
+    "products": "Produits",
+    "categories": "Catégories",
+    "configOptions": "Options de Configuration",
+    "pricingRules": "Règles de Prix",
+    "orders": "Commandes",
+    "totalProducts": "Total Produits",
+    "totalCategories": "Total Catégories",
+    "totalOrders": "Total Commandes",
+    "totalRevenue": "Revenu Total",
+    "management": "Gestion",
+    "addProduct": "Ajouter un Produit",
+    "addCategory": "Ajouter une Catégorie",
+    "productName": "Nom du Produit",
+    "status": "Statut",
+    "active": "Actif",
+    "inactive": "Inactif"
+  },
+  "profile": {
+    "title": "Profil",
+    "orderHistory": "Historique des Commandes",
+    "savedConfigs": "Configurations Sauvegardées",
+    "preferences": "Préférences",
+    "settings": "Paramètres"
+  },
+  "features": {
+    "title": "Fonctionnalités",
+    "ruleEngine": "Moteur de Règles",
+    "dynamicPricing": "Prix Dynamiques",
+    "visualization3D": "Visualisation 3D",
+    "aiRecommendations": "Recommandations IA",
+    "inventoryManagement": "Gestion des Stocks",
+    "analytics": "Analytique"
+  },
+  "home": {
+    "hero": {
+      "title": "Créez des Produits Personnalisés",
+      "subtitle": "Configurez, visualisez et commandez des produits personnalisés avec notre puissant configurateur",
+      "cta": "Commencer"
+    },
+    "welcome": "Bienvenue"
+  },
+  "settings": {
+    "language": "Langue",
+    "currency": "Devise",
+    "region": "Région",
+    "theme": "Thème"
+  },
+  "errors": {
+    "general": "Une erreur est survenue",
+    "notFound": "Page non trouvée",
+    "unauthorized": "Accès non autorisé",
+    "validation": "Veuillez vérifier vos données"
+  },
+  "dates": {
+    "today": "Aujourd'hui",
+    "yesterday": "Hier",
+    "tomorrow": "Demain"
+  },
+  "notifications": {
+    "title": "Notifications",
+    "empty": "Aucune notification",
+    "markAllRead": "Tout marquer comme lu",
+    "orderStatus": "Statut de commande",
+    "inventoryAlert": "Alerte d'inventaire",
+    "priceChange": "Changement de prix",
+    "system": "Système",
+    "orderUpdated": "Le statut de votre commande a été mis à jour",
+    "lowStock": "Alerte stock bas",
+    "priceDropped": "Le prix a baissé sur un article que vous avez consulté"
+  },
+  "reports": {
+    "title": "Rapports et Analytique",
+    "datePresets": {
+      "last7Days": "7 derniers jours",
+      "last30Days": "30 derniers jours",
+      "last90Days": "90 derniers jours"
+    },
+    "tabs": {
+      "sales": "Ventes",
+      "funnel": "Entonnoir",
+      "customers": "Clients",
+      "abTesting": "Tests A/B",
+      "export": "Exporter"
+    },
+    "sales": {
+      "title": "Analytique des Ventes",
+      "revenue": "Chiffre d'affaires",
+      "orders": "Commandes",
+      "avgOrderValue": "Valeur Moyenne",
+      "conversionRate": "Taux de Conversion",
+      "revenueOverTime": "Chiffre d'affaires dans le Temps",
+      "salesByCategory": "Ventes par Catégorie",
+      "ordersByStatus": "Commandes par Statut"
+    },
+    "funnel": {
+      "title": "Entonnoir de Conversion",
+      "stages": "Étapes de l'Entonnoir",
+      "conversionRates": "Taux de Conversion",
+      "abandonmentPoints": "Points d'Abandon",
+      "visitors": "Visiteurs",
+      "productViews": "Vues Produits",
+      "addedToCart": "Ajouté au Panier",
+      "checkout": "Paiement",
+      "purchased": "Acheté"
+    },
+    "customers": {
+      "title": "Insights Clients",
+      "acquisition": "Acquisition Clients",
+      "repeatRate": "Taux de Clients Récurrents",
+      "topSearches": "Recherches Principales",
+      "segments": "Segments Comportementaux",
+      "newCustomers": "Nouveaux Clients",
+      "returningCustomers": "Clients Récurrents"
+    },
+    "abTesting": {
+      "title": "Résultats Tests A/B",
+      "activeTests": "Tests Actifs",
+      "completedTests": "Tests Terminés",
+      "winner": "Gagnant",
+      "confidence": "Confiance",
+      "variant": "Variante",
+      "control": "Contrôle",
+      "conversionRate": "Taux de Conversion",
+      "sampleSize": "Taille de l'Échantillon"
+    },
+    "export": {
+      "title": "Exporter les Rapports",
+      "format": "Format",
+      "dateRange": "Plage de Dates",
+      "includeData": "Inclure les Données",
+      "salesData": "Données de Ventes",
+      "orderData": "Données de Commandes",
+      "customerData": "Données Clients",
+      "productData": "Données Produits",
+      "generate": "Générer le Rapport",
+      "download": "Télécharger",
+      "schedule": "Planifier le Rapport",
+      "frequency": "Fréquence",
+      "daily": "Quotidien",
+      "weekly": "Hebdomadaire",
+      "monthly": "Mensuel"
+    }
+  }
+}

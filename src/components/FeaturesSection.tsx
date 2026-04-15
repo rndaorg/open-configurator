@@ -88,7 +88,7 @@ export const FeaturesSection = () => {
           </h2>
           
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            ConfigureMax provides all the tools you need to create stunning product configurators 
+            Open Configurator provides all the tools you need to create stunning product configurators 
             that convert browsers into buyers.
           </p>
         </div>

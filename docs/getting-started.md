@@ -122,7 +122,7 @@ Open `http://localhost:5173` in your browser. You should see:
 
 ### Configuration Option Types
 
-ConfigureMax supports several option types:
+Open Configurator supports several option types:
 - **Selection**: Single choice from multiple options
 - **Color**: Color picker with hex values
 - **Size**: Numerical or text-based sizing
@@ -161,7 +161,7 @@ The app uses a design token system in:
 3. Your configurator will be live with SSL and global CDN
 
 ### Manual Deployment
-ConfigureMax works with any static hosting provider:
+Open Configurator works with any static hosting provider:
 - Vercel
 - Netlify
 - GitHub Pages
@@ -187,9 +187,53 @@ Now that you have Open Configurator running with advanced features:
 ## Need Help?
 
 - 📖 [Full Documentation](./README.md)
-- 🐛 [Report Issues](https://github.com/your-username/configuremax/issues)
-- 💬 [Community Discord](https://discord.gg/configuremax)
-- 📧 [Email Support](mailto:support@configuremax.com)
+- 🐛 [Report Issues](https://github.com/rndaorg/open-configurator/issues)
+- 💬 [Community Discord](https://discord.gg/open-configurator)
+- 📧 [Email Support](mailto:support@openconfigurator.dev)
+
+## ✅ Security Implementation
+
+Open Configurator implements enterprise-grade security features out of the box:
+
+### 🔒 Implemented Security Features
+
+1. **Authentication System**
+   - Full Supabase Auth integration with email/password
+   - User profiles with role-based access control
+   - Automatic profile creation on signup
+
+2. **Role-Based Access Control (RBAC)**
+   - Admin and user roles with separate permissions
+   - Sensitive tables (pricing_rules, configuration_rules, inventory_levels) restricted to admin access
+   - Row Level Security (RLS) policies enforce data isolation
+
+3. **Server-Side Validation**
+   - Edge Function validates all configurations server-side
+   - Price calculations verified before saving
+   - Business rules enforced at the database level
+
+4. **Input Validation**
+   - Zod schemas validate all user inputs
+   - Protection against injection attacks and data corruption
+   - Type-safe data handling throughout
+
+5. **Secure Session Management**
+   - Cryptographically secure session IDs using crypto.randomUUID()
+   - Proper session lifecycle management
+   - Anonymous user support with secure tracking
+
+### 🛡️ Security Best Practices
+
+- All sensitive business data protected by admin-only RLS policies
+- Client-side code cannot bypass security rules
+- User inputs validated both client and server-side
+- Audit trail maintained for all configurations
+
+### 📖 Security Resources
+
+- [Open Configurator Security Guide](./security.md)
+- [Supabase Security Best Practices](https://supabase.com/docs/guides/auth/row-level-security)
+- [OWASP Top 10](https://owasp.org/www-project-top-ten/)
 
 ## Common Issues
 

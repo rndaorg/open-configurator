@@ -51,7 +51,7 @@ export const HeroSection = ({ onExploreProducts }: HeroSectionProps) => {
               variant="outline"
               size="lg"
               className="border-primary/20 hover:border-primary/40 hover:bg-gradient-glass backdrop-blur-xl text-lg px-8 py-4"
-              onClick={() => window.open('https://github.com/your-username/configuremax', '_blank')}
+              onClick={() => window.open('https://github.com/rndaorg/open-configurator', '_blank')}
             >
               View on GitHub
             </Button>

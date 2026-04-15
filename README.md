@@ -160,13 +160,25 @@ open-configurator/
 - **Data-Driven Insights**: Advanced analytics reveal customer preferences and bottlenecks
 - **Future-Proof**: Extensible architecture supports growing business needs
 
+## ⚠️ Security Notice
+
+**Note**: This project implements enterprise-grade security features including authentication, RBAC, RLS, and server-side validation. See our [Security Guide](docs/security.md) for full details on the security implementation.
+
+Security features implemented:
+- ✅ Authentication System (Supabase Auth)
+- ✅ Role-Based Access Control (RBAC)
+- ✅ Row Level Security (RLS) on all tables
+- ✅ Server-Side Validation via Edge Functions
+- ✅ Input Validation with Zod schemas
+- ✅ Secure Session Management
+
 ## 📚 Documentation
 
-- [Getting Started Guide](docs/getting-started.md)
-- [Configuration Options](docs/configuration.md)
-- [API Reference](docs/api.md)
-- [Deployment Guide](docs/deployment.md)
-- [Customization](docs/customization.md)
+- [Getting Started Guide](docs/getting-started.md) - Includes security warnings
+- [API Reference](docs/api.md) - With security considerations
+- [API Specification](docs/api-spec.md) - OpenAPI/Swagger spec
+- [Advanced Features](docs/advanced-features.md) - Security best practices
+- [Security Guide](docs/security.md) - Comprehensive security review
 
 ## 🤝 Contributing
 
@@ -185,9 +197,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 🌟 Support
 
 - ⭐ Star this repository if you find it helpful
-- 🐛 [Report bugs](https://github.com/your-username/configuremax/issues)
-- 💡 [Request features](https://github.com/your-username/configuremax/issues)
-- 📧 [Contact us](mailto:support@configuremax.com)
+- 🐛 [Report bugs](https://github.com/rndaorg/open-configurator/issues)
+- 💡 [Request features](https://github.com/rndaorg/open-configurator/issues)
+- 📧 [Contact us](mailto:support@openconfigurator.dev)
 
 ## 🚀 Deploy Your Own
 

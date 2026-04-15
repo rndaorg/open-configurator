@@ -1,0 +1,259 @@
+{
+  "common": {
+    "loading": "Cargando...",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "add": "Añadir",
+    "search": "Buscar",
+    "filter": "Filtrar",
+    "submit": "Enviar",
+    "back": "Atrás",
+    "next": "Siguiente",
+    "previous": "Anterior",
+    "yes": "Sí",
+    "no": "No",
+    "confirm": "Confirmar",
+    "close": "Cerrar",
+    "view": "Ver",
+    "actions": "Acciones"
+  },
+  "nav": {
+    "home": "Inicio",
+    "features": "Características",
+    "products": "Productos",
+    "cart": "Carrito",
+    "profile": "Perfil",
+    "login": "Iniciar Sesión",
+    "logout": "Cerrar Sesión",
+    "admin": "Admin"
+  },
+  "auth": {
+    "signIn": "Iniciar Sesión",
+    "signUp": "Registrarse",
+    "email": "Correo Electrónico",
+    "password": "Contraseña",
+    "forgotPassword": "¿Olvidaste tu contraseña?",
+    "noAccount": "¿No tienes cuenta?",
+    "hasAccount": "¿Ya tienes cuenta?",
+    "fullName": "Nombre Completo"
+  },
+  "products": {
+    "title": "Productos",
+    "catalog": "Catálogo de Productos",
+    "configure": "Configurar",
+    "addToCart": "Añadir al Carrito",
+    "basePrice": "Precio Base",
+    "totalPrice": "Precio Total",
+    "quantity": "Cantidad",
+    "outOfStock": "Agotado",
+    "inStock": "En Stock",
+    "lowStock": "Stock Bajo",
+    "category": "Categoría",
+    "description": "Descripción",
+    "specifications": "Especificaciones"
+  },
+  "search": {
+    "title": "Descubre",
+    "subtitle": "Nuestros Productos",
+    "description": "Busca y filtra para encontrar exactamente lo que necesitas",
+    "placeholder": "Buscar productos...",
+    "suggestions": "Sugerencias",
+    "product": "Producto",
+    "category": "Categoría",
+    "popularSearches": "Búsquedas Populares",
+    "searches": "búsquedas",
+    "noSuggestions": "No se encontraron sugerencias",
+    "tryDifferentTerms": "Prueba con otros términos",
+    "filters": "Filtros",
+    "clearAll": "Limpiar todo",
+    "resultsCount": "{{count}} productos encontrados",
+    "sortBy": "Ordenar por",
+    "sort": {
+      "relevance": "Relevancia",
+      "priceAsc": "Precio: Menor a Mayor",
+      "priceDesc": "Precio: Mayor a Menor",
+      "nameAsc": "Nombre: A a Z",
+      "nameDesc": "Nombre: Z a A",
+      "newest": "Más Recientes"
+    },
+    "categories": "Categorías",
+    "noCategories": "Sin categorías",
+    "priceRange": "Rango de Precio",
+    "activeFilters": "Filtros Activos",
+    "noResults": "No se encontraron productos",
+    "noResultsQuery": "Sin resultados para \"{{query}}\"",
+    "noResultsFilters": "Intenta ajustar los filtros",
+    "clearFilters": "Limpiar Filtros"
+  },
+  "cart": {
+    "title": "Carrito de Compras",
+    "empty": "Tu carrito está vacío",
+    "subtotal": "Subtotal",
+    "total": "Total",
+    "checkout": "Finalizar Compra",
+    "continueShopping": "Seguir Comprando",
+    "remove": "Eliminar",
+    "items": "{{count}} artículo",
+    "items_other": "{{count}} artículos"
+  },
+  "checkout": {
+    "title": "Finalizar Compra",
+    "shipping": "Envío",
+    "payment": "Pago",
+    "review": "Revisar",
+    "confirmation": "Confirmación",
+    "shippingAddress": "Dirección de Envío",
+    "paymentMethod": "Método de Pago",
+    "orderSummary": "Resumen del Pedido",
+    "placeOrder": "Realizar Pedido",
+    "orderConfirmed": "¡Pedido Confirmado!",
+    "thankYou": "Gracias por tu pedido"
+  },
+  "admin": {
+    "dashboard": "Panel de Control",
+    "products": "Productos",
+    "categories": "Categorías",
+    "configOptions": "Opciones de Configuración",
+    "pricingRules": "Reglas de Precios",
+    "orders": "Pedidos",
+    "totalProducts": "Total de Productos",
+    "totalCategories": "Total de Categorías",
+    "totalOrders": "Total de Pedidos",
+    "totalRevenue": "Ingresos Totales",
+    "management": "Gestión",
+    "addProduct": "Añadir Producto",
+    "addCategory": "Añadir Categoría",
+    "productName": "Nombre del Producto",
+    "status": "Estado",
+    "active": "Activo",
+    "inactive": "Inactivo"
+  },
+  "profile": {
+    "title": "Perfil",
+    "orderHistory": "Historial de Pedidos",
+    "savedConfigs": "Configuraciones Guardadas",
+    "preferences": "Preferencias",
+    "settings": "Ajustes"
+  },
+  "features": {
+    "title": "Características",
+    "ruleEngine": "Motor de Reglas",
+    "dynamicPricing": "Precios Dinámicos",
+    "visualization3D": "Visualización 3D",
+    "aiRecommendations": "Recomendaciones IA",
+    "inventoryManagement": "Gestión de Inventario",
+    "analytics": "Analíticas"
+  },
+  "home": {
+    "hero": {
+      "title": "Construye Productos Personalizados",
+      "subtitle": "Configura, visualiza y pide productos personalizados con nuestro potente configurador",
+      "cta": "Comenzar"
+    },
+    "welcome": "Bienvenido"
+  },
+  "settings": {
+    "language": "Idioma",
+    "currency": "Moneda",
+    "region": "Región",
+    "theme": "Tema"
+  },
+  "errors": {
+    "general": "Algo salió mal",
+    "notFound": "Página no encontrada",
+    "unauthorized": "Acceso no autorizado",
+    "validation": "Por favor revisa tu entrada"
+  },
+  "dates": {
+    "today": "Hoy",
+    "yesterday": "Ayer",
+    "tomorrow": "Mañana"
+  },
+  "notifications": {
+    "title": "Notificaciones",
+    "empty": "Sin notificaciones",
+    "markAllRead": "Marcar todo como leído",
+    "orderStatus": "Estado del pedido",
+    "inventoryAlert": "Alerta de inventario",
+    "priceChange": "Cambio de precio",
+    "system": "Sistema",
+    "orderUpdated": "El estado de tu pedido ha sido actualizado",
+    "lowStock": "Alerta de stock bajo",
+    "priceDropped": "El precio bajó en un artículo que viste"
+  },
+  "reports": {
+    "title": "Informes y Analíticas",
+    "datePresets": {
+      "last7Days": "Últimos 7 días",
+      "last30Days": "Últimos 30 días",
+      "last90Days": "Últimos 90 días"
+    },
+    "tabs": {
+      "sales": "Ventas",
+      "funnel": "Embudo",
+      "customers": "Clientes",
+      "abTesting": "Pruebas A/B",
+      "export": "Exportar"
+    },
+    "sales": {
+      "title": "Analítica de Ventas",
+      "revenue": "Ingresos",
+      "orders": "Pedidos",
+      "avgOrderValue": "Valor Promedio",
+      "conversionRate": "Tasa de Conversión",
+      "revenueOverTime": "Ingresos a lo Largo del Tiempo",
+      "salesByCategory": "Ventas por Categoría",
+      "ordersByStatus": "Pedidos por Estado"
+    },
+    "funnel": {
+      "title": "Embudo de Conversión",
+      "stages": "Etapas del Embudo",
+      "conversionRates": "Tasas de Conversión",
+      "abandonmentPoints": "Puntos de Abandono",
+      "visitors": "Visitantes",
+      "productViews": "Vistas de Productos",
+      "addedToCart": "Añadido al Carrito",
+      "checkout": "Checkout",
+      "purchased": "Comprado"
+    },
+    "customers": {
+      "title": "Insights de Clientes",
+      "acquisition": "Adquisición de Clientes",
+      "repeatRate": "Tasa de Clientes Recurrentes",
+      "topSearches": "Principales Búsquedas",
+      "segments": "Segmentos de Comportamiento",
+      "newCustomers": "Nuevos Clientes",
+      "returningCustomers": "Clientes Recurrentes"
+    },
+    "abTesting": {
+      "title": "Resultados de Pruebas A/B",
+      "activeTests": "Pruebas Activas",
+      "completedTests": "Pruebas Completadas",
+      "winner": "Ganador",
+      "confidence": "Confianza",
+      "variant": "Variante",
+      "control": "Control",
+      "conversionRate": "Tasa de Conversión",
+      "sampleSize": "Tamaño de Muestra"
+    },
+    "export": {
+      "title": "Exportar Informes",
+      "format": "Formato",
+      "dateRange": "Rango de Fechas",
+      "includeData": "Incluir Datos",
+      "salesData": "Datos de Ventas",
+      "orderData": "Datos de Pedidos",
+      "customerData": "Datos de Clientes",
+      "productData": "Datos de Productos",
+      "generate": "Generar Informe",
+      "download": "Descargar",
+      "schedule": "Programar Informe",
+      "frequency": "Frecuencia",
+      "daily": "Diario",
+      "weekly": "Semanal",
+      "monthly": "Mensual"
+    }
+  }
+}

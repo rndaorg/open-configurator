@@ -1,16 +1,31 @@
 import { Link, useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
-import { Settings, Menu, X } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { Boxes, Menu, X, LogOut, User, ShoppingCart, Shield } from 'lucide-react';
 import { useState } from 'react';
+import { useAuth } from '@/hooks/useAuth';
+import { useCart } from '@/contexts/CartContext';
+import { useAdminCheck } from '@/hooks/useAdminCheck';
+import { LanguageSelector } from '@/components/LanguageSelector';
+import { NotificationCenter } from '@/components/NotificationCenter';
+import { useRealtimeUpdates } from '@/hooks/useRealtimeUpdates';
 
 export const Navigation = () => {
+  const { t } = useTranslation();
   const location = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { user, signOut } = useAuth();
+  const { itemCount } = useCart();
+  const { isAdmin } = useAdminCheck();
+
+  // Enable realtime updates for orders and inventory
+  useRealtimeUpdates({ showToasts: true });
 
   const navItems = [
-    { path: '/', label: 'Home' },
-    { path: '/features', label: 'Features' },
-    { path: '/products', label: 'Products' },
+    { path: '/', label: t('nav.home') },
+    { path: '/features', label: t('nav.features') },
+    { path: '/products', label: t('nav.products') },
   ];
 
   const isActive = (path: string) => location.pathname === path;
@@ -21,9 +36,9 @@ export const Navigation = () => {
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2">
-            <Settings className="h-8 w-8 text-primary" />
+            <Boxes className="h-8 w-8 text-primary" />
             <span className="text-xl font-bold bg-gradient-primary bg-clip-text text-transparent">
-              ConfigureMax
+              Open Configurator
             </span>
           </Link>
 
@@ -45,17 +60,52 @@ export const Navigation = () => {
           </div>
 
           {/* Desktop CTA */}
-          <div className="hidden md:flex items-center space-x-4">
+          <div className="hidden md:flex items-center gap-4">
+            {user && <NotificationCenter />}
+            <LanguageSelector showCurrency />
+            <Button variant="ghost" size="sm" className="relative" asChild>
+              <Link to="/cart">
+                <ShoppingCart className="h-5 w-5" />
+                {itemCount > 0 && (
+                  <Badge className="absolute -top-2 -end-2 h-5 w-5 flex items-center justify-center p-0 text-xs">
+                    {itemCount}
+                  </Badge>
+                )}
+              </Link>
+            </Button>
             <Button
               variant="outline"
               size="sm"
-              onClick={() => window.open('https://github.com/your-username/configuremax', '_blank')}
+              onClick={() => window.open('https://github.com/rndaorg/open-configurator', '_blank')}
             >
               GitHub
             </Button>
-            <Button size="sm">
-              Get Started
-            </Button>
+            {user ? (
+              <>
+                <Button variant="outline" size="sm" asChild>
+                  <Link to="/profile">
+                    <User className="h-4 w-4 me-2" />
+                    {t('nav.profile')}
+                  </Link>
+                </Button>
+                {isAdmin && (
+                  <Button variant="outline" size="sm" asChild>
+                    <Link to="/admin">
+                      <Shield className="h-4 w-4 me-2" />
+                      {t('nav.admin')}
+                    </Link>
+                  </Button>
+                )}
+                <Button size="sm" variant="ghost" onClick={signOut}>
+                  <LogOut className="h-4 w-4 me-2" />
+                  {t('nav.logout')}
+                </Button>
+              </>
+            ) : (
+              <Button size="sm" asChild>
+                <Link to="/auth">{t('nav.login')}</Link>
+              </Button>
+            )}
           </div>
 
           {/* Mobile menu button */}
@@ -85,17 +135,52 @@ export const Navigation = () => {
                   {item.label}
                 </Link>
               ))}
-              <div className="flex flex-col space-y-2 pt-4">
+              <div className="flex flex-col gap-2 pt-4">
+                <LanguageSelector variant="select" showCurrency />
+                <Button variant="outline" size="sm" className="relative" asChild>
+                  <Link to="/cart">
+                    <ShoppingCart className="h-4 w-4 me-2" />
+                    {t('nav.cart')}
+                    {itemCount > 0 && (
+                      <Badge className="ms-2 h-5 w-5 flex items-center justify-center p-0 text-xs">
+                        {itemCount}
+                      </Badge>
+                    )}
+                  </Link>
+                </Button>
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() => window.open('https://github.com/your-username/configuremax', '_blank')}
+                  onClick={() => window.open('https://github.com/rndaorg/open-configurator', '_blank')}
                 >
                   GitHub
                 </Button>
-                <Button size="sm">
-                  Get Started
-                </Button>
+                {user ? (
+                  <>
+                    <Button variant="outline" size="sm" asChild>
+                      <Link to="/profile">
+                        <User className="h-4 w-4 me-2" />
+                        {t('nav.profile')}
+                      </Link>
+                    </Button>
+                    {isAdmin && (
+                      <Button variant="outline" size="sm" asChild>
+                        <Link to="/admin">
+                          <Shield className="h-4 w-4 me-2" />
+                          {t('nav.admin')}
+                        </Link>
+                      </Button>
+                    )}
+                    <Button size="sm" variant="ghost" onClick={signOut}>
+                      <LogOut className="h-4 w-4 me-2" />
+                      {t('nav.logout')}
+                    </Button>
+                  </>
+                ) : (
+                  <Button size="sm" asChild>
+                    <Link to="/auth">{t('nav.login')}</Link>
+                  </Button>
+                )}
               </div>
             </div>
           </div>

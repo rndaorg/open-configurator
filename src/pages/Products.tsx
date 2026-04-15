@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Navigation } from '@/components/Navigation';
-import { ProductCatalog } from '@/components/ProductCatalog';
+import { ProductSearch } from '@/components/ProductSearch';
 import { ProductConfigurator } from '@/components/ProductConfigurator';
 import { Footer } from '@/components/Footer';
 
@@ -30,7 +30,7 @@ const Products = () => {
   return (
     <div className="min-h-screen bg-background">
       <Navigation />
-      <ProductCatalog onConfigureProduct={handleConfigureProduct} />
+      <ProductSearch onConfigureProduct={handleConfigureProduct} />
       <Footer />
     </div>
   );

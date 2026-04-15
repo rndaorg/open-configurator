@@ -10,7 +10,7 @@ export type Database = {
   // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
-    PostgrestVersion: "13.0.4"
+    PostgrestVersion: "13.0.5"
   }
   public: {
     Tables: {
@@ -202,6 +202,39 @@ export type Database = {
           },
         ]
       }
+      notifications: {
+        Row: {
+          created_at: string
+          data: Json | null
+          id: string
+          is_read: boolean
+          message: string
+          title: string
+          type: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          data?: Json | null
+          id?: string
+          is_read?: boolean
+          message: string
+          title: string
+          type: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          data?: Json | null
+          id?: string
+          is_read?: boolean
+          message?: string
+          title?: string
+          type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       option_values: {
         Row: {
           config_option_id: string | null
@@ -242,6 +275,117 @@ export type Database = {
             columns: ["config_option_id"]
             isOneToOne: false
             referencedRelation: "config_options"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      order_items: {
+        Row: {
+          configuration_data: Json
+          created_at: string
+          id: string
+          order_id: string
+          product_id: string | null
+          quantity: number
+          total_price: number
+          unit_price: number
+        }
+        Insert: {
+          configuration_data: Json
+          created_at?: string
+          id?: string
+          order_id: string
+          product_id?: string | null
+          quantity?: number
+          total_price: number
+          unit_price: number
+        }
+        Update: {
+          configuration_data?: Json
+          created_at?: string
+          id?: string
+          order_id?: string
+          product_id?: string | null
+          quantity?: number
+          total_price?: number
+          unit_price?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "order_items_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "order_items_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      orders: {
+        Row: {
+          configuration_data: Json
+          configuration_id: string | null
+          created_at: string
+          id: string
+          payment_status: string | null
+          product_id: string | null
+          quantity: number
+          shipping_address: Json | null
+          shipping_method: string | null
+          status: string
+          total_price: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          configuration_data: Json
+          configuration_id?: string | null
+          created_at?: string
+          id?: string
+          payment_status?: string | null
+          product_id?: string | null
+          quantity?: number
+          shipping_address?: Json | null
+          shipping_method?: string | null
+          status?: string
+          total_price: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          configuration_data?: Json
+          configuration_id?: string | null
+          created_at?: string
+          id?: string
+          payment_status?: string | null
+          product_id?: string | null
+          quantity?: number
+          shipping_address?: Json | null
+          shipping_method?: string | null
+          status?: string
+          total_price?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "orders_configuration_id_fkey"
+            columns: ["configuration_id"]
+            isOneToOne: false
+            referencedRelation: "product_configurations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "orders_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
             referencedColumns: ["id"]
           },
         ]
@@ -309,8 +453,10 @@ export type Database = {
           created_at: string
           id: string
           product_id: string | null
+          session_id: string | null
           total_price: number
           updated_at: string
+          user_id: string | null
         }
         Insert: {
           configuration_data: Json
@@ -318,8 +464,10 @@ export type Database = {
           created_at?: string
           id?: string
           product_id?: string | null
+          session_id?: string | null
           total_price: number
           updated_at?: string
+          user_id?: string | null
         }
         Update: {
           configuration_data?: Json
@@ -327,8 +475,10 @@ export type Database = {
           created_at?: string
           id?: string
           product_id?: string | null
+          session_id?: string | null
           total_price?: number
           updated_at?: string
+          user_id?: string | null
         }
         Relationships: [
           {
@@ -384,6 +534,71 @@ export type Database = {
           },
         ]
       }
+      profiles: {
+        Row: {
+          created_at: string
+          email: string
+          full_name: string | null
+          id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          full_name?: string | null
+          id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          full_name?: string | null
+          id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      search_analytics: {
+        Row: {
+          clicked_product_id: string | null
+          created_at: string
+          filters_applied: Json | null
+          id: string
+          results_count: number
+          search_query: string
+          session_id: string | null
+          user_id: string | null
+        }
+        Insert: {
+          clicked_product_id?: string | null
+          created_at?: string
+          filters_applied?: Json | null
+          id?: string
+          results_count?: number
+          search_query: string
+          session_id?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          clicked_product_id?: string | null
+          created_at?: string
+          filters_applied?: Json | null
+          id?: string
+          results_count?: number
+          search_query?: string
+          session_id?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "search_analytics_clicked_product_id_fkey"
+            columns: ["clicked_product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_preferences: {
         Row: {
           created_at: string
@@ -422,15 +637,42 @@ export type Database = {
           },
         ]
       }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "user"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -557,6 +799,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "user"],
+    },
   },
 } as const
