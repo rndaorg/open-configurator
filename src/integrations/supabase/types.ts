@@ -390,6 +390,36 @@ export type Database = {
           },
         ]
       }
+      payment_provider_config: {
+        Row: {
+          config: Json
+          created_at: string
+          id: string
+          is_enabled: boolean
+          is_live_mode: boolean
+          provider: string
+          updated_at: string
+        }
+        Insert: {
+          config?: Json
+          created_at?: string
+          id?: string
+          is_enabled?: boolean
+          is_live_mode?: boolean
+          provider: string
+          updated_at?: string
+        }
+        Update: {
+          config?: Json
+          created_at?: string
+          id?: string
+          is_enabled?: boolean
+          is_live_mode?: boolean
+          provider?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       pricing_rules: {
         Row: {
           conditions: Json
@@ -599,6 +629,66 @@ export type Database = {
           },
         ]
       }
+      subscription_tiers: {
+        Row: {
+          analytics_access: boolean
+          api_access: boolean
+          created_at: string
+          description: string | null
+          display_order: number
+          features: Json
+          id: string
+          is_active: boolean
+          max_categories: number
+          max_products: number
+          monthly_price_usd: number
+          name: string
+          priority_support: boolean
+          slug: string
+          updated_at: string
+          white_label: boolean
+          yearly_price_usd: number
+        }
+        Insert: {
+          analytics_access?: boolean
+          api_access?: boolean
+          created_at?: string
+          description?: string | null
+          display_order?: number
+          features?: Json
+          id?: string
+          is_active?: boolean
+          max_categories?: number
+          max_products?: number
+          monthly_price_usd?: number
+          name: string
+          priority_support?: boolean
+          slug: string
+          updated_at?: string
+          white_label?: boolean
+          yearly_price_usd?: number
+        }
+        Update: {
+          analytics_access?: boolean
+          api_access?: boolean
+          created_at?: string
+          description?: string | null
+          display_order?: number
+          features?: Json
+          id?: string
+          is_active?: boolean
+          max_categories?: number
+          max_products?: number
+          monthly_price_usd?: number
+          name?: string
+          priority_support?: boolean
+          slug?: string
+          updated_at?: string
+          white_label?: boolean
+          yearly_price_usd?: number
+        }
+        Relationships: []
+      }
       user_preferences: {
         Row: {
           created_at: string
@@ -657,6 +747,62 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      user_subscriptions: {
+        Row: {
+          billing_interval: string
+          cancel_at_period_end: boolean
+          created_at: string
+          current_period_end: string | null
+          current_period_start: string | null
+          id: string
+          payment_provider: string
+          provider_customer_id: string | null
+          provider_subscription_id: string | null
+          status: string
+          tier_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          billing_interval?: string
+          cancel_at_period_end?: boolean
+          created_at?: string
+          current_period_end?: string | null
+          current_period_start?: string | null
+          id?: string
+          payment_provider?: string
+          provider_customer_id?: string | null
+          provider_subscription_id?: string | null
+          status?: string
+          tier_id: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          billing_interval?: string
+          cancel_at_period_end?: boolean
+          created_at?: string
+          current_period_end?: string | null
+          current_period_start?: string | null
+          id?: string
+          payment_provider?: string
+          provider_customer_id?: string | null
+          provider_subscription_id?: string | null
+          status?: string
+          tier_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_subscriptions_tier_id_fkey"
+            columns: ["tier_id"]
+            isOneToOne: false
+            referencedRelation: "subscription_tiers"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
