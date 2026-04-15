@@ -37,6 +37,7 @@ export const Navigation = () => {
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2">
             <Boxes className="h-8 w-8 text-primary" />
+            {/* <img src="/logo.jpeg" className="h-64 w-64" /> */}
             <span className="text-xl font-bold bg-gradient-primary bg-clip-text text-transparent">
               Open Configurator
             </span>
