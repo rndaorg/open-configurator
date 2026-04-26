@@ -79,19 +79,20 @@ export function SubscriptionManagement() {
             </div>
           )}
 
-          <div className="flex gap-3">
+          <div className="flex gap-3 flex-wrap">
             <Button asChild>
               <Link to="/pricing">
                 {currentTier?.slug === 'free' ? 'Upgrade Plan' : 'Change Plan'}
               </Link>
             </Button>
+            <Button variant="secondary" asChild>
+              <Link to="/billing">
+                <ExternalLink className="h-4 w-4 mr-1" /> Open Customer Portal
+              </Link>
+            </Button>
             {subscription && currentTier?.slug !== 'free' && !subscription.cancel_at_period_end && (
-              <Button
-                variant="outline"
-                onClick={handleCancelSubscription}
-                disabled={canceling}
-              >
-                {canceling ? 'Canceling...' : 'Cancel Subscription'}
+              <Button variant="outline" onClick={() => setCancelOpen(true)}>
+                Cancel Subscription
               </Button>
             )}
           </div>
@@ -128,6 +129,16 @@ export function SubscriptionManagement() {
             </div>
           </CardContent>
         </Card>
+      )}
+      {subscription && currentTier && (
+        <CancellationFlow
+          subscriptionId={subscription.id}
+          tierName={currentTier.name}
+          periodEnd={subscription.current_period_end}
+          open={cancelOpen}
+          onOpenChange={setCancelOpen}
+          onCancelComplete={refresh}
+        />
       )}
     </div>
   );
