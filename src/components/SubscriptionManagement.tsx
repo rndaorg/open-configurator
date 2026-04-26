@@ -2,35 +2,15 @@ import { useSubscription } from '@/hooks/useSubscription';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
 import { Link } from 'react-router-dom';
-import { Crown, Calendar, CreditCard, AlertTriangle } from 'lucide-react';
-import { formatDistanceToNow, format } from 'date-fns';
-import { supabase } from '@/integrations/supabase/client';
-import { toast } from 'sonner';
+import { Crown, CreditCard, AlertTriangle, ExternalLink } from 'lucide-react';
+import { format } from 'date-fns';
 import { useState } from 'react';
+import { CancellationFlow } from '@/components/customer-portal/CancellationFlow';
 
 export function SubscriptionManagement() {
-  const { subscription, currentTier, activeProvider, loading, refresh } = useSubscription();
-  const [canceling, setCanceling] = useState(false);
-
-  const handleCancelSubscription = async () => {
-    if (!subscription) return;
-    setCanceling(true);
-
-    try {
-      const { error } = await supabase.functions.invoke('subscription-manage', {
-        body: { action: 'cancel', subscriptionId: subscription.id },
-      });
-      if (error) throw error;
-      toast.success('Subscription will cancel at the end of the billing period');
-      await refresh();
-    } catch (error) {
-      toast.error('Failed to cancel subscription');
-    } finally {
-      setCanceling(false);
-    }
-  };
+  const { subscription, currentTier, loading, refresh } = useSubscription();
+  const [cancelOpen, setCancelOpen] = useState(false);
 
   if (loading) {
     return (
