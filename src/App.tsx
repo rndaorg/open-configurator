@@ -9,6 +9,7 @@ import Products from "./pages/Products";
 import Pricing from "./pages/Pricing";
 import Auth from "./pages/Auth";
 import Profile from "./pages/Profile";
+import CustomerPortal from "./pages/CustomerPortal";
 import Cart from "./pages/Cart";
 import Checkout from "./pages/Checkout";
 import NotFound from "./pages/NotFound";
@@ -51,6 +52,14 @@ const App = () => (
             element={
               <ProtectedRoute>
                 <Profile />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/billing"
+            element={
+              <ProtectedRoute>
+                <CustomerPortal />
               </ProtectedRoute>
             }
           />

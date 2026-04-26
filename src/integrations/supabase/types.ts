@@ -14,6 +14,36 @@ export type Database = {
   }
   public: {
     Tables: {
+      cancellation_feedback: {
+        Row: {
+          created_at: string
+          feedback: string | null
+          id: string
+          reason: string
+          subscription_id: string | null
+          user_id: string
+          would_recommend: number | null
+        }
+        Insert: {
+          created_at?: string
+          feedback?: string | null
+          id?: string
+          reason: string
+          subscription_id?: string | null
+          user_id: string
+          would_recommend?: number | null
+        }
+        Update: {
+          created_at?: string
+          feedback?: string | null
+          id?: string
+          reason?: string
+          subscription_id?: string | null
+          user_id?: string
+          would_recommend?: number | null
+        }
+        Relationships: []
+      }
       categories: {
         Row: {
           created_at: string
@@ -202,6 +232,66 @@ export type Database = {
           },
         ]
       }
+      invoices: {
+        Row: {
+          amount_usd: number
+          billing_period_end: string | null
+          billing_period_start: string | null
+          created_at: string
+          currency: string
+          description: string | null
+          id: string
+          invoice_number: string
+          invoice_pdf_url: string | null
+          line_items: Json
+          paid_at: string | null
+          payment_provider: string
+          provider_invoice_id: string | null
+          status: string
+          subscription_id: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          amount_usd?: number
+          billing_period_end?: string | null
+          billing_period_start?: string | null
+          created_at?: string
+          currency?: string
+          description?: string | null
+          id?: string
+          invoice_number: string
+          invoice_pdf_url?: string | null
+          line_items?: Json
+          paid_at?: string | null
+          payment_provider?: string
+          provider_invoice_id?: string | null
+          status?: string
+          subscription_id?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          amount_usd?: number
+          billing_period_end?: string | null
+          billing_period_start?: string | null
+          created_at?: string
+          currency?: string
+          description?: string | null
+          id?: string
+          invoice_number?: string
+          invoice_pdf_url?: string | null
+          line_items?: Json
+          paid_at?: string | null
+          payment_provider?: string
+          provider_invoice_id?: string | null
+          status?: string
+          subscription_id?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       notifications: {
         Row: {
           created_at: string
@@ -389,6 +479,60 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      payment_methods: {
+        Row: {
+          billing_email: string | null
+          billing_name: string | null
+          brand: string | null
+          created_at: string
+          exp_month: number | null
+          exp_year: number | null
+          id: string
+          is_default: boolean
+          last4: string | null
+          metadata: Json
+          payment_provider: string
+          provider_payment_method_id: string | null
+          type: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          billing_email?: string | null
+          billing_name?: string | null
+          brand?: string | null
+          created_at?: string
+          exp_month?: number | null
+          exp_year?: number | null
+          id?: string
+          is_default?: boolean
+          last4?: string | null
+          metadata?: Json
+          payment_provider: string
+          provider_payment_method_id?: string | null
+          type: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          billing_email?: string | null
+          billing_name?: string | null
+          brand?: string | null
+          created_at?: string
+          exp_month?: number | null
+          exp_year?: number | null
+          id?: string
+          is_default?: boolean
+          last4?: string | null
+          metadata?: Json
+          payment_provider?: string
+          provider_payment_method_id?: string | null
+          type?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
       }
       payment_provider_config: {
         Row: {
@@ -628,6 +772,48 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      subscription_history: {
+        Row: {
+          created_at: string
+          event_type: string
+          from_status: string | null
+          from_tier_id: string | null
+          id: string
+          metadata: Json
+          reason: string | null
+          subscription_id: string | null
+          to_status: string | null
+          to_tier_id: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          event_type: string
+          from_status?: string | null
+          from_tier_id?: string | null
+          id?: string
+          metadata?: Json
+          reason?: string | null
+          subscription_id?: string | null
+          to_status?: string | null
+          to_tier_id?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          event_type?: string
+          from_status?: string | null
+          from_tier_id?: string | null
+          id?: string
+          metadata?: Json
+          reason?: string | null
+          subscription_id?: string | null
+          to_status?: string | null
+          to_tier_id?: string | null
+          user_id?: string
+        }
+        Relationships: []
       }
       subscription_tiers: {
         Row: {

@@ -2,35 +2,15 @@ import { useSubscription } from '@/hooks/useSubscription';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
 import { Link } from 'react-router-dom';
-import { Crown, Calendar, CreditCard, AlertTriangle } from 'lucide-react';
-import { formatDistanceToNow, format } from 'date-fns';
-import { supabase } from '@/integrations/supabase/client';
-import { toast } from 'sonner';
+import { Crown, CreditCard, AlertTriangle, ExternalLink } from 'lucide-react';
+import { format } from 'date-fns';
 import { useState } from 'react';
+import { CancellationFlow } from '@/components/customer-portal/CancellationFlow';
 
 export function SubscriptionManagement() {
-  const { subscription, currentTier, activeProvider, loading, refresh } = useSubscription();
-  const [canceling, setCanceling] = useState(false);
-
-  const handleCancelSubscription = async () => {
-    if (!subscription) return;
-    setCanceling(true);
-
-    try {
-      const { error } = await supabase.functions.invoke('subscription-manage', {
-        body: { action: 'cancel', subscriptionId: subscription.id },
-      });
-      if (error) throw error;
-      toast.success('Subscription will cancel at the end of the billing period');
-      await refresh();
-    } catch (error) {
-      toast.error('Failed to cancel subscription');
-    } finally {
-      setCanceling(false);
-    }
-  };
+  const { subscription, currentTier, loading, refresh } = useSubscription();
+  const [cancelOpen, setCancelOpen] = useState(false);
 
   if (loading) {
     return (
@@ -99,19 +79,20 @@ export function SubscriptionManagement() {
             </div>
           )}
 
-          <div className="flex gap-3">
+          <div className="flex gap-3 flex-wrap">
             <Button asChild>
               <Link to="/pricing">
                 {currentTier?.slug === 'free' ? 'Upgrade Plan' : 'Change Plan'}
               </Link>
             </Button>
+            <Button variant="secondary" asChild>
+              <Link to="/billing">
+                <ExternalLink className="h-4 w-4 mr-1" /> Open Customer Portal
+              </Link>
+            </Button>
             {subscription && currentTier?.slug !== 'free' && !subscription.cancel_at_period_end && (
-              <Button
-                variant="outline"
-                onClick={handleCancelSubscription}
-                disabled={canceling}
-              >
-                {canceling ? 'Canceling...' : 'Cancel Subscription'}
+              <Button variant="outline" onClick={() => setCancelOpen(true)}>
+                Cancel Subscription
               </Button>
             )}
           </div>
@@ -148,6 +129,16 @@ export function SubscriptionManagement() {
             </div>
           </CardContent>
         </Card>
+      )}
+      {subscription && currentTier && (
+        <CancellationFlow
+          subscriptionId={subscription.id}
+          tierName={currentTier.name}
+          periodEnd={subscription.current_period_end}
+          open={cancelOpen}
+          onOpenChange={setCancelOpen}
+          onCancelComplete={refresh}
+        />
       )}
     </div>
   );
