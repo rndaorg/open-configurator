@@ -2,7 +2,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Boxes, Menu, X, LogOut, User, ShoppingCart, Shield } from 'lucide-react';
+import { Boxes, Menu, X, LogOut, User, ShoppingCart, Shield, Heart } from 'lucide-react';
 import { useState } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { useCart } from '@/contexts/CartContext';
@@ -65,6 +65,13 @@ export const Navigation = () => {
           <div className="hidden md:flex items-center gap-4">
             {user && <NotificationCenter />}
             <LanguageSelector showCurrency />
+            {user && (
+              <Button variant="ghost" size="sm" asChild aria-label="Wishlist">
+                <Link to="/wishlist">
+                  <Heart className="h-5 w-5" />
+                </Link>
+              </Button>
+            )}
             <Button variant="ghost" size="sm" className="relative" asChild>
               <Link to="/cart">
                 <ShoppingCart className="h-5 w-5" />
