@@ -533,6 +533,15 @@ export const ProductConfigurator = ({
           </div>
         </div>
       </div>
+
+      <ShareConfigurationDialog
+        open={shareOpen}
+        onOpenChange={setShareOpen}
+        productId={productId}
+        productName={product.name}
+        configurationData={{ selectedOptions }}
+        totalPrice={pricingResult?.finalPrice}
+      />
     </div>
   );
 };
