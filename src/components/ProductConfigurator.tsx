@@ -295,12 +295,47 @@ export const ProductConfigurator = ({
               </Button>
               <Separator orientation="vertical" className="h-6" />
               <div>
-                <h1 className="text-2xl font-bold">{product.name}</h1>
-                <p className="text-muted-foreground">Configure your product</p>
+                <h1 className="text-2xl font-bold">{sharedName ?? product.name}</h1>
+                <p className="text-muted-foreground">
+                  {sharedConfigId ? 'Shared configuration' : 'Configure your product'}
+                </p>
               </div>
             </div>
             
             <div className="flex items-center gap-4">
+              {isCollaborative && collaborators.length > 0 && (
+                <div className="hidden md:flex items-center gap-2" title="Live collaborators">
+                  <Users className="w-4 h-4 text-muted-foreground" />
+                  <div className="flex -space-x-2">
+                    {collaborators.slice(0, 4).map((c) => (
+                      <Avatar key={c.id} className="w-7 h-7 border-2 border-background">
+                        <AvatarFallback className="text-xs bg-primary/20 text-primary">
+                          {c.display_name.slice(0, 2).toUpperCase()}
+                        </AvatarFallback>
+                      </Avatar>
+                    ))}
+                    {collaborators.length > 4 && (
+                      <div className="w-7 h-7 rounded-full bg-muted border-2 border-background flex items-center justify-center text-xs">
+                        +{collaborators.length - 4}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+              <WishlistButton
+                productId={productId}
+                configurationData={{ selectedOptions }}
+                showLabel={false}
+                size="icon"
+              />
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setShareOpen(true)}
+              >
+                <Share2 className="w-4 h-4 mr-2" />
+                Share
+              </Button>
               <div className="text-right">
                 <p className="text-sm text-muted-foreground">Final Price</p>
                 <p className="text-2xl font-bold bg-gradient-primary bg-clip-text text-transparent">
