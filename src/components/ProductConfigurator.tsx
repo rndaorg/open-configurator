@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useProductById } from '@/hooks/useProducts';
 import { useCart } from '@/contexts/CartContext';
 import { RuleEngine } from '@/services/ruleEngine';
@@ -60,7 +60,7 @@ export const ProductConfigurator = ({
   const [ruleEngine] = useState(() => new RuleEngine());
   const [pricingEngine] = useState(() => new PricingEngine());
   const [sessionId, setSessionId] = useState<string | null>(null);
-  const isRemoteUpdateRef = useState({ current: false })[0] as { current: boolean };
+  const isRemoteUpdateRef = useRef(false);
 
   const { collaborators, broadcastUpdate } = useCollaborativeShare({
     sharedConfigId: sharedConfigId ?? '',
