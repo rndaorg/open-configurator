@@ -773,6 +773,95 @@ export type Database = {
           },
         ]
       }
+      shared_configuration_collaborators: {
+        Row: {
+          created_at: string
+          display_name: string
+          id: string
+          last_seen_at: string
+          role: string
+          shared_config_id: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          display_name: string
+          id?: string
+          last_seen_at?: string
+          role?: string
+          shared_config_id: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          display_name?: string
+          id?: string
+          last_seen_at?: string
+          role?: string
+          shared_config_id?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "shared_configuration_collaborators_shared_config_id_fkey"
+            columns: ["shared_config_id"]
+            isOneToOne: false
+            referencedRelation: "shared_configurations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      shared_configurations: {
+        Row: {
+          allow_edits: boolean
+          configuration_data: Json
+          configuration_id: string | null
+          configuration_name: string | null
+          created_at: string
+          expires_at: string | null
+          id: string
+          is_collaborative: boolean
+          owner_id: string | null
+          product_id: string
+          share_token: string
+          total_price: number | null
+          updated_at: string
+          view_count: number
+        }
+        Insert: {
+          allow_edits?: boolean
+          configuration_data: Json
+          configuration_id?: string | null
+          configuration_name?: string | null
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          is_collaborative?: boolean
+          owner_id?: string | null
+          product_id: string
+          share_token: string
+          total_price?: number | null
+          updated_at?: string
+          view_count?: number
+        }
+        Update: {
+          allow_edits?: boolean
+          configuration_data?: Json
+          configuration_id?: string | null
+          configuration_name?: string | null
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          is_collaborative?: boolean
+          owner_id?: string | null
+          product_id?: string
+          share_token?: string
+          total_price?: number | null
+          updated_at?: string
+          view_count?: number
+        }
+        Relationships: []
+      }
       subscription_history: {
         Row: {
           created_at: string
@@ -989,6 +1078,39 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      wishlists: {
+        Row: {
+          configuration_data: Json | null
+          configuration_id: string | null
+          created_at: string
+          id: string
+          notes: string | null
+          product_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          configuration_data?: Json | null
+          configuration_id?: string | null
+          created_at?: string
+          id?: string
+          notes?: string | null
+          product_id: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          configuration_data?: Json | null
+          configuration_id?: string | null
+          created_at?: string
+          id?: string
+          notes?: string | null
+          product_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
       }
     }
     Views: {
