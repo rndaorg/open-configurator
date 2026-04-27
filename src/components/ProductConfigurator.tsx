@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useProductById } from '@/hooks/useProducts';
 import { useCart } from '@/contexts/CartContext';
 import { RuleEngine } from '@/services/ruleEngine';
@@ -16,30 +16,78 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { toast } from 'sonner';
-import { ArrowLeft, ShoppingCart, Save, Loader2 } from 'lucide-react';
+import { ArrowLeft, ShoppingCart, Save, Loader2, Share2, Users } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
+import { WishlistButton } from '@/components/WishlistButton';
+import { ShareConfigurationDialog } from '@/components/ShareConfigurationDialog';
+import { useCollaborativeShare } from '@/hooks/useCollaborativeShare';
+import { useAuth } from '@/hooks/useAuth';
 
 interface ProductConfiguratorProps {
   productId: string;
   onBack: () => void;
+  initialOptions?: Record<string, string>;
+  sharedConfigId?: string;
+  isCollaborative?: boolean;
+  allowEdits?: boolean;
+  sharedName?: string | null;
 }
 
 interface SelectedOptions {
   [optionId: string]: string; // optionId -> valueId
 }
 
-export const ProductConfigurator = ({ productId, onBack }: ProductConfiguratorProps) => {
+export const ProductConfigurator = ({
+  productId,
+  onBack,
+  initialOptions,
+  sharedConfigId,
+  isCollaborative = false,
+  allowEdits = false,
+  sharedName,
+}: ProductConfiguratorProps) => {
   const { data: product, isLoading } = useProductById(productId);
   const { addItem } = useCart();
-  const [selectedOptions, setSelectedOptions] = useState<SelectedOptions>({});
+  const { user } = useAuth();
+  const [selectedOptions, setSelectedOptions] = useState<SelectedOptions>(initialOptions ?? {});
   const [quantity, setQuantity] = useState(1);
   const [pricingResult, setPricingResult] = useState<PricingResult | null>(null);
   const [ruleNotifications, setRuleNotifications] = useState<any[]>([]);
   const [isSaving, setIsSaving] = useState(false);
+  const [shareOpen, setShareOpen] = useState(false);
   const [ruleEngine] = useState(() => new RuleEngine());
   const [pricingEngine] = useState(() => new PricingEngine());
   const [sessionId, setSessionId] = useState<string | null>(null);
+  const isRemoteUpdateRef = useRef(false);
+
+  const { collaborators, broadcastUpdate } = useCollaborativeShare({
+    sharedConfigId: sharedConfigId ?? '',
+    enabled: !!sharedConfigId && isCollaborative,
+    displayName: user?.email?.split('@')[0] ?? 'Guest',
+    onRemoteUpdate: (data) => {
+      const opts = data?.selectedOptions ?? data;
+      if (opts && typeof opts === 'object') {
+        isRemoteUpdateRef.current = true;
+        setSelectedOptions(opts);
+      }
+    },
+  });
+
+  // Broadcast local changes when collaborative editing is allowed
+  useEffect(() => {
+    if (!sharedConfigId || !isCollaborative || !allowEdits) return;
+    if (isRemoteUpdateRef.current) {
+      isRemoteUpdateRef.current = false;
+      return;
+    }
+    const t = setTimeout(() => {
+      broadcastUpdate({ selectedOptions });
+    }, 400);
+    return () => clearTimeout(t);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedOptions, sharedConfigId, isCollaborative, allowEdits]);
 
   // Initialize engines and analytics
   useEffect(() => {
@@ -247,12 +295,47 @@ export const ProductConfigurator = ({ productId, onBack }: ProductConfiguratorPr
               </Button>
               <Separator orientation="vertical" className="h-6" />
               <div>
-                <h1 className="text-2xl font-bold">{product.name}</h1>
-                <p className="text-muted-foreground">Configure your product</p>
+                <h1 className="text-2xl font-bold">{sharedName ?? product.name}</h1>
+                <p className="text-muted-foreground">
+                  {sharedConfigId ? 'Shared configuration' : 'Configure your product'}
+                </p>
               </div>
             </div>
             
             <div className="flex items-center gap-4">
+              {isCollaborative && collaborators.length > 0 && (
+                <div className="hidden md:flex items-center gap-2" title="Live collaborators">
+                  <Users className="w-4 h-4 text-muted-foreground" />
+                  <div className="flex -space-x-2">
+                    {collaborators.slice(0, 4).map((c) => (
+                      <Avatar key={c.id} className="w-7 h-7 border-2 border-background">
+                        <AvatarFallback className="text-xs bg-primary/20 text-primary">
+                          {c.display_name.slice(0, 2).toUpperCase()}
+                        </AvatarFallback>
+                      </Avatar>
+                    ))}
+                    {collaborators.length > 4 && (
+                      <div className="w-7 h-7 rounded-full bg-muted border-2 border-background flex items-center justify-center text-xs">
+                        +{collaborators.length - 4}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+              <WishlistButton
+                productId={productId}
+                configurationData={{ selectedOptions }}
+                showLabel={false}
+                size="icon"
+              />
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setShareOpen(true)}
+              >
+                <Share2 className="w-4 h-4 mr-2" />
+                Share
+              </Button>
               <div className="text-right">
                 <p className="text-sm text-muted-foreground">Final Price</p>
                 <p className="text-2xl font-bold bg-gradient-primary bg-clip-text text-transparent">
@@ -450,6 +533,15 @@ export const ProductConfigurator = ({ productId, onBack }: ProductConfiguratorPr
           </div>
         </div>
       </div>
+
+      <ShareConfigurationDialog
+        open={shareOpen}
+        onOpenChange={setShareOpen}
+        productId={productId}
+        productName={product.name}
+        configurationData={{ selectedOptions }}
+        totalPrice={pricingResult?.finalPrice}
+      />
     </div>
   );
 };

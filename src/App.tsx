@@ -12,6 +12,8 @@ import Profile from "./pages/Profile";
 import CustomerPortal from "./pages/CustomerPortal";
 import Cart from "./pages/Cart";
 import Checkout from "./pages/Checkout";
+import Wishlist from "./pages/Wishlist";
+import SharedConfiguration from "./pages/SharedConfiguration";
 import NotFound from "./pages/NotFound";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AdminRoute from "./components/AdminRoute";
@@ -39,6 +41,15 @@ const App = () => (
           <Route path="/pricing" element={<Pricing />} />
           <Route path="/auth" element={<Auth />} />
           <Route path="/cart" element={<Cart />} />
+          <Route path="/shared/:shareToken" element={<SharedConfiguration />} />
+          <Route
+            path="/wishlist"
+            element={
+              <ProtectedRoute>
+                <Wishlist />
+              </ProtectedRoute>
+            }
+          />
           <Route
             path="/checkout"
             element={
