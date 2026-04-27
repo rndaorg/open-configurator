@@ -16,30 +16,78 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { toast } from 'sonner';
-import { ArrowLeft, ShoppingCart, Save, Loader2 } from 'lucide-react';
+import { ArrowLeft, ShoppingCart, Save, Loader2, Share2, Users } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
+import { WishlistButton } from '@/components/WishlistButton';
+import { ShareConfigurationDialog } from '@/components/ShareConfigurationDialog';
+import { useCollaborativeShare } from '@/hooks/useCollaborativeShare';
+import { useAuth } from '@/hooks/useAuth';
 
 interface ProductConfiguratorProps {
   productId: string;
   onBack: () => void;
+  initialOptions?: Record<string, string>;
+  sharedConfigId?: string;
+  isCollaborative?: boolean;
+  allowEdits?: boolean;
+  sharedName?: string | null;
 }
 
 interface SelectedOptions {
   [optionId: string]: string; // optionId -> valueId
 }
 
-export const ProductConfigurator = ({ productId, onBack }: ProductConfiguratorProps) => {
+export const ProductConfigurator = ({
+  productId,
+  onBack,
+  initialOptions,
+  sharedConfigId,
+  isCollaborative = false,
+  allowEdits = false,
+  sharedName,
+}: ProductConfiguratorProps) => {
   const { data: product, isLoading } = useProductById(productId);
   const { addItem } = useCart();
-  const [selectedOptions, setSelectedOptions] = useState<SelectedOptions>({});
+  const { user } = useAuth();
+  const [selectedOptions, setSelectedOptions] = useState<SelectedOptions>(initialOptions ?? {});
   const [quantity, setQuantity] = useState(1);
   const [pricingResult, setPricingResult] = useState<PricingResult | null>(null);
   const [ruleNotifications, setRuleNotifications] = useState<any[]>([]);
   const [isSaving, setIsSaving] = useState(false);
+  const [shareOpen, setShareOpen] = useState(false);
   const [ruleEngine] = useState(() => new RuleEngine());
   const [pricingEngine] = useState(() => new PricingEngine());
   const [sessionId, setSessionId] = useState<string | null>(null);
+  const isRemoteUpdateRef = useState({ current: false })[0] as { current: boolean };
+
+  const { collaborators, broadcastUpdate } = useCollaborativeShare({
+    sharedConfigId: sharedConfigId ?? '',
+    enabled: !!sharedConfigId && isCollaborative,
+    displayName: user?.email?.split('@')[0] ?? 'Guest',
+    onRemoteUpdate: (data) => {
+      const opts = data?.selectedOptions ?? data;
+      if (opts && typeof opts === 'object') {
+        isRemoteUpdateRef.current = true;
+        setSelectedOptions(opts);
+      }
+    },
+  });
+
+  // Broadcast local changes when collaborative editing is allowed
+  useEffect(() => {
+    if (!sharedConfigId || !isCollaborative || !allowEdits) return;
+    if (isRemoteUpdateRef.current) {
+      isRemoteUpdateRef.current = false;
+      return;
+    }
+    const t = setTimeout(() => {
+      broadcastUpdate({ selectedOptions });
+    }, 400);
+    return () => clearTimeout(t);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedOptions, sharedConfigId, isCollaborative, allowEdits]);
 
   // Initialize engines and analytics
   useEffect(() => {
