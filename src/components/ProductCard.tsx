@@ -3,6 +3,7 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Settings } from 'lucide-react';
+import { WishlistButton } from '@/components/WishlistButton';
 
 interface ProductCardProps {
   product: Product;
@@ -12,12 +13,21 @@ interface ProductCardProps {
 export const ProductCard = ({ product, onConfigure }: ProductCardProps) => {
   return (
     <Card className="glass-card overflow-hidden group hover:glow-primary transition-all duration-500 animate-slide-up">
-      <div className="aspect-square overflow-hidden">
+      <div className="aspect-square overflow-hidden relative">
         <img
           src={product.image_url || '/placeholder.svg'}
           alt={product.name}
           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
         />
+        <div className="absolute top-3 right-3">
+          <WishlistButton
+            productId={product.id}
+            showLabel={false}
+            size="icon"
+            variant="secondary"
+            className="rounded-full backdrop-blur"
+          />
+        </div>
       </div>
       
       <div className="p-6 space-y-4">
