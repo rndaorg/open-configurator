@@ -6,7 +6,9 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import Features from "./pages/Features";
 import Products from "./pages/Products";
-import Pricing from "./pages/Pricing";
+// Pricing & billing hidden — all features are free
+// import Pricing from "./pages/Pricing";
+import { Navigate } from "react-router-dom";
 import Auth from "./pages/Auth";
 import Profile from "./pages/Profile";
 import CustomerPortal from "./pages/CustomerPortal";
@@ -38,7 +40,8 @@ const App = () => (
           <Route path="/" element={<Home />} />
           <Route path="/features" element={<Features />} />
           <Route path="/products" element={<Products />} />
-          <Route path="/pricing" element={<Pricing />} />
+          {/* Pricing route hidden — redirect to home */}
+          <Route path="/pricing" element={<Navigate to="/" replace />} />
           <Route path="/auth" element={<Auth />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/shared/:shareToken" element={<SharedConfiguration />} />
@@ -66,14 +69,8 @@ const App = () => (
               </ProtectedRoute>
             }
           />
-          <Route
-            path="/billing"
-            element={
-              <ProtectedRoute>
-                <CustomerPortal />
-              </ProtectedRoute>
-            }
-          />
+          {/* Billing/customer portal hidden — redirect to profile */}
+          <Route path="/billing" element={<Navigate to="/profile" replace />} />
           <Route
             path="/admin"
             element={
