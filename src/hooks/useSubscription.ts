@@ -102,21 +102,14 @@ export function useSubscription() {
     }
   };
 
-  const canAccess = (feature: 'analytics' | 'api' | 'white_label' | 'priority_support'): boolean => {
-    if (!currentTier) return false;
-    switch (feature) {
-      case 'analytics': return currentTier.analytics_access;
-      case 'api': return currentTier.api_access;
-      case 'white_label': return currentTier.white_label;
-      case 'priority_support': return currentTier.priority_support;
-      default: return false;
-    }
+  // Pricing hidden — all features unlocked for free.
+  // Original gating logic preserved below for future re-enablement.
+  const canAccess = (_feature: 'analytics' | 'api' | 'white_label' | 'priority_support'): boolean => {
+    return true;
   };
 
-  const isWithinLimit = (resource: 'products' | 'categories', count: number): boolean => {
-    if (!currentTier) return true;
-    const limit = resource === 'products' ? currentTier.max_products : currentTier.max_categories;
-    return limit === -1 || count < limit; // -1 = unlimited
+  const isWithinLimit = (_resource: 'products' | 'categories', _count: number): boolean => {
+    return true;
   };
 
   return {
