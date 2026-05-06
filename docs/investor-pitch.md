@@ -8,10 +8,10 @@
 
 **Open Configurator** is a modern, full-stack SaaS platform that lets businesses sell complex, customizable products online with the ease of a t-shirt checkout. We combine a **3D visual configurator**, an **AI-powered rule & pricing engine**, and a **collaborative sharing layer** into a single, deployable solution.
 
-- **Product**: White-label configurator + commerce backend
-- **Stage**: Live MVP, paying-ready (Stripe + multi-tier subscriptions integrated)
-- **Raising**: Seed round to accelerate GTM and enterprise features
-- **Traction goal**: 100 paying SMB customers in 12 months
+- **Product**: Custom configurator solutions + commerce backend, built to spec
+- **Stage**: Live MVP, ready for pilot engagements
+- **Raising**: Seed round to scale delivery capacity and deepen platform capabilities
+- **Traction goal**: 15 enterprise pilot customers and $500K in committed services revenue in 12 months
 
 ---
 
