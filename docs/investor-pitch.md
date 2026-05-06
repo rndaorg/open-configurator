@@ -63,10 +63,9 @@ A **plug-and-play configurator platform** that any business can launch in days, 
 ## 5. Product Demo Highlights
 
 - **Live preview**: [open-configurator.lovable.app](https://open-configurator.lovable.app)
-- **Customer Portal**: invoices, payment methods, plan up/downgrade, usage metrics, cancellation flow
 - **Admin Suite**: products, categories, config options, pricing rules, orders, scheduled reports
 - **Sharable configs**: `/shared/:token` deep links with view-count tracking
-- **Demo mode**: every external integration (Stripe, SendGrid, CRM, inventory) gracefully falls back when secrets aren't configured — frictionless trials
+- **White-label ready**: fully brandable UI, custom domains, bespoke integrations
 
 ---
 
