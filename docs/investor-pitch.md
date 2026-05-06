@@ -6,7 +6,7 @@
 
 ## 1. Executive Summary
 
-**Open Configurator** is a modern, full-stack SaaS platform that lets businesses sell complex, customizable products online with the ease of a t-shirt checkout. We combine a **3D visual configurator**, an **AI-powered rule & pricing engine**, and a **collaborative sharing layer** into a single, deployable solution.
+**Open Configurator** is a modern, full-stack solutioning platform that lets businesses sell complex, customizable products online with the ease of a t-shirt checkout. We combine a **3D visual configurator**, an **AI-powered rule & pricing engine**, and a **collaborative sharing layer** into a single, deployable solution.
 
 - **Product**: Custom configurator solutions + commerce backend, built to spec
 - **Stage**: Live MVP, ready for pilot engagements
