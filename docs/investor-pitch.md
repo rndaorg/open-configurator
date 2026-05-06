@@ -6,12 +6,12 @@
 
 ## 1. Executive Summary
 
-**Open Configurator** is a modern, full-stack SaaS platform that lets businesses sell complex, customizable products online with the ease of a t-shirt checkout. We combine a **3D visual configurator**, an **AI-powered rule & pricing engine**, and a **collaborative sharing layer** into a single, deployable solution.
+**Open Configurator** is a modern, full-stack solutioning platform that lets businesses sell complex, customizable products online with the ease of a t-shirt checkout. We combine a **3D visual configurator**, an **AI-powered rule & pricing engine**, and a **collaborative sharing layer** into a single, deployable solution.
 
-- **Product**: White-label configurator + commerce backend
-- **Stage**: Live MVP, paying-ready (Stripe + multi-tier subscriptions integrated)
-- **Raising**: Seed round to accelerate GTM and enterprise features
-- **Traction goal**: 100 paying SMB customers in 12 months
+- **Product**: Custom configurator solutions + commerce backend, built to spec
+- **Stage**: Live MVP, ready for pilot engagements
+- **Raising**: Seed round to scale delivery capacity and deepen platform capabilities
+- **Traction goal**: 15 enterprise pilot customers and $500K in committed services revenue in 12 months
 
 ---
 
@@ -63,37 +63,35 @@ A **plug-and-play configurator platform** that any business can launch in days, 
 ## 5. Product Demo Highlights
 
 - **Live preview**: [open-configurator.lovable.app](https://open-configurator.lovable.app)
-- **Customer Portal**: invoices, payment methods, plan up/downgrade, usage metrics, cancellation flow
 - **Admin Suite**: products, categories, config options, pricing rules, orders, scheduled reports
 - **Sharable configs**: `/shared/:token` deep links with view-count tracking
-- **Demo mode**: every external integration (Stripe, SendGrid, CRM, inventory) gracefully falls back when secrets aren't configured — frictionless trials
+- **White-label ready**: fully brandable UI, custom domains, bespoke integrations
 
 ---
 
 ## 6. Business Model
 
-**SaaS subscriptions** with usage-based ceilings.
+**Custom solutioning** — we design, build, and deploy tailored configurator experiences for each client.
 
-| Plan | Price (USD/mo) | Target |
+| Engagement Type | Description | Typical Range |
 |---|---|---|
-| **Starter** | $49 | Single store, ≤100 configs/mo |
-| **Growth** | $199 | Multi-product, ≤2,500 configs/mo, A/B testing |
-| **Scale** | $599 | Unlimited, white-label, priority support |
-| **Enterprise** | Custom | SSO, dedicated infra, SLAs |
+| **Discovery & Design** | Requirements workshops, UX wireframes, integration mapping | $15K – $30K |
+| **Build & Deploy** | Full configurator build, 3D assets, rules engine, integrations | $50K – $150K |
+| **Retainer & Support** | Ongoing enhancements, new product lines, SLA support | $5K – $15K/mo |
+| **Enterprise** | Multi-site rollouts, ERP/PLM connectors, dedicated team | $200K+ |
 
-**Secondary revenue**: implementation services, premium 3D model creation, custom integrations.
+**Revenue mix target**: 60% project fees, 25% retainers, 15% licensing / white-label platform access.
 
 ---
 
 ## 7. Traction & Milestones
 
 ✅ **Built** — Full-stack MVP with 30+ features shipped
-✅ **Subscription billing** — Stripe-integrated, 4 tiers live
-✅ **Customer portal** — Self-service plan management
+✅ **Pilot-ready** — Live demo environment for prospect evaluations
 ✅ **Collaboration layer** — Real-time multi-user editing
-✅ **Security audit-ready** — RLS on every table, server-side pricing
-🎯 **Next 90 days** — Onboard 10 design partners, publish case studies
-🎯 **Next 12 months** — 100 paying customers, $250k ARR
+✅ **Security audit-ready** — RLS on every table, server-side validation
+🎯 **Next 90 days** — Close 3 pilot customers, publish case studies
+🎯 **Next 12 months** — 15 committed customers, $500K services revenue
 
 ---
 
@@ -101,24 +99,24 @@ A **plug-and-play configurator platform** that any business can launch in days, 
 
 | | Open Configurator | Tacton / Configit | Shopify Apps | Custom Build |
 |---|:-:|:-:|:-:|:-:|
-| Time to launch | **Days** | 6–12 mo | Weeks | 3–9 mo |
+| Time to launch | **6–12 weeks** | 6–12 mo | Weeks | 3–9 mo |
 | 3D visualization | ✅ | ✅ | ❌ | $$$ |
 | Real-time collaboration | ✅ | ❌ | ❌ | $$$ |
-| SMB pricing | ✅ | ❌ | ⚠️ limited | ❌ |
+| Tailored to client workflow | ✅ | ⚠️ rigid | ⚠️ limited | ✅ |
 | Open architecture | ✅ | ❌ | ⚠️ | ✅ |
 | i18n + multi-currency | ✅ | ✅ | ⚠️ | $$$ |
 
-**Our wedge**: enterprise capability at SMB price, with a modern DX.
+**Our wedge**: enterprise-grade capability delivered as a bespoke solution, with a modern DX and faster time-to-value than traditional CPQ vendors.
 
 ---
 
 ## 9. Go-to-Market
 
-1. **Product-led growth** — Free demo mode, self-serve signup, public pricing
+1. **Consultative sales** — Discovery-led engagements with manufacturers and D2C brands
 2. **Vertical playbooks** — Start with bicycles & generators (already demoed), expand to furniture and modular goods
-3. **Partner channel** — Shopify/WooCommerce agencies as resellers
-4. **Content moat** — Open-source core + docs drives organic SEO
-5. **Outbound** — Direct sales to mid-market manufacturers ($10M–$100M revenue)
+3. **Partner channel** — Systems integrators and commerce agencies as referral partners
+4. **Content moat** — Case studies, thought leadership, and open documentation drive inbound
+5. **Outbound** — Direct sales to mid-market and enterprise manufacturers ($10M–$500M revenue)
 
 ---
 
@@ -133,10 +131,10 @@ A lean, full-stack team with deep expertise in commerce, design systems, and dev
 
 We are raising a **seed round** to:
 
-- 🚀 **Hire** 2 engineers, 1 designer, 1 GTM lead
-- 📣 **Marketing** — vertical landing pages, case studies, conference presence
-- 🏢 **Enterprise features** — SSO, audit logs, dedicated tenancy
-- 🌐 **Integrations** — ERP/PLM connectors (SAP, NetSuite, Odoo)
+- 🚀 **Hire** 2 senior engineers, 1 solutions architect, 1 designer
+- 📣 **Business Development** — vertical case studies, conference presence, partner program
+- 🏢 **Platform depth** — reusable component library, integration adapters, deployment automation
+- 🌐 **Enterprise readiness** — SSO, audit logs, SOC 2 preparation
 
 > **Join us in unlocking the next wave of configurable commerce.**
 
