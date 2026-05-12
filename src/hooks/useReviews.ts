@@ -134,11 +134,16 @@ export function useAdminReviews(status?: 'pending' | 'approved' | 'rejected' | '
   return useQuery({
     queryKey: ['admin-reviews', status],
     queryFn: async () => {
-      let q = supabase.from('product_reviews').select('*, products(name)').order('created_at', { ascending: false });
+      let q = supabase.from('product_reviews').select('*').order('created_at', { ascending: false });
       if (status && status !== 'all') q = q.eq('status', status);
       const { data, error } = await q;
       if (error) throw error;
-      return data as any[];
+      const reviews = (data ?? []) as any[];
+      const productIds = Array.from(new Set(reviews.map((r) => r.product_id)));
+      if (productIds.length === 0) return reviews;
+      const { data: products } = await supabase.from('products').select('id, name').in('id', productIds);
+      const map = new Map((products ?? []).map((p: any) => [p.id, p.name]));
+      return reviews.map((r) => ({ ...r, products: { name: map.get(r.product_id) ?? 'Unknown' } }));
     },
   });
 }
