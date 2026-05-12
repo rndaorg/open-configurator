@@ -533,6 +533,10 @@ export const ProductConfigurator = ({
             />
           </div>
         </div>
+
+        <div className="mt-8">
+          <ProductReviews productId={productId} />
+        </div>
       </div>
 
       <ShareConfigurationDialog
