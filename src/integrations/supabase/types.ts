@@ -664,6 +664,57 @@ export type Database = {
           },
         ]
       }
+      product_reviews: {
+        Row: {
+          admin_notes: string | null
+          configuration_id: string | null
+          content: string | null
+          created_at: string
+          helpful_count: number
+          id: string
+          is_verified_purchase: boolean
+          order_id: string | null
+          product_id: string
+          rating: number
+          status: string
+          title: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          admin_notes?: string | null
+          configuration_id?: string | null
+          content?: string | null
+          created_at?: string
+          helpful_count?: number
+          id?: string
+          is_verified_purchase?: boolean
+          order_id?: string | null
+          product_id: string
+          rating: number
+          status?: string
+          title?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          admin_notes?: string | null
+          configuration_id?: string | null
+          content?: string | null
+          created_at?: string
+          helpful_count?: number
+          id?: string
+          is_verified_purchase?: boolean
+          order_id?: string | null
+          product_id?: string
+          rating?: number
+          status?: string
+          title?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       products: {
         Row: {
           base_price: number
@@ -1114,7 +1165,14 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      product_rating_summary: {
+        Row: {
+          average_rating: number | null
+          product_id: string | null
+          review_count: number | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       has_role: {

@@ -4,6 +4,8 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Settings } from 'lucide-react';
 import { WishlistButton } from '@/components/WishlistButton';
+import { ProductRatingBadge } from '@/components/ProductRatingBadge';
+import { useProductRatingSummary } from '@/hooks/useReviews';
 
 interface ProductCardProps {
   product: Product;
@@ -11,6 +13,7 @@ interface ProductCardProps {
 }
 
 export const ProductCard = ({ product, onConfigure }: ProductCardProps) => {
+  const { data: rating } = useProductRatingSummary(product.id);
   return (
     <Card className="glass-card overflow-hidden group hover:glow-primary transition-all duration-500 animate-slide-up">
       <div className="aspect-square overflow-hidden relative">
@@ -46,6 +49,9 @@ export const ProductCard = ({ product, onConfigure }: ProductCardProps) => {
           <p className="text-muted-foreground text-sm line-clamp-2">
             {product.description}
           </p>
+          {rating && rating.review_count > 0 && (
+            <ProductRatingBadge average={rating.average_rating} count={rating.review_count} />
+          )}
         </div>
         
         <div className="flex items-center justify-between">

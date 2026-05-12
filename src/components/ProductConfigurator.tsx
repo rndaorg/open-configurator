@@ -24,6 +24,7 @@ import { WishlistButton } from '@/components/WishlistButton';
 import { ShareConfigurationDialog } from '@/components/ShareConfigurationDialog';
 import { useCollaborativeShare } from '@/hooks/useCollaborativeShare';
 import { useAuth } from '@/hooks/useAuth';
+import { ProductReviews } from '@/components/ProductReviews';
 
 interface ProductConfiguratorProps {
   productId: string;
@@ -531,6 +532,10 @@ export const ProductConfigurator = ({
               }}
             />
           </div>
+        </div>
+
+        <div className="mt-8">
+          <ProductReviews productId={productId} />
         </div>
       </div>
 
