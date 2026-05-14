@@ -405,7 +405,7 @@ function ReportsTab() {
   const { data: forecast } = useQuery({
     queryKey: ['inventory-forecast', productId],
     queryFn: async () => {
-      const { data, error } = await supabase.functions.invoke('inventory-forecast', { body: { product_id: productId || undefined, horizon_days: 30, history_days: 90 } });
+      const { data, error } = await supabase.functions.invoke('inventory-forecast', { body: { product_id: productId && productId !== '__all__' ? productId : undefined, horizon_days: 30, history_days: 90 } });
       if (error) throw error;
       return data as any;
     }
