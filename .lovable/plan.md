@@ -1,104 +1,61 @@
+## Advanced Inventory Management
 
+Enhance the existing inventory system with batch tracking, supplier management, automated reorder points, sales-trend forecasting, multi-warehouse support, and a new admin Inventory Reports section.
 
-## Next 10 Prompts & Subscription/Payment Strategy for India
+### 1. Database (migration)
 
-### Payment Options for India
+New tables (all admin-managed via RLS using `has_role(auth.uid(), 'admin')`; public read where noted):
 
-Your project is eligible for Lovable's built-in payment integrations. Here's what works for India:
+- **`warehouses`** — name, code, address (jsonb), is_active, is_default. Admin manage; authenticated read.
+- **`suppliers`** — name, contact_name, email, phone, address (jsonb), lead_time_days, notes, is_active. Admin only.
+- **`supplier_products`** — supplier_id, option_value_id, supplier_sku, cost_price, min_order_quantity, lead_time_days. Admin only.
+- **`inventory_batches`** — option_value_id, warehouse_id, supplier_id, batch_number, quantity, received_at, expires_at, cost_price, status (active/depleted/expired). Admin only.
+- **`warehouse_inventory`** — option_value_id, warehouse_id, available_quantity, reserved_quantity, reorder_point, reorder_quantity, low_stock_threshold (replaces single-warehouse model; `inventory_levels` kept for backward compat and treated as aggregate view).
+- **`reorder_alerts`** — option_value_id, warehouse_id, supplier_id, suggested_quantity, status (pending/ordered/dismissed), triggered_at. Admin only.
+- **`inventory_movements`** — option_value_id, warehouse_id, batch_id, movement_type (receipt/sale/transfer/adjustment/reservation/release), quantity, reference_id, notes, created_by, created_at. Admin read; system insert.
 
-**Recommended: Lovable's Built-in Stripe Integration**
-- Stripe operates in India and supports INR payments, UPI, cards, and net banking
-- You keep full control over pricing, tax compliance, and refunds
-- Supports both one-time payments and recurring subscriptions natively
-- No need to manage your own Stripe account — Lovable handles setup
+Triggers:
+- On `warehouse_inventory` UPDATE: when `available_quantity <= reorder_point`, insert into `reorder_alerts` (idempotent on pending) and a `notifications` row for admins.
+- Aggregate trigger: keep `inventory_levels.available_quantity` in sync as SUM across warehouses for backward compatibility with existing UI.
 
-**Alternative: Lovable's Built-in Paddle Integration**
-- Paddle acts as Merchant of Record (handles tax/compliance globally)
-- Works for selling SaaS/digital products from India
-- 5% + 50¢ per transaction (all-inclusive)
-- Note: Customer bank statements show "Paddle" alongside your brand
+### 2. Edge Functions
 
-Both are built-in to Lovable — no external account needed to start testing.
+- **`inventory-forecast`** — admin-only. Input: `option_value_id`, optional `warehouse_id`, `horizon_days` (Zod). Pulls last 90 days of sales from `order_items` + `orders`, computes 7/30-day moving average and simple linear trend, returns projected daily demand, days-of-stock-remaining, and recommended reorder date/qty.
+- **`inventory-reorder-suggestions`** — admin-only. Scans all SKUs, returns prioritized reorder list (incorporates supplier lead time + forecast).
+- Extend **`external-inventory`** to accept optional `warehouse_id` for sync/reserve/release.
 
----
+All inputs validated with Zod; all responses include CORS headers.
 
-### Subscription & Tier Architecture
+### 3. Admin UI
 
-To add subscriptions and tiers to Open Configurator, you'd create a pricing model where businesses (your customers) pay to use the configurator platform. Here's the approach:
+New routes under `/admin`:
+- **`/admin/warehouses`** — CRUD warehouses, mark default.
+- **`/admin/suppliers`** — CRUD suppliers + linked SKUs (cost, lead time).
+- **`/admin/inventory`** — multi-warehouse stock grid per SKU with batch breakdown drawer, reorder-point editing, manual adjustments, transfer-between-warehouses dialog.
+- **`/admin/inventory/reports`** — tabbed dashboard:
+  - Stock-on-hand by warehouse (table + bar chart)
+  - Low stock & reorder alerts (actionable list → "Create PO" stub)
+  - Forecast view (per-SKU line chart of historical sales vs projected demand)
+  - Batch expiry timeline
+  - Supplier performance (lead time accuracy, fill rate)
+  - CSV export per report
 
-1. **Subscription tiers table** — Free, Pro, Enterprise with feature gates
-2. **Feature flags per tier** — max products, max categories, analytics access, API access, white-labeling
-3. **Checkout flow** — integrated with Stripe/Paddle for recurring billing
-4. **Webhook handler** — to update subscription status on payment events
-5. **Middleware/guards** — to enforce tier limits throughout the app
+Add nav links in `AdminLayout.tsx`. Reuse existing chart primitives (`recharts` via `components/ui/chart`).
 
----
+### 4. Frontend integration
 
-### Next 10 Prompts
+- Update `InventoryStatus` and `useInventoryCheck` to read aggregated `warehouse_inventory` (sum across warehouses) so customer-facing UI is unchanged.
+- No customer-facing UI changes beyond the existing in-stock badges.
 
-Since prompts 1-6 from FEAT.md are already implemented (auth, cart, admin, i18n, search, notifications), here are the next 10:
+### 5. i18n
 
-**Prompt 1: Subscription Tiers & Billing**
-```
-"Add a subscription system with Free, Pro, and Enterprise tiers. Include a pricing page, subscription management in user profile, feature gating based on tier (e.g., max products, analytics access), and integrate with Stripe for recurring payments. Support INR currency."
-```
+Add new keys under `inventory.*`, `suppliers.*`, `warehouses.*`, `inventory.reports.*` in all five locale files.
 
-**Prompt 2: Customer Portal & Self-Service**
-```
-"Build a customer portal where users can view invoices, manage payment methods, upgrade/downgrade plans, and view usage metrics against their tier limits. Include subscription history and cancellation flow."
-```
+### Technical notes
 
-**Prompt 3: Wishlist & Saved Configurations Sharing**
-```
-"Add a wishlist feature and the ability to share saved configurations via unique URLs. Include social sharing buttons, QR code generation for configurations, and collaborative configuration editing."
-```
+- All business logic (forecast math, reorder evaluation) runs server-side per project rule.
+- Edge function secrets: none new required; uses existing `SUPABASE_SERVICE_ROLE_KEY`.
+- Backward compatibility: `inventory_levels` retained and auto-synced via trigger, so existing reservations (`external-inventory`) keep working until migrated.
+- Memory updates: add `mem://features/advanced-inventory` describing the multi-warehouse model and forecasting approach.
 
-**Prompt 4: Product Reviews & Ratings**
-```
-"Implement a review and rating system for products and configurations. Include star ratings, written reviews, review moderation in admin, verified purchase badges, and aggregate rating display on product cards."
-```
-
-**Prompt 5: Advanced Inventory Management**
-```
-"Enhance inventory with batch tracking, supplier management, automated reorder points, inventory forecasting based on sales trends, and multi-warehouse support. Add inventory reports to the admin dashboard."
-```
-
-**Prompt 6: Email Marketing & Customer Communication**
-```
-"Build an email campaign system with order confirmation emails, abandoned cart recovery, promotional newsletters, and drip campaigns. Include email templates management in admin and SendGrid integration."
-```
-
-**Prompt 7: Multi-tenant White-Label Support**
-```
-"Transform the app into a multi-tenant platform where different businesses get their own subdomain, custom branding (logo, colors, fonts), and isolated data. Include tenant admin panel and onboarding wizard."
-```
-
-**Prompt 8: Advanced Analytics Dashboard**
-```
-"Build a real-time analytics dashboard with revenue tracking, customer lifetime value, product performance heatmaps, configuration popularity trends, and cohort analysis. Include date range filters and CSV/PDF export."
-```
-
-**Prompt 9: API Keys & Developer Portal**
-```
-"Create a developer portal with API key management, rate limiting, usage tracking, and auto-generated API documentation. Allow external systems to create configurations, check inventory, and place orders programmatically."
-```
-
-**Prompt 10: Progressive Web App & Offline Mode**
-```
-"Convert the app to a PWA with service worker caching, offline product browsing, background sync for saved configurations, push notifications, and add-to-home-screen support. Optimize for mobile performance."
-```
-
----
-
-### Recommended Implementation Order
-
-1. **Start with Prompt 1** (Subscriptions) — this monetizes the platform
-2. **Then Prompt 2** (Customer Portal) — essential companion to subscriptions
-3. **Then Prompts 3-4** (Wishlist, Reviews) — increase engagement
-4. **Then Prompts 5-6** (Inventory, Email) — operational improvements
-5. **Finally Prompts 7-10** (Multi-tenant, Analytics, API, PWA) — enterprise scale
-
-### Next Step
-
-To get started with payments, I can enable Lovable's built-in Stripe integration (recommended for India) and then implement the subscription tiers. Would you like to proceed with Stripe, or would you prefer Paddle?
-
+Approve to proceed with the migration first, then code.
