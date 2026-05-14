@@ -454,7 +454,7 @@ function ReportsTab() {
           <Select value={productId} onValueChange={setProductId}>
             <SelectTrigger className="w-64"><SelectValue placeholder="All products" /></SelectTrigger>
             <SelectContent>
-              <SelectItem value="">All products</SelectItem>
+              <SelectItem value="__all__">All products</SelectItem>
               {products.map((p: any) => <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>)}
             </SelectContent>
           </Select>
