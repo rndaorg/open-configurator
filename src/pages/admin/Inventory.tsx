@@ -12,7 +12,7 @@ import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { toast } from '@/hooks/use-toast';
-import { Warehouse, Truck, Package2, AlertTriangle, BarChart3, Plus, Trash2, RefreshCw, Download } from 'lucide-react';
+import { Warehouse as WarehouseIcon, Truck, Package2, AlertTriangle, BarChart3, Plus, Trash2, RefreshCw, Download } from 'lucide-react';
 import { BarChart, Bar, LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Legend } from 'recharts';
 
 type Warehouse = { id: string; name: string; code: string; is_default: boolean; is_active: boolean; address: any };
@@ -40,7 +40,7 @@ export default function AdminInventory() {
       <Tabs defaultValue="stock" className="space-y-6">
         <TabsList className="grid w-full grid-cols-5">
           <TabsTrigger value="stock"><Package2 className="h-4 w-4 mr-1" /> Stock</TabsTrigger>
-          <TabsTrigger value="warehouses"><Warehouse className="h-4 w-4 mr-1" /> Warehouses</TabsTrigger>
+          <TabsTrigger value="warehouses"><WarehouseIcon className="h-4 w-4 mr-1" /> Warehouses</TabsTrigger>
           <TabsTrigger value="suppliers"><Truck className="h-4 w-4 mr-1" /> Suppliers</TabsTrigger>
           <TabsTrigger value="alerts"><AlertTriangle className="h-4 w-4 mr-1" /> Alerts</TabsTrigger>
           <TabsTrigger value="reports"><BarChart3 className="h-4 w-4 mr-1" /> Reports</TabsTrigger>
