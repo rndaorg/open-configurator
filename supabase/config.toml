@@ -11,3 +11,9 @@ verify_jwt = false
 
 [functions.subscription-manage]
 verify_jwt = false
+
+[functions.inventory-forecast]
+verify_jwt = false
+
+[functions.inventory-reorder-suggestions]
+verify_jwt = false
