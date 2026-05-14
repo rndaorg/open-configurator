@@ -197,6 +197,72 @@ export type Database = {
           },
         ]
       }
+      inventory_batches: {
+        Row: {
+          batch_number: string
+          cost_price: number
+          created_at: string
+          expires_at: string | null
+          id: string
+          notes: string | null
+          option_value_id: string
+          quantity: number
+          received_at: string
+          remaining_quantity: number
+          status: string
+          supplier_id: string | null
+          updated_at: string
+          warehouse_id: string
+        }
+        Insert: {
+          batch_number: string
+          cost_price?: number
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          notes?: string | null
+          option_value_id: string
+          quantity?: number
+          received_at?: string
+          remaining_quantity?: number
+          status?: string
+          supplier_id?: string | null
+          updated_at?: string
+          warehouse_id: string
+        }
+        Update: {
+          batch_number?: string
+          cost_price?: number
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          notes?: string | null
+          option_value_id?: string
+          quantity?: number
+          received_at?: string
+          remaining_quantity?: number
+          status?: string
+          supplier_id?: string | null
+          updated_at?: string
+          warehouse_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "inventory_batches_supplier_id_fkey"
+            columns: ["supplier_id"]
+            isOneToOne: false
+            referencedRelation: "suppliers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "inventory_batches_warehouse_id_fkey"
+            columns: ["warehouse_id"]
+            isOneToOne: false
+            referencedRelation: "warehouses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       inventory_levels: {
         Row: {
           available_quantity: number
@@ -226,8 +292,65 @@ export type Database = {
           {
             foreignKeyName: "inventory_levels_option_value_id_fkey"
             columns: ["option_value_id"]
-            isOneToOne: false
+            isOneToOne: true
             referencedRelation: "option_values"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      inventory_movements: {
+        Row: {
+          batch_id: string | null
+          created_at: string
+          created_by: string | null
+          id: string
+          movement_type: string
+          notes: string | null
+          option_value_id: string
+          quantity: number
+          reference_id: string | null
+          reference_type: string | null
+          warehouse_id: string
+        }
+        Insert: {
+          batch_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          movement_type: string
+          notes?: string | null
+          option_value_id: string
+          quantity: number
+          reference_id?: string | null
+          reference_type?: string | null
+          warehouse_id: string
+        }
+        Update: {
+          batch_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          movement_type?: string
+          notes?: string | null
+          option_value_id?: string
+          quantity?: number
+          reference_id?: string | null
+          reference_type?: string | null
+          warehouse_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "inventory_movements_batch_id_fkey"
+            columns: ["batch_id"]
+            isOneToOne: false
+            referencedRelation: "inventory_batches"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "inventory_movements_warehouse_id_fkey"
+            columns: ["warehouse_id"]
+            isOneToOne: false
+            referencedRelation: "warehouses"
             referencedColumns: ["id"]
           },
         ]
@@ -783,6 +906,63 @@ export type Database = {
         }
         Relationships: []
       }
+      reorder_alerts: {
+        Row: {
+          current_quantity: number
+          id: string
+          notes: string | null
+          option_value_id: string
+          reorder_point: number
+          resolved_at: string | null
+          status: string
+          suggested_quantity: number
+          supplier_id: string | null
+          triggered_at: string
+          warehouse_id: string
+        }
+        Insert: {
+          current_quantity?: number
+          id?: string
+          notes?: string | null
+          option_value_id: string
+          reorder_point?: number
+          resolved_at?: string | null
+          status?: string
+          suggested_quantity?: number
+          supplier_id?: string | null
+          triggered_at?: string
+          warehouse_id: string
+        }
+        Update: {
+          current_quantity?: number
+          id?: string
+          notes?: string | null
+          option_value_id?: string
+          reorder_point?: number
+          resolved_at?: string | null
+          status?: string
+          suggested_quantity?: number
+          supplier_id?: string | null
+          triggered_at?: string
+          warehouse_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reorder_alerts_supplier_id_fkey"
+            columns: ["supplier_id"]
+            isOneToOne: false
+            referencedRelation: "suppliers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reorder_alerts_warehouse_id_fkey"
+            columns: ["warehouse_id"]
+            isOneToOne: false
+            referencedRelation: "warehouses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       search_analytics: {
         Row: {
           clicked_product_id: string | null
@@ -1015,6 +1195,95 @@ export type Database = {
         }
         Relationships: []
       }
+      supplier_products: {
+        Row: {
+          cost_price: number
+          created_at: string
+          id: string
+          is_preferred: boolean
+          lead_time_days: number | null
+          min_order_quantity: number
+          option_value_id: string
+          supplier_id: string
+          supplier_sku: string | null
+          updated_at: string
+        }
+        Insert: {
+          cost_price?: number
+          created_at?: string
+          id?: string
+          is_preferred?: boolean
+          lead_time_days?: number | null
+          min_order_quantity?: number
+          option_value_id: string
+          supplier_id: string
+          supplier_sku?: string | null
+          updated_at?: string
+        }
+        Update: {
+          cost_price?: number
+          created_at?: string
+          id?: string
+          is_preferred?: boolean
+          lead_time_days?: number | null
+          min_order_quantity?: number
+          option_value_id?: string
+          supplier_id?: string
+          supplier_sku?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "supplier_products_supplier_id_fkey"
+            columns: ["supplier_id"]
+            isOneToOne: false
+            referencedRelation: "suppliers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      suppliers: {
+        Row: {
+          address: Json
+          contact_name: string | null
+          created_at: string
+          email: string | null
+          id: string
+          is_active: boolean
+          lead_time_days: number
+          name: string
+          notes: string | null
+          phone: string | null
+          updated_at: string
+        }
+        Insert: {
+          address?: Json
+          contact_name?: string | null
+          created_at?: string
+          email?: string | null
+          id?: string
+          is_active?: boolean
+          lead_time_days?: number
+          name: string
+          notes?: string | null
+          phone?: string | null
+          updated_at?: string
+        }
+        Update: {
+          address?: Json
+          contact_name?: string | null
+          created_at?: string
+          email?: string | null
+          id?: string
+          is_active?: boolean
+          lead_time_days?: number
+          name?: string
+          notes?: string | null
+          phone?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       user_preferences: {
         Row: {
           created_at: string
@@ -1129,6 +1398,83 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      warehouse_inventory: {
+        Row: {
+          available_quantity: number
+          id: string
+          low_stock_threshold: number
+          option_value_id: string
+          reorder_point: number
+          reorder_quantity: number
+          reserved_quantity: number
+          updated_at: string
+          warehouse_id: string
+        }
+        Insert: {
+          available_quantity?: number
+          id?: string
+          low_stock_threshold?: number
+          option_value_id: string
+          reorder_point?: number
+          reorder_quantity?: number
+          reserved_quantity?: number
+          updated_at?: string
+          warehouse_id: string
+        }
+        Update: {
+          available_quantity?: number
+          id?: string
+          low_stock_threshold?: number
+          option_value_id?: string
+          reorder_point?: number
+          reorder_quantity?: number
+          reserved_quantity?: number
+          updated_at?: string
+          warehouse_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "warehouse_inventory_warehouse_id_fkey"
+            columns: ["warehouse_id"]
+            isOneToOne: false
+            referencedRelation: "warehouses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      warehouses: {
+        Row: {
+          address: Json
+          code: string
+          created_at: string
+          id: string
+          is_active: boolean
+          is_default: boolean
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          address?: Json
+          code: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          is_default?: boolean
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          address?: Json
+          code?: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          is_default?: boolean
+          name?: string
+          updated_at?: string
+        }
+        Relationships: []
       }
       wishlists: {
         Row: {
