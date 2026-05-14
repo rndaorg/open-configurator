@@ -28,6 +28,7 @@ import AdminPricingRules from "./pages/admin/PricingRules";
 import AdminOrders from "./pages/admin/Orders";
 import AdminReports from "./pages/admin/Reports";
 import AdminReviews from "./pages/admin/Reviews";
+import AdminInventory from "./pages/admin/Inventory";
 
 const queryClient = new QueryClient();
 
