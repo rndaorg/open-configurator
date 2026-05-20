@@ -18,6 +18,7 @@ export default function AdminLayout() {
     { name: t('admin.reports'), href: '/admin/reports', icon: BarChart3 },
     { name: 'Reviews', href: '/admin/reviews', icon: Star },
     { name: 'Inventory', href: '/admin/inventory', icon: Boxes },
+    { name: 'Email', href: '/admin/email', icon: Mail },
   ];
 
   return (
