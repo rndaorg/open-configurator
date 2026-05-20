@@ -91,6 +91,8 @@ const App = () => (
             <Route path="reports" element={<AdminReports />} />
             <Route path="reviews" element={<AdminReviews />} />
             <Route path="inventory" element={<AdminInventory />} />
+            <Route path="email" element={<AdminEmail />} />
+            <Route path="email/:tab" element={<AdminEmail />} />
           </Route>
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
