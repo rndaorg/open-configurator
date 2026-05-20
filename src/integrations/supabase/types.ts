@@ -14,6 +14,48 @@ export type Database = {
   }
   public: {
     Tables: {
+      abandoned_carts: {
+        Row: {
+          cart_data: Json
+          created_at: string
+          email: string
+          id: string
+          item_count: number
+          last_email_sent_at: string | null
+          recovered_at: string | null
+          recovery_status: string
+          total_amount: number
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          cart_data: Json
+          created_at?: string
+          email: string
+          id?: string
+          item_count?: number
+          last_email_sent_at?: string | null
+          recovered_at?: string | null
+          recovery_status?: string
+          total_amount?: number
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          cart_data?: Json
+          created_at?: string
+          email?: string
+          id?: string
+          item_count?: number
+          last_email_sent_at?: string | null
+          recovered_at?: string | null
+          recovery_status?: string
+          total_amount?: number
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       cancellation_feedback: {
         Row: {
           created_at: string
@@ -196,6 +238,345 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      drip_campaign_steps: {
+        Row: {
+          created_at: string
+          delay_hours: number
+          drip_campaign_id: string
+          id: string
+          step_order: number
+          template_id: string
+        }
+        Insert: {
+          created_at?: string
+          delay_hours?: number
+          drip_campaign_id: string
+          id?: string
+          step_order: number
+          template_id: string
+        }
+        Update: {
+          created_at?: string
+          delay_hours?: number
+          drip_campaign_id?: string
+          id?: string
+          step_order?: number
+          template_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "drip_campaign_steps_drip_campaign_id_fkey"
+            columns: ["drip_campaign_id"]
+            isOneToOne: false
+            referencedRelation: "drip_campaigns"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "drip_campaign_steps_template_id_fkey"
+            columns: ["template_id"]
+            isOneToOne: false
+            referencedRelation: "email_templates"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      drip_campaigns: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          is_active: boolean
+          name: string
+          trigger_event: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          name: string
+          trigger_event: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          name?: string
+          trigger_event?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      drip_enrollments: {
+        Row: {
+          completed_at: string | null
+          current_step: number
+          drip_campaign_id: string
+          email: string
+          enrolled_at: string
+          id: string
+          next_send_at: string
+          status: string
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string | null
+          current_step?: number
+          drip_campaign_id: string
+          email: string
+          enrolled_at?: string
+          id?: string
+          next_send_at?: string
+          status?: string
+          user_id: string
+        }
+        Update: {
+          completed_at?: string | null
+          current_step?: number
+          drip_campaign_id?: string
+          email?: string
+          enrolled_at?: string
+          id?: string
+          next_send_at?: string
+          status?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "drip_enrollments_drip_campaign_id_fkey"
+            columns: ["drip_campaign_id"]
+            isOneToOne: false
+            referencedRelation: "drip_campaigns"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      email_campaign_recipients: {
+        Row: {
+          campaign_id: string
+          created_at: string
+          email: string
+          error: string | null
+          id: string
+          provider_message_id: string | null
+          sent_at: string | null
+          status: string
+          user_id: string | null
+        }
+        Insert: {
+          campaign_id: string
+          created_at?: string
+          email: string
+          error?: string | null
+          id?: string
+          provider_message_id?: string | null
+          sent_at?: string | null
+          status?: string
+          user_id?: string | null
+        }
+        Update: {
+          campaign_id?: string
+          created_at?: string
+          email?: string
+          error?: string | null
+          id?: string
+          provider_message_id?: string | null
+          sent_at?: string | null
+          status?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "email_campaign_recipients_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "email_campaigns"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      email_campaigns: {
+        Row: {
+          audience_filter: Json
+          created_at: string
+          created_by: string | null
+          id: string
+          name: string
+          scheduled_at: string | null
+          sent_at: string | null
+          stats: Json
+          status: string
+          template_data: Json
+          template_id: string
+          type: string
+          updated_at: string
+        }
+        Insert: {
+          audience_filter?: Json
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          name: string
+          scheduled_at?: string | null
+          sent_at?: string | null
+          stats?: Json
+          status?: string
+          template_data?: Json
+          template_id: string
+          type?: string
+          updated_at?: string
+        }
+        Update: {
+          audience_filter?: Json
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          name?: string
+          scheduled_at?: string | null
+          sent_at?: string | null
+          stats?: Json
+          status?: string
+          template_data?: Json
+          template_id?: string
+          type?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "email_campaigns_template_id_fkey"
+            columns: ["template_id"]
+            isOneToOne: false
+            referencedRelation: "email_templates"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      email_send_log: {
+        Row: {
+          campaign_id: string | null
+          category: string | null
+          drip_enrollment_id: string | null
+          error: string | null
+          id: string
+          provider: string
+          provider_message_id: string | null
+          recipient_email: string
+          sent_at: string
+          status: string
+          template_slug: string | null
+        }
+        Insert: {
+          campaign_id?: string | null
+          category?: string | null
+          drip_enrollment_id?: string | null
+          error?: string | null
+          id?: string
+          provider?: string
+          provider_message_id?: string | null
+          recipient_email: string
+          sent_at?: string
+          status: string
+          template_slug?: string | null
+        }
+        Update: {
+          campaign_id?: string | null
+          category?: string | null
+          drip_enrollment_id?: string | null
+          error?: string | null
+          id?: string
+          provider?: string
+          provider_message_id?: string | null
+          recipient_email?: string
+          sent_at?: string
+          status?: string
+          template_slug?: string | null
+        }
+        Relationships: []
+      }
+      email_subscriptions: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          newsletter: boolean
+          promotional: boolean
+          transactional: boolean
+          unsubscribe_token: string
+          unsubscribed_at: string | null
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          newsletter?: boolean
+          promotional?: boolean
+          transactional?: boolean
+          unsubscribe_token?: string
+          unsubscribed_at?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          newsletter?: boolean
+          promotional?: boolean
+          transactional?: boolean
+          unsubscribe_token?: string
+          unsubscribed_at?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      email_templates: {
+        Row: {
+          category: string
+          created_at: string
+          html_body: string
+          id: string
+          is_active: boolean
+          name: string
+          slug: string
+          subject: string
+          text_body: string | null
+          updated_at: string
+          variables: Json
+        }
+        Insert: {
+          category?: string
+          created_at?: string
+          html_body: string
+          id?: string
+          is_active?: boolean
+          name: string
+          slug: string
+          subject: string
+          text_body?: string | null
+          updated_at?: string
+          variables?: Json
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          html_body?: string
+          id?: string
+          is_active?: boolean
+          name?: string
+          slug?: string
+          subject?: string
+          text_body?: string | null
+          updated_at?: string
+          variables?: Json
+        }
+        Relationships: []
       }
       inventory_batches: {
         Row: {
