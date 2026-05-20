@@ -17,3 +17,18 @@ verify_jwt = false
 
 [functions.inventory-reorder-suggestions]
 verify_jwt = false
+
+[functions.email-send]
+verify_jwt = false
+
+[functions.email-campaign-dispatch]
+verify_jwt = false
+
+[functions.email-drip-processor]
+verify_jwt = false
+
+[functions.email-cart-recovery]
+verify_jwt = false
+
+[functions.email-unsubscribe]
+verify_jwt = false
