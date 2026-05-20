@@ -101,6 +101,28 @@ const Checkout = () => {
       if (itemsError) throw itemsError;
 
       setOrderId(order.id);
+
+      // Fire-and-forget order confirmation email + clear abandoned cart
+      const customerEmail = (user as any)?.email;
+      if (customerEmail) {
+        supabase.functions.invoke('email-send', {
+          body: {
+            templateSlug: 'order_confirmation',
+            to: customerEmail,
+            templateData: {
+              customer_name: customerEmail.split('@')[0],
+              order_id: order.id.substring(0, 8).toUpperCase(),
+              product_name: items.map(i => i.productName).join(', '),
+              total_price: totalAmount.toFixed(2),
+            },
+            bypassSubscriptionCheck: true,
+          },
+        }).catch((e) => console.error('order email failed', e));
+        supabase.from('abandoned_carts')
+          .update({ recovery_status: 'recovered', recovered_at: new Date().toISOString() })
+          .eq('email', customerEmail).then(() => {});
+      }
+
       clearCart();
       setStep('confirmation');
       toast.success('Order placed successfully!');
