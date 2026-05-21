@@ -1,0 +1,13 @@
+# Open Configurator
+
+> Open-source visual product configurator. Build, customize, and price custom products (bikes, generators, and more) in real time.
+
+## Pages
+
+- [Home](/): Overview and intro to the configurator platform.
+- [Features](/features): Capabilities including real-time pricing, visual customization, and analytics.
+- [Products](/products): Browse and configure available product catalog.
+
+## Optional
+
+- [Sign in](/auth): Account access for saved configurations and orders.

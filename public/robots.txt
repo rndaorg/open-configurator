@@ -12,3 +12,9 @@ Allow: /
 
 User-agent: *
 Allow: /
+Disallow: /admin
+Disallow: /checkout
+Disallow: /profile
+Disallow: /wishlist
+
+Sitemap: https://open-configurator.lovable.app/sitemap.xml
