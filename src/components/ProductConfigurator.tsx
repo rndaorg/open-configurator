@@ -25,6 +25,7 @@ import { ShareConfigurationDialog } from '@/components/ShareConfigurationDialog'
 import { useCollaborativeShare } from '@/hooks/useCollaborativeShare';
 import { useAuth } from '@/hooks/useAuth';
 import { ProductReviews } from '@/components/ProductReviews';
+import { ConfiguratorAIChat } from '@/components/ConfiguratorAIChat';
 
 interface ProductConfiguratorProps {
   productId: string;
