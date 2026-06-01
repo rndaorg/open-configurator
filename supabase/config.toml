@@ -35,3 +35,7 @@ verify_jwt = false
 
 [functions.configurator-ai-agent]
 verify_jwt = false
+
+[functions.agents-orchestrator]
+verify_jwt = false
+
