@@ -14,38 +14,57 @@ Open Configurator is a modern, full-stack product configurator that enables busi
 
 ## ✨ Features
 
-### 🎨 **Beautiful, Modern Interface**
-- Glass morphism design with smooth animations
-- Responsive design that works on all devices
+### 🎨 Storefront & Customer Experience
+- Glass-morphism design, smooth animations, fully responsive
+- Multi-page structure (Home, Features, Products, Cart, Profile, Wishlist, Customer Portal)
 - Real-time visual feedback during configuration
-- Intuitive step-by-step configuration process
+- **3D Product Visualization** with Three.js
+- **Configuration Comparison** side-by-side
+- **Save, Share & Collaborate** on configurations via shareable links
+- **Wishlist** with persistent saves
+- **Product Reviews & Ratings** with moderation
+- **i18n**: 5 languages (EN, ES, FR, DE, AR with RTL) and 9 currencies
 
-### ⚡ **Powerful Configurator Engine**
-- **AI-Powered Rule Engine**: Intelligent validation and constraint system
-- **Dynamic Pricing Engine**: Complex pricing rules with volume discounts and tiered pricing
-- **3D Product Visualization**: Interactive 3D models with real-time configuration updates
-- **Smart Recommendations**: AI-powered suggestions based on customer preferences
-- **Configuration Comparison**: Side-by-side comparison of different setups
-- **Real-time Inventory**: Live stock checking and availability updates
-- **Advanced Analytics**: Comprehensive tracking and user behavior insights
-- **Save & Share**: Customers can save and share configurations
+### 🤖 AI & Agents
+- **AI Configurator Chat Agent** — describe what you want in natural language; the agent auto-selects compatible options with explanations (Lovable AI Gateway, Gemini 3 Flash)
+- **Multi-Agent Orchestration Layer** — a master agent delegates to specialized Customer, Pricing, Inventory, and Rules sub-agents with per-agent trace logging
+- **AI-Powered Recommendations** based on browsing + configuration history
+- **Demand Forecasting & Reorder Suggestions**
 
-### 🏢 **Business Ready**
-- **Advanced Rule Management**: Configure complex business rules and constraints
-- **Multi-tier Pricing**: Volume discounts, bulk pricing, and conditional pricing
-- **Real-time Analytics**: Session tracking, conversion analysis, and user insights
-- **Inventory Management**: Live stock tracking with low-stock alerts
-- **A/B Testing**: Built-in recommendation engine testing capabilities
-- **Performance Monitoring**: Real-time performance metrics and optimization suggestions
+### 🛒 Commerce
+- **Authentication** (Supabase Auth) with protected routes and profile management
+- **Shopping Cart & Multi-step Checkout** with Stripe payments
+- **Order Management** with status tracking and history
+- **Subscriptions & Customer Portal** (plans, invoices, payment methods, usage, cancellation flow)
+- **Abandoned Cart Recovery** with automated email follow-ups
 
-### 🔧 **Developer Friendly**
-- **Full-stack Solution**: Frontend + Backend included with advanced engines
-- **Modern Tech Stack**: React, TypeScript, Tailwind CSS, Three.js for 3D
-- **Database Included**: PostgreSQL with Supabase and advanced schema
-- **Rule Engine SDK**: Powerful rule engine for custom business logic
-- **Pricing Engine API**: Flexible pricing system with complex calculations
-- **Analytics SDK**: Built-in analytics with custom event tracking
-- **3D Integration**: Three.js integration for immersive product visualization
+### 📨 Email Campaign System (SendGrid)
+- Transactional, promotional newsletters, and drip campaigns
+- Abandoned cart recovery automation
+- Template manager with live preview and test sends
+- One-click unsubscribe + per-category preferences
+
+### 🏢 Admin Console (`/admin`)
+- Dashboard, Products, Categories, Config Options, Pricing Rules
+- Orders, Reviews moderation
+- **Advanced Inventory**: multi-warehouse stock, suppliers, batches, reorder automation, forecast
+- **Reports & BI**: sales analytics, conversion funnel, customer insights, A/B testing, scheduled exports
+- **Email Center**: templates, campaigns, drips, abandoned carts, subscribers, send logs
+- **AI Agents Console**: test orchestration, inspect per-agent traces and timings
+
+### ⚡ Configurator Engine
+- **Rule Engine**: dependencies, restrictions, auto-selections, validation
+- **Dynamic Pricing Engine**: volume discounts and tiered pricing (server-side)
+- **Real-time Inventory** checking with low-stock alerts
+- **Advanced Search**: faceted, debounced, with analytics
+- **Notifications**: real-time in-app via Supabase Realtime
+
+### 🔒 Security & Compliance
+- Role-based access via `user_roles` + security-definer functions
+- Row Level Security on every table
+- Server-side business logic in Edge Functions, all inputs validated with Zod
+- Secure anonymous session IDs via `crypto.randomUUID()`
+- SEO: per-route meta, sitemap, robots, JSON-LD (Organization, WebSite, CollectionPage)
 
 ## 🚀 Quick Start
 
@@ -174,21 +193,33 @@ Security features implemented:
 
 ## 📚 Documentation
 
-- [Getting Started Guide](docs/getting-started.md) - Includes security warnings
-- [API Reference](docs/api.md) - With security considerations
-- [API Specification](docs/api-spec.md) - OpenAPI/Swagger spec
-- [Advanced Features](docs/advanced-features.md) - Security best practices
-- [Security Guide](docs/security.md) - Comprehensive security review
+- [Getting Started Guide](docs/getting-started.md) — setup + what's included
+- [Advanced Features](docs/advanced-features.md) — engines, AI agents, email, inventory, subscriptions
+- [API Reference](docs/api.md) — application + Edge Function APIs
+- [API Specification](docs/api-spec.md) — OpenAPI/Swagger spec
+- [Security Guide](docs/security.md) — RBAC, RLS, server-side validation
+- [Investor Pitch](docs/investor-pitch.md)
+- [Roadmap & Next Prompts](FEAT.md)
+
+## 🧩 Edge Functions
+
+Server-side logic ships as Supabase Edge Functions (Deno + Zod-validated inputs):
+
+| Function | Purpose |
+|---|---|
+| `configurator-ai-agent` | NL → configuration via tool calling |
+| `agents-orchestrator` | Master agent → Customer/Pricing/Inventory/Rules sub-agents |
+| `validate-and-save-configuration` | Server-side rules + pricing evaluation |
+| `personalized-recommendations` | AI recommendations |
+| `stripe-payment`, `subscription-checkout`, `subscription-manage` | Payments & subscriptions |
+| `sendgrid-email`, `email-send`, `email-campaign-dispatch`, `email-drip-processor`, `email-cart-recovery`, `email-unsubscribe` | Email system |
+| `inventory-forecast`, `inventory-reorder-suggestions`, `external-inventory` | Inventory intelligence |
+| `generate-scheduled-report` | Scheduled BI report generation |
+| `crm-integration`, `social-sharing` | External integrations (with demo-mode fallback) |
 
 ## 🤝 Contributing
 
 We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
 
 ## 📄 License
 
