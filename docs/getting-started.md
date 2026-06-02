@@ -33,32 +33,45 @@ You can find these values in your Supabase project dashboard under Settings → 
 
 ## Step 2: Database Setup
 
-Open Configurator comes with a comprehensive database schema and sample data. The schema includes:
+Open Configurator ships with a comprehensive database schema and sample data covering the full platform:
 
-- **Products**: Your main product catalog with 3D model references
-- **Categories**: Product organization with visual hierarchies
-- **Config Options**: Customization choices (color, size, materials, features)
-- **Option Values**: Specific choices within each option with 3D model variants
-- **Product Configurations**: Saved customer configurations with analytics
-- **Rule Definitions**: Business rules and validation constraints
-- **Pricing Rules**: Dynamic pricing with volume discounts and conditions
-- **Analytics Sessions**: User behavior tracking and conversion analytics
-- **3D Models**: Product visualization assets and configuration mappings
+**Storefront & catalog**
+- Products, categories, config options, option values (with 3D model variants)
+- Saved configurations, share tokens, wishlist, reviews & ratings
 
-### Sample Data Included
+**Engines**
+- `configuration_rules` (dependencies, restrictions, auto-selects, validation)
+- `pricing_rules` (volume discounts, tiered pricing, conditional modifiers)
 
-The system comes pre-loaded with:
-- **Mountain Bike**: Configurable with frame size, color, accessories, and 3D visualization
-- **Road Bike**: Multiple color options, component choices, and interactive 3D model
-- **Portable Generator**: Power output, fuel type options with rule-based constraints
-- **Standby Generator**: Advanced features, sizing options, and dynamic pricing tiers
+**Commerce**
+- Cart, orders, order items, order status history
+- Stripe customer + subscription tables, invoices, payment methods
+- Abandoned carts with recovery state
 
-### Advanced Features Ready
-- **3D Product Models**: Interactive visualization with real-time configuration updates
-- **AI Recommendations**: Smart suggestions based on customer behavior patterns
-- **Rule Engine**: Pre-configured business rules and validation constraints
-- **Dynamic Pricing**: Volume discounts and conditional pricing already set up
-- **Analytics Tracking**: User behavior tracking and conversion optimization
+**Inventory**
+- Multi-warehouse `inventory_levels`, suppliers, batches/lots, reorder points
+
+**Email system**
+- `email_templates`, `email_campaigns`, `email_campaign_recipients`
+- `drip_campaigns`, `drip_campaign_steps`, `drip_enrollments`
+- `email_subscriptions`, `email_send_log`
+
+**Intelligence & ops**
+- Analytics sessions, search analytics, A/B test results
+- Notifications (real-time), scheduled reports
+- `user_roles` for RBAC
+
+### Sample data included
+- **Mountain Bike** and **Road Bike** with frame sizes, colors, accessories, and 3D models
+- **Portable Generator** and **Standby Generator** with rule-based constraints and tiered pricing
+- Seeded email templates: `order_confirmation`, `order_shipped`, `cart_recovery_1`, `cart_recovery_2`, `welcome`, `newsletter_default`
+
+### What's running out of the box
+- AI Configurator Chat Agent + Multi-Agent Orchestration (Lovable AI Gateway — works with no extra setup)
+- Stripe checkout + subscriptions (demo-mode without `STRIPE_SECRET_KEY`)
+- SendGrid email pipeline (demo-mode without `SENDGRID_API_KEY`)
+- Real-time inventory, notifications, recommendations
+- Admin console at `/admin` (grant your user the `admin` role to access)
 
 ## Step 3: Run Development Server
 
@@ -67,12 +80,11 @@ npm run dev
 ```
 
 Open `http://localhost:5173` in your browser. You should see:
-- Beautiful landing page with hero section and navigation
-- Multi-page structure (Home, Features, Products)
-- Product catalog with sample products and 3D previews
-- Working configurator with real-time pricing and 3D visualization
-- AI-powered recommendation engine in action
-- Configuration comparison tools
+- Landing page with hero and multi-page navigation (Home, Features, Products)
+- Product catalog and a configurator with live pricing, 3D visualization, and the AI chat agent in the sidebar
+- Cart, checkout, and authentication flows
+- Customer portal and wishlist (after sign-in)
+- Admin console at `/admin` (after granting yourself the `admin` role in `user_roles`)
 
 ## Step 4: Customize Your Products
 
