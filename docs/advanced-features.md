@@ -550,3 +550,91 @@ For enterprise deployments, Open Configurator offers additional features:
 ---
 
 Ready to harness the full power of Open Configurator's advanced features? Start with our [Getting Started Guide](./getting-started.md) and build something amazing! 🚀
+---
+
+# Recent Additions
+
+The following systems were added on top of the core engines above. Each section is a quick-reference; deeper docs live alongside the code.
+
+## 🤖 AI Configurator Chat Agent
+
+Embedded in the product configurator (`src/components/ConfiguratorAIChat.tsx`). Customers describe what they want in natural language ("lightweight road bike under $2,000 with carbon fork") and the agent returns a structured selection set with explanations.
+
+- Edge function: `supabase/functions/configurator-ai-agent/index.ts`
+- Model: `google/gemini-3-flash-preview` via the **Lovable AI Gateway**
+- Uses tool calling (`apply_configuration`) to return `{ selections, reply, explanation }`
+- Receives the live catalog, active `configuration_rules`, and `currentSelections` for context
+- Frontend applies suggestions automatically and shows per-option reasoning + estimated total
+
+## 🧠 Multi-Agent Orchestration
+
+A master orchestrator coordinates four specialized sub-agents to handle complex configuration requests end-to-end.
+
+- Edge function: `supabase/functions/agents-orchestrator/index.ts`
+- Admin console: `/admin/agents` shows full execution traces (input, output, ms) per agent
+
+| Agent | Responsibility |
+|---|---|
+| Customer | Map natural-language requests to `option_id`/`value_id` selections |
+| Rules | Enforce dependencies, restrictions, auto-selects from `configuration_rules` |
+| Inventory | Verify real-time stock from `inventory_levels` |
+| Pricing | Aggregate base + modifiers + `pricing_rules` |
+
+## 📨 Email Campaign System (SendGrid)
+
+End-to-end transactional + marketing email built on SendGrid with demo-mode fallback when `SENDGRID_API_KEY` is missing.
+
+- Admin UI: `/admin/email` (Templates, Campaigns, Drips, Abandoned Carts, Subscribers, Logs)
+- Edge functions: `email-send`, `email-campaign-dispatch`, `email-drip-processor`, `email-cart-recovery`, `email-unsubscribe`, `sendgrid-email`
+- Tables: `email_templates`, `email_campaigns`, `email_campaign_recipients`, `drip_campaigns`, `drip_campaign_steps`, `drip_enrollments`, `email_subscriptions`, `email_send_log`, `abandoned_carts`
+- Cron-driven drip + cart recovery scans (pg_cron)
+- One-click unsubscribe with token-based links; per-category preferences (newsletter / promotional / transactional)
+
+## 💳 Subscriptions & Customer Portal
+
+- Stripe-backed subscription plans with `subscription-checkout` and `subscription-manage` functions
+- Customer portal pages: plans, invoices, payment methods, usage metrics, cancellation flow
+- Components live under `src/components/customer-portal/`
+
+## 📦 Advanced Inventory
+
+- Multi-warehouse stock, supplier records, batch/lot tracking
+- Automated reorder points + suggestions (`inventory-reorder-suggestions`)
+- Demand forecast (`inventory-forecast`)
+- External system bridge (`external-inventory`) with demo-mode fallback
+
+## 📊 Reports & BI
+
+- Sales analytics, conversion funnel, customer insights, A/B testing results, export
+- Components under `src/components/reports/`
+- Scheduled report generation via `generate-scheduled-report` (cron)
+
+## ❤️ Wishlist, Reviews, Sharing
+
+- Persistent wishlist (`useWishlist`, `/wishlist`)
+- Product reviews & ratings with moderation (`useReviews`, admin moderation page)
+- Shareable configuration links (`/shared/:shareToken`) with collaborative editing hook
+
+## 🔔 Notifications
+
+- Real-time in-app notifications via Supabase Realtime (`useNotifications`, `NotificationCenter`)
+- Surfaced in navigation; backed by `notifications` table with RLS
+
+## 🌍 i18n & Currency
+
+- 5 locales (`en`, `es`, `fr`, `de`, `ar`) with RTL handling for Arabic
+- 9 supported currencies with localStorage persistence
+- `LocaleContext` + `src/lib/i18n.ts`; locale files under `src/locales/`
+
+## 🔍 Search & Discovery
+
+- Faceted search with debouncing (`useSearch`, `useDebounce`)
+- Search analytics tracking for popular terms
+- Components: `SearchBar`, `SearchFilters`, `ProductSearch`
+
+## 🛡️ SEO Infrastructure
+
+- `react-helmet-async` provider in `src/main.tsx`
+- Reusable `<SEO>` component (`src/components/SEO.tsx`)
+- Per-route JSON-LD (WebSite, CollectionPage), OG + Twitter tags
+- `public/sitemap.xml`, `public/robots.txt`, `public/llms.txt`
