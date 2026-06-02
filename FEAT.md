@@ -1,70 +1,78 @@
-I'll analyze the current project structure and features to suggest the next 10 prompts that would significantly extend and enhance this product configurator application. Let me first examine the current state of the project to understand what's already implemented.
+# Open Configurator — Roadmap
 
-Based on my analysis of the current Open Configurator project, I can see it's a sophisticated product configurator with advanced features like rule engines, 3D visualization, AI recommendations, and multi-page navigation. Here are the **next 10 prompts** that would significantly extend this project:
+Open Configurator has grown from a basic configurator into a near-complete ecommerce + configuration platform. This document tracks what's shipped and what's next.
 
-## Next 10 Extension Prompts
+## ✅ Shipped
 
-### 1. **User Authentication & Account Management**
-```
-"Add Supabase authentication with user registration, login, logout, and profile management. Include features like saved configurations, order history, and personalized recommendations based on user behavior. Add protected routes and user-specific data."
-```
+### Core
+- Multi-page storefront (Home, Features, Products, Cart, Profile, Wishlist, Customer Portal)
+- Rule Engine + Dynamic Pricing Engine (server-side evaluation in Edge Functions)
+- 3D product visualization (Three.js)
+- Configuration comparison, save & share, collaborative links
+- Real-time inventory checks and low-stock alerts
 
-### 2. **Shopping Cart & Checkout System**
-```
-"Implement a complete shopping cart system with add to cart functionality, cart management, quantity updates, and a multi-step checkout process. Include order summary, shipping options, and integration with payment processing."
-```
+### Commerce
+- Supabase Auth, RBAC via `user_roles`, RLS on every table
+- Shopping cart + multi-step checkout
+- Stripe payments
+- Order management with status tracking
+- Subscriptions (checkout, manage, portal: plans / invoices / payment methods / usage / cancellation)
+- Wishlist, product reviews & ratings (with moderation)
 
-### 3. **Admin Dashboard & Content Management**
-```
-"Create a comprehensive admin dashboard for managing products, categories, configuration options, pricing rules, and viewing analytics. Include features for bulk operations, content management, and system configuration."
-```
+### Intelligence
+- AI Configurator Chat Agent (Lovable AI Gateway, Gemini 3 Flash, tool calling)
+- Multi-Agent Orchestration: master → Customer / Pricing / Inventory / Rules sub-agents with traces
+- Personalized recommendations
+- Demand forecasting + automated reorder suggestions
 
-### 4. **Multi-language & Internationalization**
-```
-"Add internationalization (i18n) support with multiple language options, currency conversion, and region-specific content. Include RTL language support and localized number/date formatting."
-```
+### Operations
+- Admin console (`/admin`): dashboard, products, categories, config options, pricing rules, orders, reviews, inventory, email, agents, reports
+- Advanced inventory: multi-warehouse, suppliers, batches, reorder automation
+- Reports & BI: sales, conversion funnel, customer insights, A/B testing, scheduled exports
 
-### 5. **Advanced Search & Filtering System**
-```
-"Implement a powerful search system with filters, faceted search, autocomplete, and advanced filtering options. Include search analytics, popular searches, and intelligent search suggestions."
-```
+### Email (SendGrid)
+- Transactional sends (order confirmation, shipped, welcome)
+- Promotional newsletters with audience targeting
+- Drip campaigns triggered by lifecycle events
+- Abandoned cart recovery automation
+- Template manager with live preview and test sends
+- Per-category subscription preferences + one-click unsubscribe
 
-### 6. **Notification System & Real-time Updates**
-```
-"Add a comprehensive notification system with email notifications, in-app notifications, push notifications, and real-time updates using Supabase real-time subscriptions for inventory changes and order updates."
-```
+### Platform
+- i18n: 5 languages (EN, ES, FR, DE, AR with RTL), 9 currencies
+- Real-time notifications via Supabase Realtime
+- Faceted search with analytics
+- SEO: per-route meta, sitemap, robots, JSON-LD
+- Demo-mode fallback for all external integrations (missing API keys)
 
-### 7. **Mobile App with React Native**
-```
-"Create a React Native mobile application that shares the same backend with the web app. Include mobile-specific features like camera integration for AR visualization, push notifications, and offline mode."
-```
+---
 
-### 8. **Advanced Reporting & Business Intelligence**
-```
-"Build a comprehensive reporting system with sales analytics, conversion funnels, A/B testing results, customer insights, and exportable reports. Include interactive charts and scheduled report generation."
-```
+## 🔭 Next 15 Prompts — Toward an OS for Ecommerce & Product Configuration
 
-### 9. **API & Third-party Integrations**
-```
-"Create a REST API with comprehensive documentation and implement integrations with popular services like Stripe for payments, SendGrid for emails, external inventory systems, CRM platforms, and social media sharing."
-```
+### Platform & Extensibility
+1. **Multi-Tenant SaaS Workspaces** — subdomain routing, tenant-scoped RLS, per-tenant branding, plan limits, super-admin console.
+2. **Plugin / Extension Marketplace** — manifest + sandboxed runtime for third-party widgets, rules, integrations, AI tools; marketplace UI with revenue share.
+3. **Public Developer API + Webhooks + SDKs** — versioned REST + GraphQL, OAuth2/API keys, OpenAPI docs, signed webhooks, JS/Python SDKs, embeddable web component.
 
-### 10. **Enterprise Features & Multi-tenancy**
-```
-"Transform the application into a multi-tenant SaaS platform where different businesses can have their own configurators. Include tenant management, custom branding, role-based permissions, and enterprise-grade security features."
-```
+### Configuration Engine Depth
+4. **Visual Rules & Workflow Builder (No-Code)** — drag-and-drop (React Flow) for rules, pricing, and order workflows with simulation, versioning, A/B variants.
+5. **CPQ: Quotes, Approvals & B2B Contracts** — PDF quotes, multi-step approvals, customer-specific price lists, net terms, POs, B2B buyer portal.
+6. **AR/VR Try-On & Photorealistic Configurator** — PBR materials, HDRI lighting, WebXR AR via iOS Quick Look + Android Scene Viewer.
 
-## Why These Extensions Matter
+### Commerce Operations
+7. **Order Management System (OMS) & Fulfillment** — split shipments, multi-warehouse routing, ShipStation/EasyPost, returns/RMA, warehouse picker app with barcode.
+8. **Production & Manufacturing Workflow (BOM + MES)** — BOM generation, work orders, WIP tracking, supplier POs, shop-floor Kanban.
+9. **Headless Storefront Themes + Page Builder** — theme layer, visual builder, CMS, scheduled publishing, per-locale overrides.
 
-Each of these prompts addresses a specific business need and would add significant value:
+### Intelligence Layer
+10. **AI Sales Copilot for Merchants** — NL queries over orders/inventory/customers, drafts copy in 5 languages, suggests pricing changes, executes with approval.
+11. **Personalization & Recommendation Engine v2** — per-visitor embeddings (pgvector), dynamic ordering, segment slots, feature flags, multi-armed bandits.
+12. **Predictive Analytics & Demand Forecasting** — ML forecasting per SKU, dynamic pricing, churn prediction, LTV/CAC dashboards, anomaly alerts.
 
-- **Prompts 1-3** focus on core e-commerce functionality that's essential for any commercial application
-- **Prompts 4-6** enhance user experience and operational efficiency  
-- **Prompts 7-8** expand platform reach and provide business insights
-- **Prompts 9-10** enable scalability and enterprise adoption
+### Trust, Reach & Operations
+13. **Omnichannel: POS, Marketplaces & Social Commerce** — in-store POS, Shopify/Amazon/eBay/Etsy/Google/TikTok/IG sync, unified order inbox.
+14. **Compliance, Tax & Global Commerce** — TaxJar/Avalara, EU VAT + GST, customs/HS codes, GDPR/CCPA flows, WCAG 2.2 AA, SOC2 audit logs, SSO.
+15. **White-Label Embeddable Configurator Widget** — `<script>` embed, theme inheritance, postMessage cart handoff, <100KB initial bundle, no-code embed builder.
 
-These extensions would transform the current product configurator from a demo/prototype into a production-ready, enterprise-grade SaaS platform capable of serving multiple businesses across different industries.
-
-The next logical development phase should focus on core e-commerce functionality first (authentication, cart, admin), then expand to enhanced UX features (i18n, search, notifications), followed by platform expansion (mobile, analytics, APIs), and finally enterprise capabilities (multi-tenancy, advanced security). This progression ensures a solid foundation before adding advanced features.
-
-I'd like to implement one of these suggested features - which one should we start with?
+### Suggested sequence to reach "OS" status fastest
+**1 → 3 → 15 → 4 → 7 → 10**
