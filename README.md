@@ -193,21 +193,33 @@ Security features implemented:
 
 ## 📚 Documentation
 
-- [Getting Started Guide](docs/getting-started.md) - Includes security warnings
-- [API Reference](docs/api.md) - With security considerations
-- [API Specification](docs/api-spec.md) - OpenAPI/Swagger spec
-- [Advanced Features](docs/advanced-features.md) - Security best practices
-- [Security Guide](docs/security.md) - Comprehensive security review
+- [Getting Started Guide](docs/getting-started.md) — setup + what's included
+- [Advanced Features](docs/advanced-features.md) — engines, AI agents, email, inventory, subscriptions
+- [API Reference](docs/api.md) — application + Edge Function APIs
+- [API Specification](docs/api-spec.md) — OpenAPI/Swagger spec
+- [Security Guide](docs/security.md) — RBAC, RLS, server-side validation
+- [Investor Pitch](docs/investor-pitch.md)
+- [Roadmap & Next Prompts](FEAT.md)
+
+## 🧩 Edge Functions
+
+Server-side logic ships as Supabase Edge Functions (Deno + Zod-validated inputs):
+
+| Function | Purpose |
+|---|---|
+| `configurator-ai-agent` | NL → configuration via tool calling |
+| `agents-orchestrator` | Master agent → Customer/Pricing/Inventory/Rules sub-agents |
+| `validate-and-save-configuration` | Server-side rules + pricing evaluation |
+| `personalized-recommendations` | AI recommendations |
+| `stripe-payment`, `subscription-checkout`, `subscription-manage` | Payments & subscriptions |
+| `sendgrid-email`, `email-send`, `email-campaign-dispatch`, `email-drip-processor`, `email-cart-recovery`, `email-unsubscribe` | Email system |
+| `inventory-forecast`, `inventory-reorder-suggestions`, `external-inventory` | Inventory intelligence |
+| `generate-scheduled-report` | Scheduled BI report generation |
+| `crm-integration`, `social-sharing` | External integrations (with demo-mode fallback) |
 
 ## 🤝 Contributing
 
 We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
 
 ## 📄 License
 
