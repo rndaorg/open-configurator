@@ -1,13 +1,22 @@
 # Open Configurator
 
-> Open-source visual product configurator. Build, customize, and price custom products (bikes, generators, and more) in real time.
+> Open-source ecommerce + product configuration platform. Build, customize, price, and sell custom products with AI-assisted configuration, multi-agent orchestration, subscriptions, advanced inventory, and a full email campaign system.
 
 ## Pages
 
-- [Home](/): Overview and intro to the configurator platform.
-- [Features](/features): Capabilities including real-time pricing, visual customization, and analytics.
-- [Products](/products): Browse and configure available product catalog.
+- [Home](/): Overview of the configurator platform.
+- [Features](/features): Capabilities including AI agents, 3D visualization, dynamic pricing, email campaigns, and analytics.
+- [Products](/products): Browse and configure available products.
+- [Cart](/cart): Shopping cart and checkout entry point.
 
-## Optional
+## Account
 
-- [Sign in](/auth): Account access for saved configurations and orders.
+- [Sign in](/auth): Account access for saved configurations, orders, and subscriptions.
+- [Profile](/profile): Profile, preferences, and email subscription settings (auth required).
+- [Wishlist](/wishlist): Saved products and configurations (auth required).
+- [Customer Portal](/customer-portal): Subscription plans, invoices, payment methods, and usage (auth required).
+
+## Notes
+
+- Admin pages live under `/admin/*` and require an admin role (disallowed for crawlers).
+- Shareable configuration links are served from `/shared/:token`.
