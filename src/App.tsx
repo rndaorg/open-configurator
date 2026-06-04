@@ -31,6 +31,7 @@ import AdminReviews from "./pages/admin/Reviews";
 import AdminInventory from "./pages/admin/Inventory";
 import AdminEmail from "./pages/admin/Email";
 import AdminAgents from "./pages/admin/Agents";
+import AdminSalesCopilot from "./pages/admin/SalesCopilot";
 
 
 const queryClient = new QueryClient();
@@ -96,6 +97,7 @@ const App = () => (
             <Route path="email" element={<AdminEmail />} />
             <Route path="email/:tab" element={<AdminEmail />} />
             <Route path="agents" element={<AdminAgents />} />
+            <Route path="sales-copilot" element={<AdminSalesCopilot />} />
           </Route>
 
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

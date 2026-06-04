@@ -39,3 +39,6 @@ verify_jwt = false
 [functions.agents-orchestrator]
 verify_jwt = false
 
+
+[functions.sales-copilot]
+verify_jwt = false
