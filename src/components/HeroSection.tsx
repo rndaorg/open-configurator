@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button';
-import { ArrowRight, Sparkles } from 'lucide-react';
+import { ArrowRight, Sparkles, Bot, Boxes, Zap } from 'lucide-react';
 
 interface HeroSectionProps {
   onExploreProducts: () => void;
@@ -10,34 +10,57 @@ export const HeroSection = ({ onExploreProducts }: HeroSectionProps) => {
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* Animated background */}
       <div className="absolute inset-0 bg-gradient-to-br from-background via-background to-primary/5" />
-      
+
       {/* Floating elements */}
       <div className="absolute top-1/4 left-1/4 w-32 h-32 bg-gradient-primary rounded-full opacity-20 animate-float" />
       <div className="absolute bottom-1/4 right-1/4 w-24 h-24 bg-gradient-accent rounded-full opacity-30 animate-float" style={{ animationDelay: '2s' }} />
       <div className="absolute top-1/3 right-1/3 w-16 h-16 bg-primary/30 rounded-full animate-float" style={{ animationDelay: '4s' }} />
-      
-      <div className="relative z-10 text-center max-w-4xl mx-auto px-6">
+
+      <div className="relative z-10 text-center max-w-5xl mx-auto px-6">
         <div className="space-y-8 animate-slide-up">
           <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-glass backdrop-blur-xl rounded-full border border-white/10">
             <Sparkles className="w-4 h-4 text-primary-glow" />
-            <span className="text-sm text-primary-glow font-medium">Custom Product Configurator</span>
+            <span className="text-sm text-primary-glow font-medium">
+              The Agentic OS for Configurable Commerce
+            </span>
           </div>
-          
+
           <div className="space-y-6">
             <h1 className="text-6xl md:text-8xl font-bold leading-tight">
-              Build Your
+              Configure.
               <span className="block bg-gradient-primary bg-clip-text text-transparent">
-                Perfect Product
+                Sell. Automate.
               </span>
             </h1>
-            
-            <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-              Configure, customize, and create exactly what you need with our 
-              intuitive product builder. From bicycles to generators, make it yours.
+
+            <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+              Open Configurator unifies a 3D product configurator, full commerce stack,
+              and a fleet of AI agents — one operating system to design, price, sell,
+              and fulfill custom products at scale.
             </p>
           </div>
-          
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+
+          {/* Capability pills */}
+          <div className="flex flex-wrap justify-center gap-3 pt-2">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-primary/20 bg-gradient-glass backdrop-blur-xl text-sm">
+              <Bot className="w-4 h-4 text-primary-glow" />
+              <span>Multi-Agent Orchestration</span>
+            </div>
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-primary/20 bg-gradient-glass backdrop-blur-xl text-sm">
+              <Sparkles className="w-4 h-4 text-primary-glow" />
+              <span>AI Sales Copilot</span>
+            </div>
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-primary/20 bg-gradient-glass backdrop-blur-xl text-sm">
+              <Boxes className="w-4 h-4 text-primary-glow" />
+              <span>Commerce + Inventory OS</span>
+            </div>
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-primary/20 bg-gradient-glass backdrop-blur-xl text-sm">
+              <Zap className="w-4 h-4 text-primary-glow" />
+              <span>Server-side Rules & Pricing</span>
+            </div>
+          </div>
+
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-4">
             <Button
               onClick={onExploreProducts}
               size="lg"
@@ -46,7 +69,7 @@ export const HeroSection = ({ onExploreProducts }: HeroSectionProps) => {
               Explore Products
               <ArrowRight className="w-5 h-5 ml-2" />
             </Button>
-            
+
             <Button
               variant="outline"
               size="lg"
@@ -58,7 +81,7 @@ export const HeroSection = ({ onExploreProducts }: HeroSectionProps) => {
           </div>
         </div>
       </div>
-      
+
       {/* Glow effects */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-96 bg-primary/20 rounded-full blur-3xl opacity-50" />
       <div className="absolute bottom-0 right-0 w-64 h-64 bg-accent/20 rounded-full blur-3xl opacity-30" />
