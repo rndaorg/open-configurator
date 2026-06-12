@@ -1,67 +1,50 @@
-# Email Campaign System (SendGrid)
+# VC Pitch Deck — Open Configurator
 
-Build a full email marketing + transactional system on top of the existing `sendgrid-email` edge function. The user explicitly requested SendGrid, so all sends go through SendGrid (demo-mode fallback when `SENDGRID_API_KEY` is missing, per project rule).
+Build a polished 20-slide `.pptx` deck in the **Midnight Executive** palette (#0F172A navy, #1E2761, #3B82F6 electric, #CADCFC ice) using `pptxgenjs`, saved to `/mnt/documents/open-configurator-pitch-deck.pptx`. Narrative mirrors the existing VC outreach email and `docs/investor-pitch.md`, with AI/agent differentiation pulled forward.
 
-## 1. Database (migration)
+## Slide outline
 
-New admin-managed tables (RLS via `has_role(auth.uid(), 'admin')`):
+1. **Cover** — "Open Configurator: The OS for Configurable Commerce" + tagline + contact
+2. **The Problem** — 70% of B2B buyers want self-service; <10% of mid-market offers it
+3. **Why Now** — AI agents + 3D web + CPQ market shift ($2.8B → $5.7B by 2030)
+4. **Market Size** — TAM/SAM/SOM with mid-market wedge ($1.6B underserved)
+5. **The Solution** — Configurator + Commerce + AI in one platform
+6. **Product Pillars** — 4-card grid: 3D Viz, Rules/Pricing, AI Agents, Commerce
+7. **AI Configuration Agent** — NL → compatible config, with example prompt
+8. **Multi-Agent Orchestration** — Master → Customer/Pricing/Inventory/Rules diagram
+9. **Sales Copilot** — Upsells, quotes, follow-up emails for internal teams
+10. **Commerce Backend** — Cart, checkout, Stripe, subscriptions, orders
+11. **Operations** — Multi-warehouse inventory, forecasting, reorder automation
+12. **Marketing Engine** — SendGrid drips, cart recovery, segmentation
+13. **Global & Enterprise-Ready** — 5 languages, 9 currencies, RLS, RBAC, Zod
+14. **Live Demo** — Screenshot/mock + URL to open-configurator.lovable.app
+15. **Competitive Landscape** — Table vs Tacton/Configit, Shopify apps, custom build
+16. **Business Model** — Services + retainers + white-label licensing mix
+17. **Go-To-Market** — Verticals, partners, content moat, outbound
+18. **Traction & Milestones** — Shipped MVP, 30+ features, 90-day & 12-mo goals
+19. **Roadmap** — Next 6 prompts toward "OS" status (multi-tenant, CPQ, OMS, etc.)
+20. **The Ask & Team** — Seed round, hires, contact (support@openconfigurator.dev)
 
-- **`email_templates`** — `slug` (unique), `name`, `subject`, `html_body`, `text_body`, `variables` (jsonb list of supported tokens), `category` (transactional / promotional / drip / cart_recovery), `is_active`, timestamps. Admin CRUD; authenticated read for active templates.
-- **`email_campaigns`** — `name`, `template_id`, `type` (newsletter / drip / cart_recovery / one_off), `status` (draft / scheduled / sending / sent / paused), `audience_filter` (jsonb: all_users, segment by last_order, has_cart, custom user_ids), `scheduled_at`, `sent_at`, `stats` (jsonb: sent/opened/clicked/failed). Admin only.
-- **`email_campaign_recipients`** — `campaign_id`, `user_id`, `email`, `status` (pending/sent/failed/skipped), `sent_at`, `error`, `message_id`. Admin only.
-- **`drip_campaigns`** — `name`, `trigger_event` (signup / first_order / cart_abandoned / inactive_30d), `is_active`. Admin only.
-- **`drip_campaign_steps`** — `drip_campaign_id`, `step_order`, `delay_hours`, `template_id`, `condition` (jsonb optional). Admin only.
-- **`drip_enrollments`** — `user_id`, `drip_campaign_id`, `current_step`, `next_send_at`, `status` (active/completed/cancelled), `enrolled_at`.
-- **`email_subscriptions`** — `user_id` (unique), `email`, `newsletter` (bool), `promotional` (bool), `transactional` (bool, always true), `unsubscribe_token`, `unsubscribed_at`. User can read/update own; admin all.
-- **`email_send_log`** — `template_slug`, `recipient_email`, `campaign_id` (nullable), `category`, `status`, `provider_message_id`, `error`, `sent_at`. Admin read.
-- **`abandoned_carts`** — `user_id`, `email`, `cart_data` (jsonb), `total_amount`, `recovery_status` (pending/email_1_sent/email_2_sent/recovered/expired), `last_email_sent_at`, `recovered_at`, `created_at`.
+## Technical approach
 
-Seed default templates: `order_confirmation`, `order_shipped`, `cart_recovery_1` (24h), `cart_recovery_2` (72h), `welcome`, `newsletter_default`.
+- Use the bundled **pptx skill** (`pptxgenjs`) — install globally, write generator script to `/tmp/gen-deck.js`
+- 16:9, US Letter-equivalent widescreen (13.33 × 7.5 in)
+- Custom dark master: `#0F172A` background, `#CADCFC` body text, `#3B82F6` accents
+- Typography: bold sans for titles (Arial Black / Calibri Bold), Calibri body; title 40–48pt, body 20–24pt
+- Visual motifs: thin top accent bar, slide number bottom-right, kicker labels in `#3B82F6`
+- Stat slides use large numerals (72–96pt) with small captions
+- Diagram slides (#8 orchestration, #6 pillars) built from `addShape` rectangles + connectors — no external images required
+- Embed any imagery as base64 if used
 
-## 2. Edge Functions
+## QA cycle (mandatory per pptx skill)
 
-All accept Zod-validated input, CORS headers, admin-gated where applicable.
+1. Convert to PDF via LibreOffice → render slides at 150dpi with `pdftoppm`
+2. View each slide image, check for overflow/overlap/contrast/density
+3. Fix issues, re-render, re-verify until clean
+4. Deliver `<presentation-artifact path="open-configurator-pitch-deck.pptx" mime_type="application/vnd.openxmlformats-officedocument.presentationml.presentation">`
 
-- **`email-send`** — single send via SendGrid. Loads template by slug, renders `{{token}}` substitutions from `templateData`, logs to `email_send_log`. Used by app code (order confirmation, etc.). Skips if recipient has `email_subscriptions.{category} = false` (except transactional).
-- **`email-campaign-dispatch`** — admin-only. Given `campaign_id`, resolves audience from `audience_filter`, inserts `email_campaign_recipients`, sends in batches of 50 with delay, updates campaign stats.
-- **`email-drip-processor`** — scheduled (pg_cron every 5 min). Scans `drip_enrollments` where `next_send_at <= now() and status='active'`, sends current step, advances to next step or marks completed.
-- **`email-cart-recovery`** — scheduled (pg_cron hourly). Scans `abandoned_carts`: send `cart_recovery_1` after 24h pending, `cart_recovery_2` after 72h, expire after 7d.
-- **`email-unsubscribe`** — public GET with `token` query param; flips `email_subscriptions.unsubscribed_at` + clears `newsletter`/`promotional`. Returns simple branded HTML page.
-- Extend existing **`sendgrid-email`** as the low-level transport used by `email-send` (keep current admin-only direct sends for ad-hoc admin emails).
+## Out of scope
 
-pg_cron jobs scheduled via `supabase--read_query` insert (per project rule for cron with user-specific URLs).
-
-## 3. Admin UI (`/admin/email/*`)
-
-New nav entry "Email" with sub-routes (single page with tabs to keep admin nav clean):
-
-- **Templates** (`/admin/email/templates`) — table list, create/edit drawer with Monaco-style textarea for HTML + plain text, variable picker chips, live preview pane with sample data, send-test-email button.
-- **Campaigns** (`/admin/email/campaigns`) — list with status badges, create wizard (pick template → audience filter → schedule now/later), per-campaign detail showing recipient table + stats (sent/failed counts, open-rate placeholder).
-- **Drip Campaigns** (`/admin/email/drip`) — manage flows (trigger → ordered steps with delay + template), toggle active, view enrollment counts.
-- **Abandoned Carts** (`/admin/email/abandoned`) — table of carts in recovery, manual "Send recovery now" action.
-- **Subscribers** (`/admin/email/subscribers`) — list with subscription toggles, search by email, CSV export.
-- **Send Log** (`/admin/email/logs`) — recent sends with filters (status, template, date), error inspection.
-
-Register routes in `App.tsx` and `AdminLayout.tsx` (icon: `Mail`).
-
-## 4. Frontend integration
-
-- **Checkout success** → call `email-send` with `order_confirmation` template + order data (replaces direct sendgrid invocation).
-- **Order status change (admin)** → existing path continues to use `sendgrid-email`; optionally route through `email-send` for logging.
-- **Auth signup** → enroll user in `welcome` drip and create default `email_subscriptions` row (all enabled).
-- **Cart abandonment tracking** → `CartContext` upserts `abandoned_carts` row whenever cart has items and user is identified (email known via auth or checkout email). Clears on order completion.
-- **Profile / Customer Portal** → new "Email Preferences" section using `email_subscriptions` (toggles for newsletter, promotional).
-
-## 5. i18n
-
-New keys under `email.*` (admin labels, template categories, subscriber UI) in all 5 locales.
-
-## Technical notes
-
-- All template rendering uses simple `{{var}}` regex substitution server-side (no client logic).
-- Unsubscribe link appended automatically to promotional + newsletter sends, omitted for transactional.
-- Demo mode: if no `SENDGRID_API_KEY`, all sends log + return success without hitting SendGrid (existing pattern).
-- Memory: add `mem://features/email-campaigns` summarizing architecture.
-- Backward compatible: existing `sendgrid-email` function remains for direct admin use.
-
-Approve to proceed with the migration first, then code + edge functions.
+- No app code changes (this is a downloadable artifact, parallel to the VC email)
+- No interactive `/pitch` route
+- No edits to existing `docs/investor-pitch.md`
