@@ -1,6 +1,6 @@
 import { Link, Outlet, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { LayoutDashboard, Package, FolderTree, Settings, DollarSign, ShoppingCart, BarChart3, Star, Boxes, Mail, Bot, Sparkles } from 'lucide-react';
+import { LayoutDashboard, Package, FolderTree, Settings, DollarSign, ShoppingCart, BarChart3, Star, Boxes, Mail, Bot, Sparkles, Wand2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import Footer from './Footer';
 
