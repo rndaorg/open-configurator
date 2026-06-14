@@ -21,6 +21,7 @@ export default function AdminLayout() {
     { name: 'Email', href: '/admin/email', icon: Mail },
     { name: 'AI Agents', href: '/admin/agents', icon: Bot },
     { name: 'Sales Copilot', href: '/admin/sales-copilot', icon: Sparkles },
+    { name: 'Catalog AI', href: '/admin/catalog-ai', icon: Wand2 },
   ];
 
 
