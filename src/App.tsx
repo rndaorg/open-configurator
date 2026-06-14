@@ -32,6 +32,7 @@ import AdminInventory from "./pages/admin/Inventory";
 import AdminEmail from "./pages/admin/Email";
 import AdminAgents from "./pages/admin/Agents";
 import AdminSalesCopilot from "./pages/admin/SalesCopilot";
+import AdminCatalogAI from "./pages/admin/CatalogAI";
 
 
 const queryClient = new QueryClient();
