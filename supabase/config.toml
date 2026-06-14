@@ -42,3 +42,9 @@ verify_jwt = false
 
 [functions.sales-copilot]
 verify_jwt = false
+
+[functions.catalog-ai-suggest]
+verify_jwt = false
+
+[functions.catalog-ai-apply]
+verify_jwt = false

@@ -86,6 +86,56 @@ export type Database = {
         }
         Relationships: []
       }
+      catalog_ai_proposals: {
+        Row: {
+          applied_summary: Json | null
+          created_at: string
+          created_by: string
+          id: string
+          product_id: string
+          reviewed_at: string | null
+          reviewed_by: string | null
+          status: string
+          suggestions: Json
+          summary: string | null
+          updated_at: string
+        }
+        Insert: {
+          applied_summary?: Json | null
+          created_at?: string
+          created_by: string
+          id?: string
+          product_id: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          suggestions?: Json
+          summary?: string | null
+          updated_at?: string
+        }
+        Update: {
+          applied_summary?: Json | null
+          created_at?: string
+          created_by?: string
+          id?: string
+          product_id?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          suggestions?: Json
+          summary?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "catalog_ai_proposals_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       categories: {
         Row: {
           created_at: string
