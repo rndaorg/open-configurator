@@ -99,6 +99,7 @@ const App = () => (
             <Route path="email/:tab" element={<AdminEmail />} />
             <Route path="agents" element={<AdminAgents />} />
             <Route path="sales-copilot" element={<AdminSalesCopilot />} />
+            <Route path="catalog-ai" element={<AdminCatalogAI />} />
           </Route>
 
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
