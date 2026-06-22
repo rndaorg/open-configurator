@@ -56,6 +56,72 @@ export type Database = {
         }
         Relationships: []
       }
+      ai_agent_memory: {
+        Row: {
+          budget_max: number | null
+          budget_min: number | null
+          created_at: string
+          interested_categories: string[]
+          last_interaction_at: string
+          preferences: Json
+          style_tags: string[]
+          summary: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          budget_max?: number | null
+          budget_min?: number | null
+          created_at?: string
+          interested_categories?: string[]
+          last_interaction_at?: string
+          preferences?: Json
+          style_tags?: string[]
+          summary?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          budget_max?: number | null
+          budget_min?: number | null
+          created_at?: string
+          interested_categories?: string[]
+          last_interaction_at?: string
+          preferences?: Json
+          style_tags?: string[]
+          summary?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      ai_agent_messages: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          role: string
+          suggestions: Json | null
+          user_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: string
+          role: string
+          suggestions?: Json | null
+          user_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          role?: string
+          suggestions?: Json | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       cancellation_feedback: {
         Row: {
           created_at: string
