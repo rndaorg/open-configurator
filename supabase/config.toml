@@ -48,3 +48,6 @@ verify_jwt = false
 
 [functions.catalog-ai-apply]
 verify_jwt = false
+
+[functions.personal-shopper-agent]
+verify_jwt = false
