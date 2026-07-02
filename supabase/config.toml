@@ -51,3 +51,6 @@ verify_jwt = false
 
 [functions.personal-shopper-agent]
 verify_jwt = false
+
+[functions.collab-mediator-agent]
+verify_jwt = false
