@@ -26,6 +26,7 @@ import { useCollaborativeShare } from '@/hooks/useCollaborativeShare';
 import { useAuth } from '@/hooks/useAuth';
 import { ProductReviews } from '@/components/ProductReviews';
 import { ConfiguratorAIChat } from '@/components/ConfiguratorAIChat';
+import { CollaborativeMediatorPanel } from '@/components/CollaborativeMediatorPanel';
 
 interface ProductConfiguratorProps {
   productId: string;
@@ -516,6 +517,24 @@ export const ProductConfigurator = ({
 
           {/* Advanced Features Sidebar */}
           <div className="space-y-6">
+            {sharedConfigId && isCollaborative && (
+              <CollaborativeMediatorPanel
+                sharedConfigId={sharedConfigId}
+                productId={productId}
+                displayName={user?.email?.split('@')[0] ?? 'Guest'}
+                currentSelections={selectedOptions}
+                allowEdits={allowEdits}
+                optionNameLookup={Object.fromEntries(
+                  configOptions.map((o: any) => [o.id, o.name])
+                )}
+                valueNameLookup={Object.fromEntries(
+                  configOptions.flatMap((o: any) =>
+                    (o.option_values || []).map((v: any) => [v.id, v.name])
+                  )
+                )}
+                onApplyProposal={(map) => setSelectedOptions(map)}
+              />
+            )}
             <ConfiguratorAIChat
               productId={productId}
               productName={product.name}
