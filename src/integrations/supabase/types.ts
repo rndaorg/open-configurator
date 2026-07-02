@@ -912,6 +912,91 @@ export type Database = {
         }
         Relationships: []
       }
+      mediator_messages: {
+        Row: {
+          content: string
+          created_at: string
+          display_name: string
+          id: string
+          metadata: Json | null
+          proposed_config: Json | null
+          role: string
+          shared_config_id: string
+          user_id: string | null
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          display_name?: string
+          id?: string
+          metadata?: Json | null
+          proposed_config?: Json | null
+          role: string
+          shared_config_id: string
+          user_id?: string | null
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          display_name?: string
+          id?: string
+          metadata?: Json | null
+          proposed_config?: Json | null
+          role?: string
+          shared_config_id?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mediator_messages_shared_config_id_fkey"
+            columns: ["shared_config_id"]
+            isOneToOne: false
+            referencedRelation: "shared_configurations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mediator_preferences: {
+        Row: {
+          budget_max: number | null
+          display_name: string
+          id: string
+          preferences_text: string
+          priorities: Json
+          shared_config_id: string
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          budget_max?: number | null
+          display_name?: string
+          id?: string
+          preferences_text?: string
+          priorities?: Json
+          shared_config_id: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          budget_max?: number | null
+          display_name?: string
+          id?: string
+          preferences_text?: string
+          priorities?: Json
+          shared_config_id?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mediator_preferences_shared_config_id_fkey"
+            columns: ["shared_config_id"]
+            isOneToOne: false
+            referencedRelation: "shared_configurations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       notifications: {
         Row: {
           created_at: string
