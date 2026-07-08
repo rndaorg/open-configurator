@@ -54,3 +54,9 @@ verify_jwt = false
 
 [functions.collab-mediator-agent]
 verify_jwt = false
+
+[functions.quote-agent]
+verify_jwt = false
+
+[functions.multimodal-config-agent]
+verify_jwt = false
