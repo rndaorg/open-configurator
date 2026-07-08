@@ -1,6 +1,6 @@
 import { Link, Outlet, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { LayoutDashboard, Package, FolderTree, Settings, DollarSign, ShoppingCart, BarChart3, Star, Boxes, Mail, Bot, Sparkles, Wand2 } from 'lucide-react';
+import { LayoutDashboard, Package, FolderTree, Settings, DollarSign, ShoppingCart, BarChart3, Star, Boxes, Mail, Bot, Sparkles, Wand2, FileText, Camera } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import Footer from './Footer';
 
@@ -22,6 +22,8 @@ export default function AdminLayout() {
     { name: 'AI Agents', href: '/admin/agents', icon: Bot },
     { name: 'Sales Copilot', href: '/admin/sales-copilot', icon: Sparkles },
     { name: 'Catalog AI', href: '/admin/catalog-ai', icon: Wand2 },
+    { name: 'Quote Agent', href: '/admin/quote-generator', icon: FileText },
+    { name: 'Multi-Modal Agent', href: '/admin/multimodal-agent', icon: Camera },
   ];
 
 
