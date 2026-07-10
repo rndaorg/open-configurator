@@ -15,7 +15,8 @@ export const configurationSchema = z.object({
     .number()
     .positive('Price must be positive')
     .max(1000000, 'Price exceeds maximum')
-    .multipleOf(0.01, 'Invalid price format'),
+    .transform((val) => Math.round(val * 100) / 100),
+
   
   quantity: z
     .number()
