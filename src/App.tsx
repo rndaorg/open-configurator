@@ -36,6 +36,7 @@ import AdminSalesCopilot from "./pages/admin/SalesCopilot";
 import AdminCatalogAI from "./pages/admin/CatalogAI";
 import AdminQuoteGenerator from "./pages/admin/QuoteGenerator";
 import AdminMultimodalAgent from "./pages/admin/MultimodalAgent";
+import AdminAnalyticsAgent from "./pages/admin/AnalyticsAgent";
 
 
 const queryClient = new QueryClient();
