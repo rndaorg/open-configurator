@@ -60,3 +60,6 @@ verify_jwt = false
 
 [functions.multimodal-config-agent]
 verify_jwt = false
+
+[functions.analytics-agent]
+verify_jwt = false

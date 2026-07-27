@@ -122,6 +122,111 @@ export type Database = {
         }
         Relationships: []
       }
+      analytics_agent_runs: {
+        Row: {
+          created_at: string
+          duration_ms: number | null
+          error: string | null
+          id: string
+          metrics: Json
+          status: string
+          summary: string | null
+          trigger_type: string
+          triggered_by: string | null
+          window_days: number
+        }
+        Insert: {
+          created_at?: string
+          duration_ms?: number | null
+          error?: string | null
+          id?: string
+          metrics?: Json
+          status?: string
+          summary?: string | null
+          trigger_type?: string
+          triggered_by?: string | null
+          window_days?: number
+        }
+        Update: {
+          created_at?: string
+          duration_ms?: number | null
+          error?: string | null
+          id?: string
+          metrics?: Json
+          status?: string
+          summary?: string | null
+          trigger_type?: string
+          triggered_by?: string | null
+          window_days?: number
+        }
+        Relationships: []
+      }
+      analytics_insights: {
+        Row: {
+          created_at: string
+          description: string
+          evidence: Json
+          id: string
+          insight_type: string
+          product_id: string | null
+          recommendation: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          run_id: string | null
+          severity: string
+          status: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description: string
+          evidence?: Json
+          id?: string
+          insight_type: string
+          product_id?: string | null
+          recommendation?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          run_id?: string | null
+          severity?: string
+          status?: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          evidence?: Json
+          id?: string
+          insight_type?: string
+          product_id?: string | null
+          recommendation?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          run_id?: string | null
+          severity?: string
+          status?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "analytics_insights_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "analytics_insights_run_id_fkey"
+            columns: ["run_id"]
+            isOneToOne: false
+            referencedRelation: "analytics_agent_runs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       cancellation_feedback: {
         Row: {
           created_at: string
