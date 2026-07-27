@@ -24,6 +24,7 @@ export default function AdminLayout() {
     { name: 'Catalog AI', href: '/admin/catalog-ai', icon: Wand2 },
     { name: 'Quote Agent', href: '/admin/quote-generator', icon: FileText },
     { name: 'Multi-Modal Agent', href: '/admin/multimodal-agent', icon: Camera },
+    { name: 'Analytics Agent', href: '/admin/analytics-agent', icon: Brain },
   ];
 
 
