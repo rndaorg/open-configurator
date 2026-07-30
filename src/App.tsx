@@ -107,7 +107,7 @@ const App = () => (
             <Route path="catalog-ai" element={<AdminCatalogAI />} />
             <Route path="quote-generator" element={<AdminQuoteGenerator />} />
             <Route path="multimodal-agent" element={<AdminMultimodalAgent />} />
-            <Route path="analytics-agent" element={<AdminAnalyticsAgent />} />
+            <Route path="agent-api" element={<AdminAgentAPI />} />
           </Route>
 
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
