@@ -227,6 +227,244 @@ export type Database = {
           },
         ]
       }
+      api_agent_requests: {
+        Row: {
+          agent_id: string | null
+          created_at: string
+          duration_ms: number | null
+          endpoint: string
+          error: string | null
+          id: string
+          ip_address: string | null
+          method: string
+          status_code: number
+          token_id: string | null
+        }
+        Insert: {
+          agent_id?: string | null
+          created_at?: string
+          duration_ms?: number | null
+          endpoint: string
+          error?: string | null
+          id?: string
+          ip_address?: string | null
+          method: string
+          status_code: number
+          token_id?: string | null
+        }
+        Update: {
+          agent_id?: string | null
+          created_at?: string
+          duration_ms?: number | null
+          endpoint?: string
+          error?: string | null
+          id?: string
+          ip_address?: string | null
+          method?: string
+          status_code?: number
+          token_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "api_agent_requests_agent_id_fkey"
+            columns: ["agent_id"]
+            isOneToOne: false
+            referencedRelation: "api_agents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "api_agent_requests_token_id_fkey"
+            columns: ["token_id"]
+            isOneToOne: false
+            referencedRelation: "api_agent_tokens"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      api_agent_tokens: {
+        Row: {
+          agent_id: string
+          created_at: string
+          expires_at: string | null
+          id: string
+          last_used_at: string | null
+          name: string
+          revoked_at: string | null
+          token_hash: string
+          token_prefix: string
+          updated_at: string
+        }
+        Insert: {
+          agent_id: string
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          last_used_at?: string | null
+          name?: string
+          revoked_at?: string | null
+          token_hash: string
+          token_prefix: string
+          updated_at?: string
+        }
+        Update: {
+          agent_id?: string
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          last_used_at?: string | null
+          name?: string
+          revoked_at?: string | null
+          token_hash?: string
+          token_prefix?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "api_agent_tokens_agent_id_fkey"
+            columns: ["agent_id"]
+            isOneToOne: false
+            referencedRelation: "api_agents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      api_agent_webhook_deliveries: {
+        Row: {
+          agent_id: string | null
+          attempts: number
+          created_at: string
+          event: string
+          id: string
+          payload: Json
+          response_body: string | null
+          response_status: number | null
+          status: string
+          updated_at: string
+          webhook_id: string
+        }
+        Insert: {
+          agent_id?: string | null
+          attempts?: number
+          created_at?: string
+          event: string
+          id?: string
+          payload: Json
+          response_body?: string | null
+          response_status?: number | null
+          status?: string
+          updated_at?: string
+          webhook_id: string
+        }
+        Update: {
+          agent_id?: string | null
+          attempts?: number
+          created_at?: string
+          event?: string
+          id?: string
+          payload?: Json
+          response_body?: string | null
+          response_status?: number | null
+          status?: string
+          updated_at?: string
+          webhook_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "api_agent_webhook_deliveries_agent_id_fkey"
+            columns: ["agent_id"]
+            isOneToOne: false
+            referencedRelation: "api_agents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "api_agent_webhook_deliveries_webhook_id_fkey"
+            columns: ["webhook_id"]
+            isOneToOne: false
+            referencedRelation: "api_agent_webhooks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      api_agent_webhooks: {
+        Row: {
+          agent_id: string
+          created_at: string
+          events: string[]
+          id: string
+          is_active: boolean
+          signing_secret: string
+          updated_at: string
+          url: string
+        }
+        Insert: {
+          agent_id: string
+          created_at?: string
+          events?: string[]
+          id?: string
+          is_active?: boolean
+          signing_secret: string
+          updated_at?: string
+          url: string
+        }
+        Update: {
+          agent_id?: string
+          created_at?: string
+          events?: string[]
+          id?: string
+          is_active?: boolean
+          signing_secret?: string
+          updated_at?: string
+          url?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "api_agent_webhooks_agent_id_fkey"
+            columns: ["agent_id"]
+            isOneToOne: false
+            referencedRelation: "api_agents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      api_agents: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          is_active: boolean
+          last_used_at: string | null
+          name: string
+          owner_user_id: string | null
+          rate_limit_per_minute: number
+          scopes: string[]
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          last_used_at?: string | null
+          name: string
+          owner_user_id?: string | null
+          rate_limit_per_minute?: number
+          scopes?: string[]
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          last_used_at?: string | null
+          name?: string
+          owner_user_id?: string | null
+          rate_limit_per_minute?: number
+          scopes?: string[]
+          updated_at?: string
+        }
+        Relationships: []
+      }
       cancellation_feedback: {
         Row: {
           created_at: string
