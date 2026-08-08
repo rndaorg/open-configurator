@@ -190,7 +190,10 @@ export default function TenantAdmin() {
   };
 
   const changeRole = async (id: string, newRole: string) => {
-    const { error } = await supabase.from('tenant_members').update({ role: newRole }).eq('id', id);
+    const { error } = await supabase
+      .from('tenant_members')
+      .update({ role: newRole as 'owner' | 'admin' | 'member' })
+      .eq('id', id);
     if (error) toast.error(error.message);
     else qc.invalidateQueries({ queryKey: ['tenant-members', tenant.id] });
   };
