@@ -38,6 +38,10 @@ import AdminQuoteGenerator from "./pages/admin/QuoteGenerator";
 import AdminMultimodalAgent from "./pages/admin/MultimodalAgent";
 import AdminAnalyticsAgent from "./pages/admin/AnalyticsAgent";
 import AdminAgentAPI from "./pages/admin/AgentAPI";
+import TenantOnboarding from "./pages/tenant/Onboarding";
+import TenantAdmin from "./pages/tenant/TenantAdmin";
+import TenantStorefront from "./pages/tenant/TenantStorefront";
+import { TenantProvider } from "./contexts/TenantContext";
 
 
 const queryClient = new QueryClient();
@@ -48,6 +52,7 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
+        <TenantProvider>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/features" element={<Features />} />
@@ -57,6 +62,17 @@ const App = () => (
           <Route path="/auth" element={<Auth />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/shared/:shareToken" element={<SharedConfiguration />} />
+          <Route path="/onboarding" element={<TenantOnboarding />} />
+          <Route path="/t/:slug" element={<TenantStorefront />} />
+          <Route path="/t/:slug/products" element={<TenantStorefront />} />
+          <Route
+            path="/t/:slug/admin"
+            element={
+              <ProtectedRoute>
+                <TenantAdmin />
+              </ProtectedRoute>
+            }
+          />
           <Route
             path="/wishlist"
             element={
@@ -116,6 +132,7 @@ const App = () => (
           <Route path="*" element={<NotFound />} />
         </Routes>
         <PersonalShopperAgent />
+        </TenantProvider>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>

@@ -10,6 +10,8 @@ import { useAdminCheck } from '@/hooks/useAdminCheck';
 import { LanguageSelector } from '@/components/LanguageSelector';
 import { NotificationCenter } from '@/components/NotificationCenter';
 import { useRealtimeUpdates } from '@/hooks/useRealtimeUpdates';
+import { useTenant } from '@/contexts/TenantContext';
+import { TenantSwitcher } from '@/components/TenantSwitcher';
 
 export const Navigation = () => {
   const { t } = useTranslation();
@@ -18,6 +20,7 @@ export const Navigation = () => {
   const { user, signOut } = useAuth();
   const { itemCount } = useCart();
   const { isAdmin } = useAdminCheck();
+  const { tenant, branding } = useTenant();
 
   // Enable realtime updates for orders and inventory
   useRealtimeUpdates({ showToasts: true });
@@ -37,12 +40,17 @@ export const Navigation = () => {
       <div className="max-w-7xl mx-auto px-6">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
-          <Link to="/" className="flex items-center space-x-2">
-            <Boxes className="h-8 w-8 text-primary" />
-            {/* <img src="/logo.jpeg" className="h-64 w-64" /> */}
-            <span className="text-xl font-bold bg-gradient-primary bg-clip-text text-transparent">
-              Open Configurator
-            </span>
+          <Link to={tenant ? `/t/${tenant.slug}` : '/'} className="flex items-center space-x-2">
+            {tenant && branding?.logo_url ? (
+              <img src={branding.logo_url} alt={`${tenant.name} logo`} className="h-8 max-w-[140px] object-contain" />
+            ) : (
+              <>
+                <Boxes className="h-8 w-8 text-primary" />
+                <span className="text-xl font-bold bg-gradient-primary bg-clip-text text-transparent">
+                  {tenant ? tenant.name : 'Open Configurator'}
+                </span>
+              </>
+            )}
           </Link>
 
           {/* Desktop Navigation */}
@@ -64,6 +72,7 @@ export const Navigation = () => {
 
           {/* Desktop CTA */}
           <div className="hidden md:flex items-center gap-4">
+            {user && <TenantSwitcher />}
             {user && <NotificationCenter />}
             <LanguageSelector showCurrency />
             {user && (

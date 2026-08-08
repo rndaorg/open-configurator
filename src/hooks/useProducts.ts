@@ -45,24 +45,24 @@ export interface OptionValue {
   created_at: string;
 }
 
-export const useCategories = () => {
+export const useCategories = (tenantId?: string | null) => {
   return useQuery({
-    queryKey: ['categories'],
+    queryKey: ['categories', tenantId],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from('categories')
-        .select('*')
-        .order('name');
-      
+      let query = supabase.from('categories').select('*').order('name');
+      if (tenantId) query = query.eq('tenant_id', tenantId);
+
+      const { data, error } = await query;
+
       if (error) throw error;
       return data as Category[];
     }
   });
 };
 
-export const useProducts = (categoryId?: string) => {
+export const useProducts = (categoryId?: string, tenantId?: string | null) => {
   return useQuery({
-    queryKey: ['products', categoryId],
+    queryKey: ['products', categoryId, tenantId],
     queryFn: async () => {
       let query = supabase
         .from('products')
@@ -75,6 +75,9 @@ export const useProducts = (categoryId?: string) => {
       
       if (categoryId) {
         query = query.eq('category_id', categoryId);
+      }
+      if (tenantId) {
+        query = query.eq('tenant_id', tenantId);
       }
       
       const { data, error } = await query;
