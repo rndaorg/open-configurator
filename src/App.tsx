@@ -132,6 +132,7 @@ const App = () => (
           <Route path="*" element={<NotFound />} />
         </Routes>
         <PersonalShopperAgent />
+        </TenantProvider>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
