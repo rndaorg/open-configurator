@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useCategories, useProducts } from '@/hooks/useProducts';
+import { useTenant } from '@/contexts/TenantContext';
 import { ProductCard } from './ProductCard';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
@@ -11,9 +12,10 @@ interface ProductCatalogProps {
 
 export const ProductCatalog = ({ onConfigureProduct }: ProductCatalogProps) => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  
-  const { data: categories, isLoading: categoriesLoading } = useCategories();
-  const { data: products, isLoading: productsLoading } = useProducts(selectedCategory || undefined);
+  const { tenant } = useTenant();
+
+  const { data: categories, isLoading: categoriesLoading } = useCategories(tenant?.id);
+  const { data: products, isLoading: productsLoading } = useProducts(selectedCategory || undefined, tenant?.id);
   
   const isLoading = categoriesLoading || productsLoading;
   
