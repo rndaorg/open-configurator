@@ -552,6 +552,7 @@ export type Database = {
           id: string
           image_url: string | null
           name: string
+          tenant_id: string | null
           updated_at: string
         }
         Insert: {
@@ -560,6 +561,7 @@ export type Database = {
           id?: string
           image_url?: string | null
           name: string
+          tenant_id?: string | null
           updated_at?: string
         }
         Update: {
@@ -568,9 +570,18 @@ export type Database = {
           id?: string
           image_url?: string | null
           name?: string
+          tenant_id?: string | null
           updated_at?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "categories_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       config_options: {
         Row: {
@@ -581,6 +592,7 @@ export type Database = {
           name: string
           option_type: string
           product_id: string | null
+          tenant_id: string | null
         }
         Insert: {
           created_at?: string
@@ -590,6 +602,7 @@ export type Database = {
           name: string
           option_type: string
           product_id?: string | null
+          tenant_id?: string | null
         }
         Update: {
           created_at?: string
@@ -599,6 +612,7 @@ export type Database = {
           name?: string
           option_type?: string
           product_id?: string | null
+          tenant_id?: string | null
         }
         Relationships: [
           {
@@ -606,6 +620,13 @@ export type Database = {
             columns: ["product_id"]
             isOneToOne: false
             referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "config_options_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
             referencedColumns: ["id"]
           },
         ]
@@ -662,6 +683,7 @@ export type Database = {
           product_id: string | null
           rule_name: string
           rule_type: string
+          tenant_id: string | null
           updated_at: string
         }
         Insert: {
@@ -674,6 +696,7 @@ export type Database = {
           product_id?: string | null
           rule_name: string
           rule_type: string
+          tenant_id?: string | null
           updated_at?: string
         }
         Update: {
@@ -686,6 +709,7 @@ export type Database = {
           product_id?: string | null
           rule_name?: string
           rule_type?: string
+          tenant_id?: string | null
           updated_at?: string
         }
         Relationships: [
@@ -694,6 +718,13 @@ export type Database = {
             columns: ["product_id"]
             isOneToOne: false
             referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "configuration_rules_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
             referencedColumns: ["id"]
           },
         ]
@@ -1384,6 +1415,7 @@ export type Database = {
           is_available: boolean
           name: string
           price_modifier: number
+          tenant_id: string | null
         }
         Insert: {
           config_option_id?: string | null
@@ -1395,6 +1427,7 @@ export type Database = {
           is_available?: boolean
           name: string
           price_modifier?: number
+          tenant_id?: string | null
         }
         Update: {
           config_option_id?: string | null
@@ -1406,6 +1439,7 @@ export type Database = {
           is_available?: boolean
           name?: string
           price_modifier?: number
+          tenant_id?: string | null
         }
         Relationships: [
           {
@@ -1413,6 +1447,13 @@ export type Database = {
             columns: ["config_option_id"]
             isOneToOne: false
             referencedRelation: "config_options"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "option_values_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
             referencedColumns: ["id"]
           },
         ]
@@ -1477,6 +1518,7 @@ export type Database = {
           shipping_address: Json | null
           shipping_method: string | null
           status: string
+          tenant_id: string | null
           total_price: number
           updated_at: string
           user_id: string
@@ -1492,6 +1534,7 @@ export type Database = {
           shipping_address?: Json | null
           shipping_method?: string | null
           status?: string
+          tenant_id?: string | null
           total_price: number
           updated_at?: string
           user_id: string
@@ -1507,6 +1550,7 @@ export type Database = {
           shipping_address?: Json | null
           shipping_method?: string | null
           status?: string
+          tenant_id?: string | null
           total_price?: number
           updated_at?: string
           user_id?: string
@@ -1524,6 +1568,13 @@ export type Database = {
             columns: ["product_id"]
             isOneToOne: false
             referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "orders_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
             referencedColumns: ["id"]
           },
         ]
@@ -1624,6 +1675,7 @@ export type Database = {
           product_id: string | null
           rule_name: string
           rule_type: string
+          tenant_id: string | null
           updated_at: string
           valid_from: string | null
           valid_until: string | null
@@ -1639,6 +1691,7 @@ export type Database = {
           product_id?: string | null
           rule_name: string
           rule_type: string
+          tenant_id?: string | null
           updated_at?: string
           valid_from?: string | null
           valid_until?: string | null
@@ -1654,6 +1707,7 @@ export type Database = {
           product_id?: string | null
           rule_name?: string
           rule_type?: string
+          tenant_id?: string | null
           updated_at?: string
           valid_from?: string | null
           valid_until?: string | null
@@ -1666,6 +1720,13 @@ export type Database = {
             referencedRelation: "products"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "pricing_rules_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
         ]
       }
       product_configurations: {
@@ -1676,6 +1737,7 @@ export type Database = {
           id: string
           product_id: string | null
           session_id: string | null
+          tenant_id: string | null
           total_price: number
           updated_at: string
           user_id: string | null
@@ -1687,6 +1749,7 @@ export type Database = {
           id?: string
           product_id?: string | null
           session_id?: string | null
+          tenant_id?: string | null
           total_price: number
           updated_at?: string
           user_id?: string | null
@@ -1698,6 +1761,7 @@ export type Database = {
           id?: string
           product_id?: string | null
           session_id?: string | null
+          tenant_id?: string | null
           total_price?: number
           updated_at?: string
           user_id?: string | null
@@ -1708,6 +1772,13 @@ export type Database = {
             columns: ["product_id"]
             isOneToOne: false
             referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "product_configurations_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
             referencedColumns: ["id"]
           },
         ]
@@ -1773,6 +1844,7 @@ export type Database = {
           image_url: string | null
           is_active: boolean
           name: string
+          tenant_id: string | null
           updated_at: string
         }
         Insert: {
@@ -1784,6 +1856,7 @@ export type Database = {
           image_url?: string | null
           is_active?: boolean
           name: string
+          tenant_id?: string | null
           updated_at?: string
         }
         Update: {
@@ -1795,6 +1868,7 @@ export type Database = {
           image_url?: string | null
           is_active?: boolean
           name?: string
+          tenant_id?: string | null
           updated_at?: string
         }
         Relationships: [
@@ -1803,6 +1877,13 @@ export type Database = {
             columns: ["category_id"]
             isOneToOne: false
             referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "products_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
             referencedColumns: ["id"]
           },
         ]
@@ -2179,6 +2260,7 @@ export type Database = {
           name: string
           notes: string | null
           phone: string | null
+          tenant_id: string | null
           updated_at: string
         }
         Insert: {
@@ -2192,6 +2274,7 @@ export type Database = {
           name: string
           notes?: string | null
           phone?: string | null
+          tenant_id?: string | null
           updated_at?: string
         }
         Update: {
@@ -2205,6 +2288,148 @@ export type Database = {
           name?: string
           notes?: string | null
           phone?: string | null
+          tenant_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "suppliers_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tenant_branding: {
+        Row: {
+          accent_color: string
+          background_color: string
+          body_font: string
+          created_at: string
+          favicon_url: string | null
+          foreground_color: string
+          heading_font: string
+          id: string
+          logo_url: string | null
+          primary_color: string
+          radius: string
+          support_email: string | null
+          tagline: string | null
+          tenant_id: string
+          updated_at: string
+        }
+        Insert: {
+          accent_color?: string
+          background_color?: string
+          body_font?: string
+          created_at?: string
+          favicon_url?: string | null
+          foreground_color?: string
+          heading_font?: string
+          id?: string
+          logo_url?: string | null
+          primary_color?: string
+          radius?: string
+          support_email?: string | null
+          tagline?: string | null
+          tenant_id: string
+          updated_at?: string
+        }
+        Update: {
+          accent_color?: string
+          background_color?: string
+          body_font?: string
+          created_at?: string
+          favicon_url?: string | null
+          foreground_color?: string
+          heading_font?: string
+          id?: string
+          logo_url?: string | null
+          primary_color?: string
+          radius?: string
+          support_email?: string | null
+          tagline?: string | null
+          tenant_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tenant_branding_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: true
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tenant_members: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["tenant_role"]
+          tenant_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["tenant_role"]
+          tenant_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["tenant_role"]
+          tenant_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tenant_members_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tenants: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          custom_domain: string | null
+          id: string
+          name: string
+          onboarding_completed: boolean
+          onboarding_step: number
+          slug: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          custom_domain?: string | null
+          id?: string
+          name: string
+          onboarding_completed?: boolean
+          onboarding_step?: number
+          slug: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          custom_domain?: string | null
+          id?: string
+          name?: string
+          onboarding_completed?: boolean
+          onboarding_step?: number
+          slug?: string
+          status?: string
           updated_at?: string
         }
         Relationships: []
@@ -2377,6 +2602,7 @@ export type Database = {
           is_active: boolean
           is_default: boolean
           name: string
+          tenant_id: string | null
           updated_at: string
         }
         Insert: {
@@ -2387,6 +2613,7 @@ export type Database = {
           is_active?: boolean
           is_default?: boolean
           name: string
+          tenant_id?: string | null
           updated_at?: string
         }
         Update: {
@@ -2397,9 +2624,18 @@ export type Database = {
           is_active?: boolean
           is_default?: boolean
           name?: string
+          tenant_id?: string | null
           updated_at?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "warehouses_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       wishlists: {
         Row: {
@@ -2446,6 +2682,8 @@ export type Database = {
       }
     }
     Functions: {
+      can_manage_tenant: { Args: { _tenant_id: string }; Returns: boolean }
+      can_write_tenant: { Args: { _tenant_id: string }; Returns: boolean }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -2453,9 +2691,18 @@ export type Database = {
         }
         Returns: boolean
       }
+      has_tenant_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["tenant_role"]
+          _tenant_id: string
+        }
+        Returns: boolean
+      }
+      is_tenant_member: { Args: { _tenant_id: string }; Returns: boolean }
     }
     Enums: {
       app_role: "admin" | "user"
+      tenant_role: "owner" | "admin" | "member"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -2584,6 +2831,7 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "user"],
+      tenant_role: ["owner", "admin", "member"],
     },
   },
 } as const
