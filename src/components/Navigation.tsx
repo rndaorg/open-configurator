@@ -10,6 +10,8 @@ import { useAdminCheck } from '@/hooks/useAdminCheck';
 import { LanguageSelector } from '@/components/LanguageSelector';
 import { NotificationCenter } from '@/components/NotificationCenter';
 import { useRealtimeUpdates } from '@/hooks/useRealtimeUpdates';
+import { useTenant } from '@/contexts/TenantContext';
+import { TenantSwitcher } from '@/components/TenantSwitcher';
 
 export const Navigation = () => {
   const { t } = useTranslation();
@@ -18,6 +20,7 @@ export const Navigation = () => {
   const { user, signOut } = useAuth();
   const { itemCount } = useCart();
   const { isAdmin } = useAdminCheck();
+  const { tenant, branding } = useTenant();
 
   // Enable realtime updates for orders and inventory
   useRealtimeUpdates({ showToasts: true });
